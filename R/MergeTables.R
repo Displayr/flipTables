@@ -54,6 +54,12 @@ MergeTables <- function(left, right, joinby = c("Join columns", "Join rows"),
     rownames(left)  <- stringr::str_trim(rownames(left))
     rownames(right) <- stringr::str_trim(rownames(right))
 
+    if (length(intersect(rownames(left), rownames(right))) == 0)
+    {
+        type <- ifelse(joinby == "Join columns", "rows", "columns")
+        stop("Can not find any matching ", type, ". Perhaps you meant to join by ", type, "?")
+    }
+
     all.x <- all.y <- FALSE
     if (nonmatching %in% c("Keep all from first table", "Keep all"))
     {
