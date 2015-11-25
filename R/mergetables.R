@@ -79,5 +79,5 @@ MergeTables <- function(left, right, joinby = c("Join columns", "Join rows"),
         merged <- t(merged)
     }
 
-    merged
+    as.matrix(merged)
 }

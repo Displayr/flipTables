@@ -7,6 +7,9 @@ Author: Numbers International
 Maintainer: Numbers International <info@numbers.net.au>
 Description: Package for handling tables and related objects.
 License: What license is it under?
-Imports: stringr
+Imports:
+    stringr
 LazyData: TRUE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1
+Suggests:
+    testthat
