@@ -3,10 +3,9 @@ Type: Package
 Title: Package for handling tables and related objects
 Version: 0.1
 Date: 2015-11-18
-Author: Numbers International
-Maintainer: Numbers International <info@numbers.net.au>
+Authors@R: "Numbers International <info@numbers.net.au> [aut, cre]"
 Description: Package for handling tables and related objects.
-License: What license is it under?
+License: Copyright Numbers International Pty Ltd
 Imports:
     stringr
 LazyData: TRUE
