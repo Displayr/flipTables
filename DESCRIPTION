@@ -5,7 +5,7 @@ Version: 0.1
 Date: 2015-11-18
 Authors@R: "Numbers International <info@numbers.net.au> [aut, cre]"
 Description: Package for handling tables and related objects.
-License: Copyright Numbers International Pty Ltd
+License: MIT + file LICENSE
 Imports:
     stringr
 LazyData: TRUE
