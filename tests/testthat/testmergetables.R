@@ -14,52 +14,52 @@ keep.first <- matrix(c(1:12, 21, 22, NA, 24, 25, NA, 27, 28, NA),
     nrow = 3, ncol = 7, dimnames = list(rownames(left), LETTERS[1:7]))
 keep.second <- matrix(c(1, 2, NA, 4, 5, NA, 7, 8, NA, 10, 11, NA, 21:29),
     nrow = 3, ncol = 7, dimnames = list(rownames(right), LETTERS[1:7]))
-keep.all <- matrix(c(1:3, NA, 4:6, NA, 7:9, NA, 10:12, NA,
-    21, 22, NA, 23, 24, 25, NA, 26, 27, 28, NA, 29),
-    nrow = 4, ncol = 7, dimnames = list(letters[1:4], LETTERS[1:7]))
+keep.all <- matrix(c(1:2, NA, 3:5, NA, 6:8, NA, 9:11, NA, 12,
+    21, 22, 23, NA, 24, 25, 26, NA, 27, 28, 29, NA),
+    nrow = 4, ncol = 7, dimnames = list(c("a", "b", "d", "c"), LETTERS[1:7]))
 
 test_that("Merge by columns",
 {
-    expect_equal(MergeTables(left, right, "Join columns", "Matching only"), matching.only)
-    expect_equal(MergeTables(left, right, "Join columns", "Keep all from first table"), keep.first)
-    expect_equal(MergeTables(left, right, "Join columns", "Keep all from second table"), keep.second)
-    expect_equal(MergeTables(left, right, "Join columns", "Keep all"), keep.all)
+    expect_equal(Merge2Tables(left, right, "Join columns", "Matching only"), matching.only)
+    expect_equal(Merge2Tables(left, right, "Join columns", "Keep all from first table"), keep.first)
+    expect_equal(Merge2Tables(left, right, "Join columns", "Keep all from second table"), keep.second)
+    expect_equal(Merge2Tables(left, right, "Join columns", "Keep all"), keep.all)
 })
 
 test_that("Merge by columns, multiple statistics",
 {
-    expect_warning(MergeTables(left.multistat, right, "Join columns", "Matching only"),
-        "The first table contains multiple statistics.")
-    expect_equal(suppressWarnings(MergeTables(left.multistat, right, "Join columns", "Matching only")),
+    expect_warning(Merge2Tables(left.multistat, right, "Join columns", "Matching only"),
+        "'left.multistat' contains multiple statistics.")
+    expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Matching only")),
         matching.only)
-    expect_equal(suppressWarnings(MergeTables(left.multistat, right, "Join columns", "Keep all from first table")),
+    expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Keep all from first table")),
         keep.first)
-    expect_equal(suppressWarnings(MergeTables(left.multistat, right, "Join columns", "Keep all from second table")),
+    expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Keep all from second table")),
         keep.second)
-    expect_equal(suppressWarnings(MergeTables(left.multistat, right, "Join columns", "Keep all")),
+    expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Keep all")),
         keep.all)
 
-    expect_warning(MergeTables(left, right.multistat, "Join columns", "Matching only"),
-        "The second table contains multiple statistics.")
-    expect_equal(suppressWarnings(MergeTables(left, right.multistat, "Join columns", "Matching only")),
+    expect_warning(Merge2Tables(left, right.multistat, "Join columns", "Matching only"),
+        "'right.multistat' contains multiple statistics.")
+    expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Matching only")),
         matching.only)
-    expect_equal(suppressWarnings(MergeTables(left, right.multistat, "Join columns", "Keep all from first table")),
+    expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all from first table")),
         keep.first)
-    expect_equal(suppressWarnings(MergeTables(left, right.multistat, "Join columns", "Keep all from second table")),
+    expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all from second table")),
         keep.second)
-    expect_equal(suppressWarnings(MergeTables(left, right.multistat, "Join columns", "Keep all")),
+    expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all")),
         keep.all)
 })
 
 test_that("Merge by columns, too many dimensions",
 {
-    expect_error(MergeTables(too.many.dims, right, "Join columns", "Matching only"),
+    expect_error(Merge2Tables(too.many.dims, right, "Join columns", "Matching only"),
         "One of the input tables has more than 3 dimensions.")
 })
 
 test_that("Using join rows inappropriately",
 {
-    expect_error(MergeTables(left, right, "Join rows", "Matching only"),
+    expect_error(Merge2Tables(left, right, "Join rows", "Matching only"),
         "Can not find any matching columns.")
 })
 
@@ -76,19 +76,19 @@ keep.first <- matrix(c(1:3, 21:23, 4:6, 24:26, 7:9, rep(NA, 3), 10:12, rep(NA, 3
     nrow = 6, ncol = 4, dimnames = list(letters[1:6], colnames(left)))
 keep.second <- matrix(c(1:3, 21:23, 4:6, 24:26, rep(NA, 3), 27:29),
     nrow = 6, ncol = 3, dimnames = list(letters[1:6], colnames(right)))
-keep.all <- matrix(c(1:3, 21:23, 4:6, 24:26, 7:9, rep(NA, 3), 10:12, rep(NA, 6), 27:29),
-    nrow = 6, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5]))
+keep.all <- matrix(c(1:3, 21:23, 4:6, 24:26, rep(NA, 3), 27:29, 7:9, rep(NA, 3), 10:12, rep(NA, 3)),
+    nrow = 6, ncol = 5, dimnames = list(letters[1:6], c("A", "B", "E", "C", "D")))
 
 test_that("Merge by rows",
 {
-    expect_equal(MergeTables(left, right, "Join rows", "Matching only"), matching.only)
-    expect_equal(MergeTables(left, right, "Join rows", "Keep all from first table"), keep.first)
-    expect_equal(MergeTables(left, right, "Join rows", "Keep all from second table"), keep.second)
-    expect_equal(MergeTables(left, right, "Join rows", "Keep all"), keep.all)
+    expect_equal(Merge2Tables(left, right, "Join rows", "Matching only"), matching.only)
+    expect_equal(Merge2Tables(left, right, "Join rows", "Keep all from first table"), keep.first)
+    expect_equal(Merge2Tables(left, right, "Join rows", "Keep all from second table"), keep.second)
+    expect_equal(Merge2Tables(left, right, "Join rows", "Keep all"), keep.all)
 })
 
 test_that("Using join columns inappropriately",
 {
-    expect_error(MergeTables(left, right, "Join columns", "Matching only"),
+    expect_error(Merge2Tables(left, right, "Join columns", "Matching only"),
         "Can not find any matching rows.")
 })
