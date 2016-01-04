@@ -108,14 +108,19 @@ Merge2Tables <- function(left, right, joinby = c("Join columns", "Join rows"),
     merged[["Row.names"]] <- NULL
 
     # Rearrange rows to match the input as closely as possible
-    if (nonmatching %in% c("Matching only", "Keep all from first table"))
+    if (nonmatching == "Matching only")
     {
-        index <- match(rownames(merged), rownames(left))
+        index <- match(intersect(rownames(left), rownames(right)), rownames(merged))
+        merged <- merged[index, ]
+    }
+    else if (nonmatching == "Keep all from first table")
+    {
+        index <- match(rownames(left), rownames(merged))
         merged <- merged[index, ]
     }
     else if (nonmatching == "Keep all from second table")
     {
-        index <- match(rownames(merged), rownames(right))
+        index <- match(rownames(right), rownames(merged))
         merged <- merged[index, ]
     }
     else
@@ -208,10 +213,11 @@ mergeNames <- function(left, right)
 
     last.match <- max(which(!is.na(matches)))
     len <- length(matches)
-    if (matches[last.match] == max.match)
-        max.match <- max.match + 1
     if (last.match != len)
     {
+        if (matches[last.match] == max.match)
+            max.match <- max.match + 1
+
         matches[(last.match + 1):len] <- seq(from = matches[last.match] + 0.1, to = max.match - 0.1,
             length.out = len - last.match)
     }

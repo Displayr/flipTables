@@ -24,12 +24,18 @@ test_that("Merge by columns",
     expect_equal(Merge2Tables(left, right, "Join columns", "Keep all from first table"), keep.first)
     expect_equal(Merge2Tables(left, right, "Join columns", "Keep all from second table"), keep.second)
     expect_equal(Merge2Tables(left, right, "Join columns", "Keep all"), keep.all)
+
+    expect_equal(MergeTables(list(left, right), "Join columns", "Matching only"), matching.only)
+    expect_equal(MergeTables(list(left, right), "Join columns", "Keep all"), keep.all)
 })
 
 test_that("Merge by columns, multiple statistics",
 {
     expect_warning(Merge2Tables(left.multistat, right, "Join columns", "Matching only"),
         "'left.multistat' contains multiple statistics.")
+#     expect_warning(MergeTables(list(left.multistat, right), "Join columns", "Matching only"),
+#         "'tables[[1]]' contains multiple statistics.")
+
     expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Matching only")),
         matching.only)
     expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Keep all from first table")),
@@ -39,8 +45,16 @@ test_that("Merge by columns, multiple statistics",
     expect_equal(suppressWarnings(Merge2Tables(left.multistat, right, "Join columns", "Keep all")),
         keep.all)
 
+    expect_equal(suppressWarnings(MergeTables(list(left.multistat, right), "Join columns", "Matching only")),
+        matching.only)
+    expect_equal(suppressWarnings(MergeTables(list(left.multistat, right), "Join columns", "Keep all")),
+        keep.all)
+
     expect_warning(Merge2Tables(left, right.multistat, "Join columns", "Matching only"),
         "'right.multistat' contains multiple statistics.")
+#     expect_warning(MergeTables(list(left, right.multistat), "Join columns", "Matching only"),
+#         "'tables[[2]]' contains multiple statistics.")
+
     expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Matching only")),
         matching.only)
     expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all from first table")),
@@ -48,6 +62,11 @@ test_that("Merge by columns, multiple statistics",
     expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all from second table")),
         keep.second)
     expect_equal(suppressWarnings(Merge2Tables(left, right.multistat, "Join columns", "Keep all")),
+        keep.all)
+
+    expect_equal(suppressWarnings(MergeTables(list(left, right.multistat), "Join columns", "Matching only")),
+        matching.only)
+    expect_equal(suppressWarnings(MergeTables(list(left, right.multistat), "Join columns", "Keep all")),
         keep.all)
 })
 
@@ -85,6 +104,9 @@ test_that("Merge by rows",
     expect_equal(Merge2Tables(left, right, "Join rows", "Keep all from first table"), keep.first)
     expect_equal(Merge2Tables(left, right, "Join rows", "Keep all from second table"), keep.second)
     expect_equal(Merge2Tables(left, right, "Join rows", "Keep all"), keep.all)
+
+    expect_equal(MergeTables(list(left, right), "Join rows", "Matching only"), matching.only)
+    expect_equal(MergeTables(list(left, right), "Join rows", "Keep all"), keep.all)
 })
 
 test_that("Using join columns inappropriately",
