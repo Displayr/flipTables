@@ -6,11 +6,11 @@
 \title{Merge tables}
 \usage{
 MergeTables(tables, joinby = c("Join columns", "Join rows"),
-  nonmatching = c("Matching only", "Keep all"))
+  nonmatching = c("Keep all", "Matching only"))
 
 Merge2Tables(left, right, joinby = c("Join columns", "Join rows"),
-  nonmatching = c("Matching only", "Keep all from first table",
-  "Keep all from second table", "Keep all"))
+  nonmatching = c("Keep all", "Keep all from first table",
+  "Keep all from second table", "Matching only"))
 }
 \arguments{
 \item{tables}{A list of tables to merge}
@@ -20,8 +20,8 @@ Merge2Tables(left, right, joinby = c("Join columns", "Join rows"),
 
 \item{nonmatching}{How to handle non-matching row or column names. These are
 similar to the \code{all.*} arguments in \code{\link{merge}}.
-\code{MergeTables} supports 2 options: \code{"Matching only"} (like
-\code{all = FALSE}) and \code{"Keep all"} (like \code{all = TRUE}).
+\code{MergeTables} supports 2 options: \code{"Keep all"} (like \code{all =
+TRUE}) and \code{"Matching only"} (like \code{all = FALSE}).
 \code{Merge2Tables} supports these and a further 2 options: \code{"Keep all
 from first table"} (like \code{all.x = TRUE}) and \code{"Keep all from
 second table"} (like \code{all.y = TRUE}).}
