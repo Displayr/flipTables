@@ -1,4 +1,4 @@
-#' Merge tables
+#' Merge two or more tables
 #'
 #' Bind tables together either by rows (similar to \code{\link{rbind}}) or by
 #' columns (similar to \code{\link{cbind}}). Unlike those functions, this will
@@ -6,8 +6,8 @@
 #' \code{\link{merge}}).
 #'
 #' @param tables A list of tables to merge
-#' @param joinby \code{"Join columns"} is similar to \code{\link{cbind}}.
-#'   \code{"Join rows"} is similar to \code{\link{rbind}}.
+#' @param direction \code{"Side-by-side"} is similar to \code{\link{cbind}}.
+#'   \code{"Up-and-down"} is similar to \code{\link{rbind}}.
 #' @param nonmatching How to handle non-matching row or column names. These are
 #'   similar to the \code{all.*} arguments in \code{\link{merge}}.
 #'   \code{MergeTables} supports 2 options: \code{"Keep all"} (like \code{all =
@@ -16,10 +16,10 @@
 #'   from first table"} (like \code{all.x = TRUE}) and \code{"Keep all from
 #'   second table"} (like \code{all.y = TRUE}).
 #' @export
-MergeTables <- function(tables, joinby = c("Join columns", "Join rows"),
+MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Matching only"))
 {
-    joinby <- match.arg(joinby)
+    direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
     merged <- NULL
@@ -29,29 +29,29 @@ MergeTables <- function(tables, joinby = c("Join columns", "Join rows"),
     }
     else if (length(tables) == 2)
     {
-        merged <- Merge2Tables(tables[[1]], tables[[2]], joinby = joinby, nonmatching = nonmatching)
+        merged <- Merge2Tables(tables[[1]], tables[[2]], direction = direction, nonmatching = nonmatching)
     }
     else
     {
         merged <- Merge2Tables(tables[[1]],
-            Recall(tables[-1], joinby = joinby, nonmatching = nonmatching),
-            joinby = joinby, nonmatching = nonmatching)
+            Recall(tables[-1], direction = direction, nonmatching = nonmatching),
+            direction = direction, nonmatching = nonmatching)
     }
 
     merged
 }
 
-#' @describeIn MergeTables Merge 2 tables.
+#' @describeIn MergeTables Merge two tables.
 #' @inheritParams MergeTables
 #' @param left,right The tables to merge. These should be vectors, matrices or
 #'   arrays. If the array has 3 dimensions, the first 'plane' of the third
 #'   dimension is kept, the others are dropped. It is an error to have more than
 #'   3 dimensions in the array.
 #' @export
-Merge2Tables <- function(left, right, joinby = c("Join columns", "Join rows"),
+Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"))
 {
-    joinby <- match.arg(joinby)
+    direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
     if (length(dim(left)) > 3 || length(dim(right)) > 3)
@@ -78,7 +78,7 @@ Merge2Tables <- function(left, right, joinby = c("Join columns", "Join rows"),
         right <- .makeMatrix(right, attr(right, "statistic"))
     }
 
-    if (joinby == "Join rows")
+    if (direction == "Up-and-down")
     {
         left <- t(left)
         right <- t(right)
@@ -89,8 +89,17 @@ Merge2Tables <- function(left, right, joinby = c("Join columns", "Join rows"),
 
     if (length(intersect(rownames(left), rownames(right))) == 0)
     {
-        type <- ifelse(joinby == "Join columns", "rows", "columns")
-        stop("Can not find any matching ", type, ". Perhaps you meant to join by ", type, "?")
+        if (direction == "Side-by-side")
+        {
+            type <- "rows"
+            other.direction <- "up-and-down"
+        }
+        else
+        {
+            type <- "columns"
+            other.direction <- "side-by-side"
+        }
+        stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
     }
 
     all.x <- all.y <- FALSE
@@ -139,7 +148,7 @@ Merge2Tables <- function(left, right, joinby = c("Join columns", "Join rows"),
         }
     }
 
-    if (joinby == "Join rows")
+    if (direction == "Up-and-down")
     {
         merged <- t(merged)
     }

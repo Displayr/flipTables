@@ -3,20 +3,20 @@
 \name{MergeTables}
 \alias{Merge2Tables}
 \alias{MergeTables}
-\title{Merge tables}
+\title{Merge two or more tables}
 \usage{
-MergeTables(tables, joinby = c("Join columns", "Join rows"),
+MergeTables(tables, direction = c("Side-by-side", "Up-and-down"),
   nonmatching = c("Keep all", "Matching only"))
 
-Merge2Tables(left, right, joinby = c("Join columns", "Join rows"),
+Merge2Tables(left, right, direction = c("Side-by-side", "Up-and-down"),
   nonmatching = c("Keep all", "Keep all from first table",
   "Keep all from second table", "Matching only"))
 }
 \arguments{
 \item{tables}{A list of tables to merge}
 
-\item{joinby}{\code{"Join columns"} is similar to \code{\link{cbind}}.
-\code{"Join rows"} is similar to \code{\link{rbind}}.}
+\item{direction}{\code{"Side-by-side"} is similar to \code{\link{cbind}}.
+\code{"Up-and-down"} is similar to \code{\link{rbind}}.}
 
 \item{nonmatching}{How to handle non-matching row or column names. These are
 similar to the \code{all.*} arguments in \code{\link{merge}}.
@@ -39,6 +39,6 @@ attempt to match cases based on the row or column names (similar to
 }
 \section{Functions}{
 \itemize{
-\item \code{Merge2Tables}: Merge 2 tables.
+\item \code{Merge2Tables}: Merge two tables.
 }}
 
