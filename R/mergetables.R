@@ -153,7 +153,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         merged <- t(merged)
     }
 
-    as.matrix(merged)
+    round(as.matrix(merged), 1)
 }
 
 
