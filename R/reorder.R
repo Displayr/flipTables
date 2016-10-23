@@ -2,7 +2,7 @@
 #'
 #' Reorders the rows or columns of a table.
 #'
-#' @param x A \code{\link{matrix}} or \code{\link{data.fram}} A list of tables to merge
+#' @param x A \code{\link{matrix}} or \code{\link{data.frame}} A list of tables to merge
 #' @param rows One of  \code{"Descending"}, which orders the rows from top to bottom
 #' based on \code{FUN}, \code{"Ascending"}, or \code{"None"}.
 #' @param columns Same as \code{"rows"}.
@@ -14,17 +14,18 @@
 #' orderly way (e.g., if all the numbers in the table are the same, the table
 #' is not reordered).
 #' @export
-Reorder <- function(x, rows = "Descending", columns = "Descending", FUN = mean, fudge = 1e-12)
+Reorder <- function(x, rows = "Descending", columns = "Descending", FUN = mean, fudge = 1e-6)
 {
     .order <- function(x, MARGIN)
     {
         values <- apply(x, MARGIN, FUN, na.rm = TRUE)
-        values <- values + fudge * (length(values):1)
-        order(values, decreasing = if (MARGIN == 1) rows == "Descending" else columns == "Descending" )
+        values <- values + fudge * (1:length(values))
+        decreasing <- (if (MARGIN == 1) rows else columns) == "Descending"
+        order(values, decreasing = decreasing)
     }
     if (rows != "None")
-        z <- x[.order(x, 1), ]
+        x <- x[.order(x, 1), , drop = FALSE]
     if (columns != "None")
-        z <- x[, .order(x, 2)]
+        x <- x[, .order(x, 2), drop = FALSE]
     x
 }

@@ -5,10 +5,10 @@
 \title{Reorder}
 \usage{
 Reorder(x, rows = "Descending", columns = "Descending", FUN = mean,
-  fudge = 1e-12)
+  fudge = 1e-06)
 }
 \arguments{
-\item{x}{A \code{\link{matrix}} or \code{\link{data.fram}} A list of tables to merge}
+\item{x}{A \code{\link{matrix}} or \code{\link{data.frame}} A list of tables to merge}
 
 \item{rows}{One of  \code{"Descending"}, which orders the rows from top to bottom
 based on \code{FUN}, \code{"Ascending"}, or \code{"None"}.}

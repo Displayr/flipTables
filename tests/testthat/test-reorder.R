@@ -11,6 +11,8 @@ test_that("Reorder",
               z <- matrix(c(1:10,2:11), ncol = 2, dimnames = list(LETTERS[1:10], c("Smaller", "Bigger")))
               expect_equal(Reorder(z, "Ascending", "Ascending"), z)
               expect_equal(Reorder(z), z[10:1, 2:1])
+              expect_equal(Reorder(z, "Ascending", "Descending"), z[1:10, 2:1])
+              expect_equal(Reorder(z, "Descending", "Ascending"), z[10:1, 1:2])
               expect_equal(Reorder(z, "None", "None"), z)
               # Missing values
               z[9, 1] <- NA
