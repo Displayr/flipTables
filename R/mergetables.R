@@ -1,6 +1,6 @@
-#' Merge two or more tables
+#' MergeTables
 #'
-#' Bind tables together either by rows (similar to \code{\link{rbind}}) or by
+#' Merge two or more tables. Bind tables together either by rows (similar to \code{\link{rbind}}) or by
 #' columns (similar to \code{\link{cbind}}). Unlike those functions, this will
 #' attempt to match cases based on the row or column names (similar to
 #' \code{\link{merge}}).

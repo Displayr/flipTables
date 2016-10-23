@@ -3,7 +3,7 @@
 \name{MergeTables}
 \alias{Merge2Tables}
 \alias{MergeTables}
-\title{Merge two or more tables}
+\title{MergeTables}
 \usage{
 MergeTables(tables, direction = c("Side-by-side", "Up-and-down"),
   nonmatching = c("Keep all", "Matching only"))
@@ -32,7 +32,7 @@ dimension is kept, the others are dropped. It is an error to have more than
 3 dimensions in the array.}
 }
 \description{
-Bind tables together either by rows (similar to \code{\link{rbind}}) or by
+Merge two or more tables. Bind tables together either by rows (similar to \code{\link{rbind}}) or by
 columns (similar to \code{\link{cbind}}). Unlike those functions, this will
 attempt to match cases based on the row or column names (similar to
 \code{\link{merge}}).
