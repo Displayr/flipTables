@@ -51,6 +51,19 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"))
 {
+    left.name <- deparse(substitute(left))
+    right.name <- deparse(substitute(right))
+    .as.matrix <- function(x) # Converts a vector to a matrix, if required.
+    {
+        if (!is.vector(x))
+            return(x)
+        x <- as.matrix(x)
+        if (direction == "Up-and-down")
+            return(t(x))
+        x
+    }
+    left <- .as.matrix(left)
+    right <- .as.matrix(right)
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
@@ -58,11 +71,11 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         stop("One of the input tables has more than 3 dimensions.")
 
     if (length(dim(left)) == 3) {
-        warning("'", deparse(substitute(left)), "' contains multiple statistics. Only using the first statistic.")
+        warning("'", left.name, "' contains multiple statistics. Only using the first statistic.")
         left <- left[, , 1]
     }
     if (length(dim(right)) == 3) {
-        warning("'", deparse(substitute(right)), "' contains multiple statistics. Only using the first statistic.")
+        warning("'", right.name, "' contains multiple statistics. Only using the first statistic.")
         right <- right[, , 1]
     }
 

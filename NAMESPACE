@@ -2,4 +2,5 @@
 
 export(Merge2Tables)
 export(MergeTables)
+export(Rbind)
 export(Reorder)
