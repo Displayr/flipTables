@@ -2,10 +2,10 @@ Package: flipTables
 Type: Package
 Title: Package for handling tables and related objects
 Version: 0.1
-Date: 2015-11-18
-Authors@R: "Numbers International <info@numbers.net.au> [aut, cre]"
+Author: Displayr
+Maintainer: Displayr <opensource@displayr.com>
 Description: Package for handling tables and related objects.
-License: MIT + file LICENSE
+License: GPL-3
 Imports:
     stringr
 LazyData: TRUE
