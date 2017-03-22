@@ -27,4 +27,3 @@ is not reordered).}
 \description{
 Reorders the rows or columns of a table.
 }
-
