@@ -21,7 +21,7 @@ test_that("Rbind",
           })
 
 
-test_that("Rbind",
+test_that("Cbind",
           {
               expect_equal(suppressWarnings(Cbind(1:5, 1:5)), cbind(1:5, 1:5))
               a <- c(a = 1, b = 3)
