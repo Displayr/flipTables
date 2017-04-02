@@ -2,7 +2,7 @@
 % Please edit documentation in R/r_and_c_bind.R
 \name{Cbind}
 \alias{Cbind}
-\title{CBind}
+\title{Cbind}
 \usage{
 Cbind(..., keep.all = TRUE)
 }
