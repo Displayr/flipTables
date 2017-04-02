@@ -54,7 +54,7 @@ Rbind <- function(..., keep.all = TRUE)
 }
 
 
-#' CBind
+#' Cbind
 #'
 #' Takes a sequence of vectors or tables and merges them, similar to \code{\link{rbind}}, except that it matches
 #' based on names.
