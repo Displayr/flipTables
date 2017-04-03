@@ -11,7 +11,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     bind.tables <- suppressWarnings(bind(...))
     tables <- list(...)
     if(is.list(tables[[1]]))
-        return(rbindAndCbinWithLabels(tables[[1]]))
+        return(rbindAndCbindWithLabels(tables[[1]]))
     if (is.null(tables[[1]]))
     {
         tables[[1]] <- NULL
