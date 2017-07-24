@@ -37,6 +37,12 @@ columns (similar to \code{\link{cbind}}). Unlike those functions, this will
 attempt to match cases based on the row or column names (similar to
 \code{\link{merge}}).
 }
+\details{
+If any table has no names for matching, matching is performed based on the index
+  order with the output retaining the names from any table that does have them.
+  In this case the number of columns of the output (for \code{"Up-and-down"}) is the maximum
+  of the numbers of columns of the inputs.
+}
 \section{Functions}{
 \itemize{
 \item \code{Merge2Tables}: Merge two tables.

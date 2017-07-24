@@ -11,4 +11,5 @@ Imports:
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests:
+    gtools,
     testthat

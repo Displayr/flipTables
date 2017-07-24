@@ -2,16 +2,17 @@
 % Please edit documentation in R/r_and_c_bind.R
 \name{Rbind}
 \alias{Rbind}
-\title{RBind}
+\title{Rbind}
 \usage{
 Rbind(..., keep.all = TRUE)
 }
 \arguments{
 \item{...}{The tables or vectors to be merged.}
 
-\item{keep.all}{If TRUE, even non-matching rows are retained.}
+\item{keep.all}{If \code{"TRUE"}, even non-matching rows are retained. Ignored and treated as
+\code{"TRUE"} if matching is based upon indices.}
 }
 \description{
 Takes a sequence of vectors or tables and merges them, similar to \code{\link{rbind}}, except that it matches
-based on names.
+based on names. If there are no names, matching is based upon indices.
 }

@@ -1,15 +1,30 @@
 #' rbindAndCbindWithLabels
 #'
 #' Takes a sequence of vectors or tables and merges them, similar to rbind and cbind, except that it matches
-#' based on names.
+#' based on names. If there are no names, matching is based upon indices.
 #' @param ... The tables or vectors to be merged.
 #' @param rows If TRUE, binds by rows. Otherwise by columns.
-#' @param keep.all If TRUE, even non-matching rows are retained.
+#' @param keep.all If \code{"TRUE"}, even non-matching rows/columns are retained. Ignored and treated as
+#' \code{"TRUE"} if matching is based upon indices.
 rbindAndCbindWithLabels <- function(..., rows, keep.all)
 {
-    bind <- if (rows) rbind else cbind
-    bind.tables <- suppressWarnings(bind(...))
+    # rbind does not work on matrices with different ncols. However in order to use rbind
+    # to extract rownames, set all ncols to 1 for matrices. Vica versa for cbind.
     tables <- list(...)
+    vectors <- unlist(lapply(tables, is.vector))
+    if (rows)
+        tables[!vectors] <- lapply(tables[!vectors], '[', , 1, drop = FALSE)
+    else
+        tables[!vectors] <- lapply(tables[!vectors], '[', 1, , drop = FALSE)
+    bind <- if (rows) rbind else cbind
+    # reset names of vectors which have been lost and are used as rownames.
+    object.names <- as.character(substitute(list(...)))[-1L]
+    named.objects <- sapply(object.names, exists)
+    names(tables)[named.objects] <- as.character(substitute(list(...)))[-1L][named.objects]
+    bind.tables <- suppressWarnings(do.call(bind, tables))
+
+    tables <- list(...)   # reset to full size matrices
+
     if(is.list(tables[[1]]))
         return(rbindAndCbindWithLabels(tables[[1]]))
     if (is.null(tables[[1]]))
@@ -17,17 +32,28 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
         tables[[1]] <- NULL
         return(bind.tables)
     }
-    if (!(any(c("names", "dimnames") %in% names(attributes(tables[[1]])))))
-    {
-        warning("As the first table contains no names, names have been ignored in the matching.")
-        return(bind(...))
-    }
+    #if (!(any(c("names", "dimnames") %in% names(attributes(tables[[1]])))))
+    #{
+    #    warning("As the first table contains no names, names have been ignored in the matching.")
+    #    return(bind(...))
+    #}
     merged <- MergeTables(tables, direction = if (rows) "Up-and-down" else "Side-by-side", nonmatching = if (keep.all) "Keep all" else "Matching only")
+
     if (rows)
     {
         if(is.vector(merged) || nrow(merged) == 1)
             return(merged)
         rownames(merged) <- rownames(bind.tables)
+
+        # # T if vector, F if matrix
+        # vector.or.matrix <- unlist(lapply(tables, is.vector))
+        # # if vector use name, if matrix use rownames (maybe blank)
+        # object.names <- as.character(substitute(list(...)))[-1L]
+        # # sapply(substitute(list(...))[-1], deparse)
+        # named.objects <- sapply(object.names, exists)
+        # table.rownames <- unlist(lapply(tables, rownames))
+        # rownames(merged) <- object.names
+        # rownames(merged)[!named.objects] <- NULL
 
     }
     else
@@ -41,12 +67,13 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
 
 
 
-#' RBind
+#' Rbind
 #'
 #' Takes a sequence of vectors or tables and merges them, similar to \code{\link{rbind}}, except that it matches
-#' based on names.
+#' based on names. If there are no names, matching is based upon indices.
 #' @param ... The tables or vectors to be merged.
-#' @param keep.all If TRUE, even non-matching rows are retained.
+#' @param keep.all If \code{"TRUE"}, even non-matching rows are retained. Ignored and treated as
+#' \code{"TRUE"} if matching is based upon indices.
 #' @export
 Rbind <- function(..., keep.all = TRUE)
 {
@@ -56,10 +83,11 @@ Rbind <- function(..., keep.all = TRUE)
 
 #' Cbind
 #'
-#' Takes a sequence of vectors or tables and merges them, similar to \code{\link{rbind}}, except that it matches
-#' based on names.
+#' Takes a sequence of vectors or tables and merges them, similar to \code{\link{cbind}}, except that it matches
+#' based on names. If there are no names, matching is based upon indices.
 #' @param ... The tables or vectors to be merged.
-#' @param keep.all If TRUE, even non-matching rows are retained.
+#' @param keep.all If \code{"TRUE"}, even non-matching rows are retained. Ignored and treated as
+#' \code{"TRUE"} if matching is based upon indices.
 #' @export
 Cbind <- function(..., keep.all = TRUE)
 {

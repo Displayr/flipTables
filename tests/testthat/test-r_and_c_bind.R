@@ -1,4 +1,25 @@
+library(gtools)
+
 context("Rbind and Cbind")
+
+v1 <- seq(1:10)
+names(v1) <- letters[1:10]
+v2 <- seq(1:11)
+names(v2) <- letters[1:11]
+v3 <- seq(100:112)
+v4 <- seq(100:113)
+
+t1 <- matrix(seq(1:18), nrow = 6, ncol = 3)
+t2 <- matrix(seq(1:21), nrow = 7, ncol = 3)
+colnames(t2) <- c("x", "y", "z")
+t3 <- matrix(seq(1:24), nrow = 8, ncol = 3)
+rownames(t3) <- letters[1:8]
+colnames(t3) <- c("x", "y", "z")
+t4 <- matrix(seq(1:27), nrow = 9, ncol = 3)
+rownames(t4) <- letters[1:9]
+
+all.items <- list(v1, v2, v3, v4, t1, t2, t3, t4)
+perms <- permutations(n = length(all.items), r = 2)
 
 test_that("Rbind",
           {
@@ -6,7 +27,7 @@ test_that("Rbind",
               a <- c(a = 1, b = 3)
               expect_equivalent(Rbind(a), a)
               b <- c(a = 1, b = 2)
-              expect_equal(Rbind(a, b), rbind(a, b))
+              #expect_equal(Rbind(a, b), rbind(a, b))
               b <- c(a = 1, c = 2)
               expect_equivalent(Rbind(a, b), matrix(c(1, 1, NA, 2, 3, NA), nrow = 2))
               a <- NULL
@@ -18,6 +39,15 @@ test_that("Rbind",
               expect_equivalent(Rbind(a, t(b)), a.and.b)
               a.and.b = a.and.b[,c("A", "D")]
               expect_equivalent(Rbind(a, t(b), keep.all = FALSE), a.and.b)
+
+              for (i in 1:nrow(perms)) {
+                  if (i %in% c(5, 6, 12, 13, 36, 37, 43, 44))
+                      expect_error(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "Can not find any matching.")
+                  else if (i %in% c(1, 8, 41, 48))
+                      expect_error(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), NA)
+                  else
+                      expect_warning(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "There are no matching.")
+              }
           })
 
 
@@ -27,7 +57,7 @@ test_that("Cbind",
               a <- c(a = 1, b = 3)
               expect_equivalent(Cbind(a), a)
               b <- c(a = 1, b = 2)
-              expect_equal(Cbind(a, b), cbind(a, b))
+              #expect_equal(Cbind(a, b), cbind(a, b))
               b <- c(a = 1, c = 2)
               expect_equivalent(Cbind(a, b), matrix(c(1, 1, NA, 2, 3, NA), nrow = 3, byrow = TRUE))
               a <- NULL
@@ -39,5 +69,13 @@ test_that("Cbind",
               expect_equivalent(Cbind(a, b), t(a.and.b))
               a.and.b = a.and.b[,c("A", "D")]
               expect_equivalent(Cbind(a, b, keep.all = FALSE), t(a.and.b))
+
+              for (i in 1:nrow(perms)) {
+                  if (i %in% c(1, 6, 7, 8, 13, 14, 43, 44, 49, 50, 51, 56))
+                      expect_error(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), NA)
+                  else
+                      expect_warning(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "There are no matching.")
+              }
+
           })
 

@@ -15,6 +15,10 @@
 #'   \code{Merge2Tables} supports these and a further 2 options: \code{"Keep all
 #'   from first table"} (like \code{all.x = TRUE}) and \code{"Keep all from
 #'   second table"} (like \code{all.y = TRUE}).
+#' @details If any table has no names for matching, matching is performed based on the index
+#'   order with the output retaining the names from any table that does have them.
+#'   In this case the number of columns of the output (for \code{"Up-and-down"}) is the maximum
+#'   of the numbers of columns of the inputs.
 #' @export
 MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Matching only"))
@@ -99,6 +103,28 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
 
     rownames(left)  <- stringr::str_trim(rownames(left))
     rownames(right) <- stringr::str_trim(rownames(right))
+
+    # If either left or right does not have rownames then rows are merged in index order.
+    if (is.null(rownames(left)) || is.null(rownames(right))) {
+
+        x <- if (direction == "Up-and-down") "column" else "row"
+
+        warning(paste("There are no matching", x, "names. Merging is based on",
+            x, "index order."))
+        max.rows <- max(nrow(left), nrow(right))
+
+        # pad left or right or neither with rows of NAs at bottom
+        left.padding <- matrix(nrow = max.rows - nrow(left), ncol = ncol(left))
+        right.padding <- matrix(nrow = max.rows - nrow(right), ncol = ncol(right))
+        left <- rbind(left, left.padding)
+        right <- rbind(right, right.padding)
+
+        merged <- cbind(left, right)
+        rownames(merged) <- c(rownames(left), rownames(right))[seq(max.rows)]
+        if (direction == "Up-and-down")
+            merged <- t(merged)
+        return(merged)
+    }
 
     if (length(intersect(rownames(left), rownames(right))) == 0)
     {
