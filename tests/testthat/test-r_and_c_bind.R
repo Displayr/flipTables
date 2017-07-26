@@ -27,7 +27,9 @@ test_that("Rbind",
               a <- c(a = 1, b = 3)
               expect_equivalent(Rbind(a), a)
               b <- c(a = 1, b = 2)
-              #expect_equal(Rbind(a, b), rbind(a, b))
+              # The following line may fail and need to be commented out because testthat wrongly
+              # says that Rbind(a,b) has no rownames.
+              expect_equal(Rbind(a, b), rbind(a, b))
               b <- c(a = 1, c = 2)
               expect_equivalent(Rbind(a, b), matrix(c(1, 1, NA, 2, 3, NA), nrow = 2))
               a <- NULL
@@ -57,7 +59,9 @@ test_that("Cbind",
               a <- c(a = 1, b = 3)
               expect_equivalent(Cbind(a), a)
               b <- c(a = 1, b = 2)
-              #expect_equal(Cbind(a, b), cbind(a, b))
+              # The following line may fail and need to be commented out because testthat wrongly
+              # says that Cbind(a,b) has no colnames.
+              expect_equal(Cbind(a, b), cbind(a, b))
               b <- c(a = 1, c = 2)
               expect_equivalent(Cbind(a, b), matrix(c(1, 1, NA, 2, 3, NA), nrow = 3, byrow = TRUE))
               a <- NULL
