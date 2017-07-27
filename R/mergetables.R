@@ -29,7 +29,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     merged <- NULL
     if (length(tables) == 1)
     {
-        merged <- tables[[1]]
+        merged <- to.matrix(tables[[1]], direction)
     }
     else if (length(tables) == 2)
     {
@@ -57,17 +57,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
 {
     left.name <- deparse(substitute(left))
     right.name <- deparse(substitute(right))
-    .as.matrix <- function(x) # Converts a vector to a matrix, if required.
-    {
-        if (!is.vector(x))
-            return(x)
-        x <- as.matrix(x)
-        if (direction == "Up-and-down")
-            return(t(x))
-        x
-    }
-    left <- .as.matrix(left)
-    right <- .as.matrix(right)
+
+    left <- to.matrix(left, direction)
+    right <- to.matrix(right, direction)
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
@@ -139,6 +131,16 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
             other.direction <- "side-by-side"
         }
         stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
+    }
+
+    if (any(is.na(rownames(left))) || any(is.na(rownames(right))))
+    {
+        stop("Objects to be merged must both have a unique set of names without NAs, however NAs have been found.")
+    }
+
+    if (length(unique(rownames(left))) != nrow(left) || length(unique(rownames(right))) != nrow(right))
+    {
+        stop("Objects to be merged must both have a unique set of names without NAs, however duplicate names have been found.")
     }
 
     all.x <- all.y <- FALSE
@@ -282,4 +284,15 @@ mergeNames <- function(left, right)
     )
     new.order <- new.order[!duplicated(new.order$name), ]
     new.order$name[order(new.order$order)]
+}
+
+
+to.matrix <- function(x, direction) # Converts a vector to a matrix, if required.
+{
+    if (!is.vector(x))
+        return(x)
+    x <- as.matrix(x)
+    if (direction == "Up-and-down")
+        return(t(x))
+    x
 }

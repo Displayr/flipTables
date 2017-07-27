@@ -8,8 +8,8 @@
 #' \code{"TRUE"} if matching is based upon indices.
 rbindAndCbindWithLabels <- function(..., rows, keep.all)
 {
-    # rbind does not work on matrices with different ncols. However in order to use rbind
-    # to extract rownames, set all ncols to 1 for matrices. Vica versa for cbind.
+    # rbind does not work on matrices with different ncols. However we use rbind to extract rownames.
+    # So temporarily set all ncols to 1 for matrices. Vica versa for cbind.
     tables <- list(...)
     vectors <- unlist(lapply(tables, is.vector))
     if (rows)
@@ -24,42 +24,19 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     bind.tables <- suppressWarnings(do.call(bind, tables))
 
     tables <- list(...)   # reset to full size matrices
+    tables <- tables[!sapply(tables, is.null)]
 
     if(is.list(tables[[1]]))
-        return(rbindAndCbindWithLabels(tables[[1]]))
-    if (is.null(tables[[1]]))
-    {
-        tables[[1]] <- NULL
-        return(bind.tables)
-    }
-    #if (!(any(c("names", "dimnames") %in% names(attributes(tables[[1]])))))
-    #{
-    #    warning("As the first table contains no names, names have been ignored in the matching.")
-    #    return(bind(...))
-    #}
+        return(rbindAndCbindWithLabels(tables[[1]], rows = rows, keep.all = keep.all))
+
     merged <- MergeTables(tables, direction = if (rows) "Up-and-down" else "Side-by-side", nonmatching = if (keep.all) "Keep all" else "Matching only")
 
     if (rows)
     {
-        if(is.vector(merged) || nrow(merged) == 1)
-            return(merged)
         rownames(merged) <- rownames(bind.tables)
-
-        # # T if vector, F if matrix
-        # vector.or.matrix <- unlist(lapply(tables, is.vector))
-        # # if vector use name, if matrix use rownames (maybe blank)
-        # object.names <- as.character(substitute(list(...)))[-1L]
-        # # sapply(substitute(list(...))[-1], deparse)
-        # named.objects <- sapply(object.names, exists)
-        # table.rownames <- unlist(lapply(tables, rownames))
-        # rownames(merged) <- object.names
-        # rownames(merged)[!named.objects] <- NULL
-
     }
     else
     {
-        if(is.vector(merged) || ncol(merged) == 1)
-            return(merged)
         colnames(merged) <- colnames(bind.tables)
     }
     merged
