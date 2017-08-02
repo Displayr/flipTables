@@ -26,7 +26,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     tables <- list(...)   # reset to full size matrices
     tables <- tables[!sapply(tables, is.null)]
 
-    if(is.list(tables[[1]]))
+    if(is.list(tables[[1]]) && !is.data.frame(tables[[1]]))
         return(rbindAndCbindWithLabels(tables[[1]], rows = rows, keep.all = keep.all))
 
     merged <- MergeTables(tables, direction = if (rows) "Up-and-down" else "Side-by-side", nonmatching = if (keep.all) "Keep all" else "Matching only")
