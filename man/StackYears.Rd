@@ -5,7 +5,7 @@
 \title{StackYears}
 \usage{
 StackYears(x, date = NULL, n.years = NULL, calendar = TRUE,
-  period.number = FALSE, transpose = TRUE)
+  period.number = FALSE, transpose = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link{vector}}, \code{\link{list}}, \code{\link{table}}. or \code{\link{data.frame}}.}
@@ -14,7 +14,7 @@ StackYears(x, date = NULL, n.years = NULL, calendar = TRUE,
 
 \item{n.years}{The number of years to stack. Older data is ignored.}
 
-\item{calendar}{If true, the years are calendar. Otherwise, the end at the final time point.}
+\item{calendar}{If true, the years are calendar. Otherwise, the end at the final time point. When this is done, some years can have different numbers of values (e.g., weeks).}
 
 \item{period.number}{If TRUE, period numbers instead of dates are returned in the column names.}
 
