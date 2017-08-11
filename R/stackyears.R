@@ -35,11 +35,12 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.n
     year.table <- table(year.index)
     #year.table <- year.table[length(year.table):1]
     n.periods <- max(year.table)
+    date.diff = date[2] - date[1]
     colnm <- if(period.number) 1:n.periods
         else
             {
                 first.2 <- date[year.index == 1][1:2]
-                seq(first.2[1], by = first.2[2] - first.2[1], length.out = n.periods)
+                seq(first.2[1], by = date.diff, length.out = n.periods)
             }
     rnm <- latest.year:(latest.year - n.years + 1)
     result <- matrix(NA, nrow = n.years, ncol = n.periods,
