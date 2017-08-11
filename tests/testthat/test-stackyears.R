@@ -12,6 +12,21 @@ test_that("StackYears - diferent typesof data input",{
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
+    # vector
+    x <- adhd
+    names(x) = dates
+    stacked = StackYears(x)
+    expect_equal(colnames(stacked)[1], "2017-01-01")
+    expect_equal(stacked[1,1], 10)
+    expect_equal(nrow(stacked), 6)
+    expect_equal(ncol(stacked), 52)
+    # 1-D array
+    x <- as.array(x)
+    stacked = StackYears(x)
+    expect_equal(colnames(stacked)[1], "2017-01-01")
+    expect_equal(stacked[1,1], 10)
+    expect_equal(nrow(stacked), 6)
+    expect_equal(ncol(stacked), 52)
     # matrix
     dt = cbind(as.character(dates), adhd)
     stacked = StackYears(dt)

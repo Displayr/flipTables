@@ -73,7 +73,11 @@ tidyDataForStacking <- function(x, date = NULL)
         }
         else if (is.vector(x))
         {
-            date <- rownames(x)
+            date <- names(x)
+        }
+        else if (is.array(x) & length(dim(x)) == 1)
+        {
+            date <- names(x)
         }
         else
         {
