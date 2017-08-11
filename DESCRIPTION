@@ -8,7 +8,8 @@ Description: Package for handling tables and related objects.
 License: GPL-3
 Imports:
     stringr,
-    lubridate
+    lubridate,
+    flipTime
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests:
