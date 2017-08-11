@@ -47,7 +47,10 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.n
         dimnames = list(Year = rnm, Date = as.character(colnm)))
     for (i in 1:(n.years - 1))
         result[i, 1:year.table[i]] <- x[year.index == i]
-    result[n.years, (n.periods - year.table[n.years]+ 1):n.periods] <- x[year.index == n.years]
+    if (year.table[n.years] + 1 >= n.periods) # Checking to see if last year is incomplete.
+        result[n.years, 1:year.table[n.years]] <- x[year.index == n.years]
+    else
+        result[n.years, (n.periods - year.table[n.years]+ 1):n.periods] <- x[year.index == n.years]
     if (transpose)
         result <- t(result)
     result
