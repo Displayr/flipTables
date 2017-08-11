@@ -10,11 +10,13 @@
 #' @param transpose If TRUE, the result is transposed.
 #' @return A \code{\link{matrix}}, with the column names containing the dates or time periods, and the rows the years.
 #' @importFrom lubridate year years interval duration
+#' @importFrom flipTime ParseDateTime
+
 #' @export
 StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.number = FALSE, transpose = FALSE)
 {
     x <- tidyDataForStacking(x, date)
-    date <- as.Date(names(x))
+    date <- ParseDateTime(names(x))
     latest.year <- year(max(date))
     year.index <- if (calendar)
         latest.year - year(date) + 1
