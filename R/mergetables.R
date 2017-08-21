@@ -93,8 +93,8 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         right <- t(right)
     }
 
-    rownames(left)  <- stringr::str_trim(rownames(left))
-    rownames(right) <- stringr::str_trim(rownames(right))
+    #rownames(left)  <- stringr::str_trim(rownames(left))
+    #rownames(right) <- stringr::str_trim(rownames(right))
 
     # If either left or right does not have rownames then rows are merged in index order.
     if (is.null(rownames(left)) || is.null(rownames(right))) {
