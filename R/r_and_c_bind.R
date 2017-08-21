@@ -11,6 +11,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     # rbind does not work on matrices with different ncols. However we use rbind to extract rownames.
     # So temporarily set all ncols to 1 for matrices. Vica versa for cbind.
     tables <- list(...)
+    tables <- lapply(tables, oneDimensionalArrayToVector)
     vectors <- unlist(lapply(tables, is.vector))
     if (rows)
         tables[!vectors] <- lapply(tables[!vectors], '[', , 1, drop = FALSE)
@@ -24,6 +25,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     bind.tables <- suppressWarnings(do.call(bind, tables))
 
     tables <- list(...)   # reset to full size matrices
+    tables <- lapply(tables, oneDimensionalArrayToVector)
     tables <- tables[!sapply(tables, is.null)]
 
     if(is.list(tables[[1]]) && !is.data.frame(tables[[1]]))
@@ -69,4 +71,16 @@ Rbind <- function(..., keep.all = TRUE)
 Cbind <- function(..., keep.all = TRUE)
 {
     rbindAndCbindWithLabels(..., rows = FALSE, keep.all = keep.all)
+}
+
+# Converts array with 1 dimension to an equivalent vector, preserving names.
+# Else returns object unchanged
+#' @importFrom methods is
+oneDimensionalArrayToVector <- function(x) {
+    if (!is(x, "array") || length(dim(x)) != 1)
+        return(x)
+    array.names <- names(x)
+    x <- as.vector(x)
+    names(x) <- array.names
+    return(x)
 }

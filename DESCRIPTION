@@ -8,6 +8,7 @@ Description: Package for handling tables and related objects.
 License: GPL-3
 Imports:
     stringr,
+    methods,
     lubridate,
     flipTime
 LazyData: TRUE
