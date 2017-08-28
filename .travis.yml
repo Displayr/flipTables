@@ -34,6 +34,6 @@ notifications:
 # Warning notifications and downstream package builds are implemented
 # by calling R functions so they can be updated in this package without
 # committing a new change to .travis.yml in each repository
-after_success: >-
-  Rscript -e "require(devtools); install_github('Displayr/travisCI'); travisCI::NotifyWarnings(); travisCI::TriggerDownstreamBuilds();"
+after_success: 
+  - Rscript -e "require(devtools); install_github('Displayr/travisCI'); travisCI::NotifyWarnings(); travisCI::TriggerDownstreamBuilds();"
   - Rscript -e "library(covr); coverall(type = 'all')"
