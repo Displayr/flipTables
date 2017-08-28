@@ -38,5 +38,4 @@ notifications:
 # committing a new change to .travis.yml in each repository
 after_success: 
   - Rscript -e "require(devtools); install_github('Displayr/travisCI'); travisCI::NotifyWarnings(); travisCI::TriggerDownstreamBuilds();"
-  - tar -C .. -xf *.tar.gz # https://github.com/jimhester/covr/issues/178
   - Rscript -e "devtools::install_github('Displayr/flipTables'); covr::coveralls(type = 'all')"
