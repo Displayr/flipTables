@@ -3,6 +3,7 @@ dist: trusty  # ubuntu 14.04 has additional libraries available
 sudo: required
 cache: packages
 before_cache:
+  - sudo rm -rf $HOME/R/Library/flip*
   - sudo rm -rf $HOME/R/Library/rhtml*
 warnings_are_errors: false
 
