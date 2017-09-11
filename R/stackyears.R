@@ -109,7 +109,7 @@ tidyDataForStacking <- function(x, date = NULL)
             }
         }
     }
-    if (max(table(date)) > 1)
+    if (anyDuplicated(date))
         stop("Duplicate dates. Dates should be unique.")
    x <- as.numeric(x)
    names(x) <- date
