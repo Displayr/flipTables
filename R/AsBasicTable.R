@@ -3,7 +3,192 @@
 #' Creates tables used by Displayr charting functions
 #' @param x \strong{named} matrix or vector
 #' @return An object of class \code{BasicTable} - a named matrix or vector
+#' @importFrom utils modifyList
+#' @export
 AsBasicTable <- function(x)
 {
 
+    old.attrs <- attributes(x)
+    old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim")]
+    if (IsQTable(x)){
+        x <- QTableToBasicTable(x)
+        if (!is.null(attr(x, "statistic")))
+            old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
+    }
+    if (length(old.attrs))
+        attributes(x) <- modifyList(old.attrs, attributes(x))
+    x
+}
+
+#' Check if an object is a QTable
+#'
+#' Looks for attributes \code{"name"},
+#' and \code{"questions"} to determine if the object is a
+#' table created by \code{Q}
+#' @param x an R object
+#' @return logical; is \code{x} a \code{QTable}
+#' @note An attribute \code{"statistic"} is not guaranteed to be present, as
+#' the names of the statistics computed may be present in the dimnames
+#' @keywords internal
+#' @noRd
+IsQTable <- function(x){
+    all(c("questions", "name") %in% names(attributes(x)))
+}
+
+## Unused and Incomplete!!!
+## .valid.stats <- c("Average", "Standard Deviation", "Minimum", "5th Percentile", "25th Percentile",
+##                   "Median", "75th Percentile", "95th Percentile", "Maximum", "Mode",
+##                   "Trimmed Average", "Interquartile Range", "Sum", "% Share", "Column Sample Size",
+##                   "Sample Size", "Missing Count", "Effective Sample Size",
+##                   "Weighted Column Sample Size", "Weighted Sample Size", "t-Statistic",
+##                   "d.f.", "z-Statistic", "Standard Error", "p", "Corrected p",
+##                   "Multiple Comparison Adjustment", "Not Duplicate", "Column Names",
+##                   "Columns Compared", "Column Comparisons")
+
+#' Converts a QTable to a BasicTable
+#' @param x a QTable (an array with attributes \code{"name"}, \code{"statistic"},
+#' and \code{"questions"} and named dimensions)
+#' @details If a Qtable contains multiple statistics, only the first will be used to
+#' create the basic table
+#' @return a matrix or vector with the same attributes (aside from possibly modified
+#' dimensions and \code{dimnames}
+#' @noRd
+#' @keywords internal
+QTableToBasicTable <- function(x){
+   stopifnot(IsQTable(x))
+   dims <- dim(x)
+   n.dim <- length(dims)
+   dim.names <- dimnames(x)
+   stat <- attr(x, "statistic")
+   has.only.one.stat <- !is.null(stat)
+
+   if (!has.only.one.stat && n.dim > 1)
+   {
+       stat <- dim.names[[n.dim]][1]
+       warning(gettextf("Multiple statistics detected; only the first in the table (%s) will be used.",
+                           dQuote(stat)))
+       x <- GetFirstStat(x)
+       dims <- dim(x)
+       n.dim <- length(dims)
+       dim.names <- dimnames(x)
+   }
+
+   out <- if (length(dims) == 4L)  # Two group variables
+              Flatten4DQTable(x)
+          else if (length(dims) == 3L)
+              Flatten3DQTable(x)
+          else
+              x
+   if (!has.only.one.stat)  # need to update statistic attribute
+       attr(out, "statistic") <- stat
+   out
+}
+
+#' Get First Statistic From A QTable
+#'
+#' Drops any statistics from the array beyond the first
+#' @param x a QTable
+#' @return an array; the first statistic in the QTable; i.e. \code{x} with
+#' only the first element of the last dimension returned
+#' @details the statistics are assumed to be
+#' contained in the last dimension of the array
+#' @section Warning the subsetting into the array will results in length-1
+#' dimensions of \code{x} will be dropped in the returned array
+#' @noRd
+#' @keywords internal
+GetFirstStat <- function(x){
+    text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
+    eval(parse(text = text))
+}
+
+#' Flatten a 4D QTable to a matrix
+#'
+#' Takes a four-dimensional QTable (array) and flattens
+#' it two a matrix.  The dimensions are combined in a way
+#' that mimics what is done in \code{Q}.
+#' @param a a four dimensional array with all dimensions named.
+#' @return a matrix with rownames and column names of dimension
+#' \eqn{d1*d3 \times d2*d4} where \code{a} is \eqn{d1\times d2\times d3\times d4}
+#' @examples
+#'    ta <- array(1:24, dim = 2:4)
+#'    dimnames(ta) <- list(c("one", "two"), letters[1:3], LETTERS[1:4])
+#'    out <- flipTables:::Flatten3DQTable(ta)
+#'    all.equal(out["one: B", "c"], ta["one", "c", "B"])
+#' @noRd
+#' @keywords internal
+Flatten3DQTable <- function(a){
+    ## Loop for 3D case
+    ## d1 <- dim(a)[1]
+    ## d2 <- dim(a)[2]
+    ## d3 <- dim(a)[3]
+    ## m <- matrix(0, d1*d3, d2)
+    ## for ( i in 1:d1){
+    ##   for (j in 1:d2){
+    ##       for (k in 1:d3){
+    ##          m[(i-1)*d3 + k, j] = a[i, j, k]
+    ##       }
+    ##   }
+    ## }
+    ## m
+
+    dnames <- dimnames(a)
+    ## Weird use of t below is to replicate Q behaviour
+    ## The code:
+    ##   matrix(a, nrow = d1*d3, ncol = d3)
+    ## would not result in same output as Q (the first dim
+    ## is populated first/varies fastest in R, in Q the third
+    ## dim is populated first/varies fastest)
+    out <- apply(a, 2L, t)
+    dimnames(out) <- list(CombineNames(dnames[c(3, 1)]), dnames[[2]])
+    out
+}
+
+#' Flatten a 4D QTable to a matrix
+#'
+#' Takes a four-dimensional QTable (array) and flattens
+#' it two a matrix.  The dimensions are combined in a way
+#' that mimics what is done in \code{Q}.
+#' @param a a four dimensional array with all dimensions named.
+#' @return a matrix with rownames and column names of dimension
+#' \eqn{d1*d3 \times d2*d4} where \code{a} is \eqn{d1\times d2\times d3\times d4}
+#' @example
+#'    ta <- array(1:120, dim = 2:5)
+#'    dimnames(ta) <- list(c("one", "two"), letters[1:3], LETTERS[1:4], paste0("d", 1:5))
+#'    out <- flipTables:::Flatten4DQTable(ta)
+#'    all.equal(out["C: two", "a: d3"], ta["two", "a", "C", "d3"])
+#' @keywords internal
+#' @noRd
+Flatten4DQTable <- function(a){
+    dnames <- dimnames(a)
+    ## Commented out code below results in valid 2D table, but
+    ##  with wrong dimensions combined compared to Q output
+    ## out <- apply(a, 2:3, t)
+    ## out <- apply(aperm(out, c(2, 1, 3)), 2, t)
+    ## dimnames(out) <- list(CombineNames(dnames[c(3, 2)]),
+    ##                       CombineNames(dnames[c(4, 1)]))
+    out <- apply(a, c(2, 4), c)
+    tnames <- CombineNames(dnames[c(3, 1)], flip = TRUE)
+    out <- t(apply(out, 1, t))
+    dimnames(out) <- list(CombineNames(dnames[c(3, 1)], flip = TRUE),
+                          CombineNames(dnames[c(4, 2)], flip = FALSE))
+
+    out
+}
+
+#' Combine two lists of variable names
+#'
+#' Uses \code{\link[base]{expand.grid}} to create new
+#' variable names from a two combined \code{QTable} dimensions
+#' @param name.list list of length 2 containing character vectors
+#' of possibly differing lengths; e.g. the result of \code{dimnames} on a
+#' two-dimensional array
+#' @return character vector of new names of length
+#' \code{length(name.list[[1]])*length(name.list[[2]])}
+#' @noRd
+#' @keywords internal
+CombineNames <- function(name.list, flip = FALSE){
+    if (flip)
+        name.list <- rev(name.list)
+    name.grid <- expand.grid(name.list)
+    paste(name.grid$Var2, name.grid$Var1, sep = ": ")
 }
