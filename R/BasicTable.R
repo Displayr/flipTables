@@ -54,9 +54,31 @@ BasicTable <- function(x, by = NULL, date = NULL,
     {
         x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
     }
+    class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
     x
 }
 
-SetDimNames <- function(x, date){
+#' Create Dimnames for a BasicTable
+#'
+#' Adds names to a vector or row and column names to a matrix
+#' @param x numeric vector or matrix
+#' @return x with updated names
+#' @noRd
+#' @keywords internal
+SetDimNames <- function(x, date = NULL){
+    dims <- dim(x)
+    if (is.null(dims) && is.null(names(x)))
+        return(setNames(x, seq_along(x)))
 
+    dim.names <- dimnames(x)
+    rnames <- if (!is.null(dim.names[[1L]]))
+                  dim.names[[1L]]
+              else
+                  paste0("Row ", seq_len(dims[1L]))
+    cnames <- if (!is.null(dim.names[[2L]]))
+                  dim.names[[2L]]
+              else
+                  paste0("Col ", seq_len(dims[2L]))
+    structure(x, dimnames = list(rnames, cnames))
 }
+
