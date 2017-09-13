@@ -11,9 +11,9 @@
 #' @importFrom flipTransformations ParseEnteredData AsNumeric
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
-#'     \code{\link[flipTransformations]{AsNumeric}; with behaviour
+#'     \code{\link[flipTransformations]{AsNumeric}}; with behaviour
 #'     dependent upon the value of \code{as.binary}
-#' @seealso \code{\link[flipTransformations]{AsNumeric}
+#' @seealso \code{\link[flipTransformations]{AsNumeric}}
 #' @export
 AsBasicTable <- function(x)
 {
