@@ -21,3 +21,19 @@ test_that("BasicTable: works when needs to call AsBasicTable first",
 {
   ## check QTable
 })
+
+test_that("BasicTable: remove all rows or columns",
+{
+
+})
+
+test_that("BasicTable: remove all but one row or column",
+{
+
+})
+
+test_that("BasicTable: transpose arg works",
+{
+
+})
+

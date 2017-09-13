@@ -38,6 +38,9 @@ BasicTable <- function(x, by = NULL, date = NULL,
     x <- SetDimNames(x, date)
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
 
+
+    ## Handle transpose
+
     class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
     x
 }
