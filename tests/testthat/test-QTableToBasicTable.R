@@ -1,7 +1,7 @@
 context("QTable to BasicTable")
 
 ## Load QTables for testing
-source("Qtables.R")
+source(file.path(system.file("tests", package="flipTables"), "Qtables.R"))
 
 test_that("IsQTable works",
 {
