@@ -2,7 +2,7 @@ context("QTable to BasicTable")
 
 ## Load QTables for testing
 ## Need to specify use of base's system.file not devtools
-source(file.path(base::system.file("tests", package="flipTables", mustWork = TRUE), "Qtables.R"))
+source(file.path(base::system.file("tests", package="flipTables", mustWork = TRUE), "QTables.R"))
 
 test_that("IsQTable works",
 {
