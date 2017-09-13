@@ -2,21 +2,68 @@
 #'
 #' Creates tables used by Displayr charting functions
 #' @param x \strong{named} matrix or vector
-#' @return An object of class \code{BasicTable} - a named matrix or vector
+#' @param as.binary logical; if \code{TRUE}, unordered factors are
+#'     represented as dummy variables.  Otherwise, they are
+#'     represented as sequential integers
+#' @return An object of class \code{BasicTable} - a named matrix or
+#'     vector
 #' @importFrom utils modifyList
+#' @importFrom flipTransformations ParseEnteredData AsNumeric
+#' @details \code{factors} will automatically be converted to numeric
+#'     variables (with a warning) using
+#'     \code{\link[flipTransformations]{AsNumeric}; with behaviour
+#'     dependent upon the value of \code{as.binary}
+#' @seealso \code{\link[flipTransformations]{AsNumeric}
 #' @export
 AsBasicTable <- function(x)
 {
+    if (inherits(x, "BasicTable"))
+        return(x)
 
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim")]
-    if (IsQTable(x)){
+    if (is.character(x))
+    {  # assume raw user-entered table
+        x <- ParseEnteredData(x)
+    }else if (IsQTable(x))
+    {
         x <- QTableToBasicTable(x)
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
+    }else if (is.data.frame(x))
+    {
+        x <- ProcessQVariables(x)
+        x <- AsNumeric(x, binary = as.binary, remove.first = FALSE)
+    }else if (is.factor(x))
+    {
+        x <- AsNumeric(x, binary = as.binary, remove.first = FALSE)
+    }else if (is.numeric(x))
+    {  # make sure has dimnames and is <= 2D
+        dims <- dim(x)
+        n.dim <- length(dims)
+        if (n.dim > 4)
+        {
+            stop("Cannot coerce an array of greater than four dimension to BasicTable")
+        }else if (n.dim == 4 || n.dim == 3)
+        {   # Make sure there are sensible dimnames, a statistic attribute,
+            #  and flatten as if a QTable
+            x <- CreateArrayNames(x)
+            if (is.null(old.attrs$statistic))
+                old.attrs$statistic <- "UNKNOWN"
+            x <- do.call(paste0("Flatten", n.dim, "DQTable"), list(x))
+        }
+    }else
+    {
+        classes <- paste(class(x), collapse = ", ")
+        stop(gettextf("Cannot coerce object of type (%s) to BasicTable",
+                      sQuote(classes)))
     }
+
+    x <- SetDimNames(x)  # set labels
+
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
+    class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
     x
 }
 
@@ -191,4 +238,26 @@ CombineNames <- function(name.list, flip = FALSE){
         name.list <- rev(name.list)
     name.grid <- expand.grid(name.list)
     paste(name.grid$Var2, name.grid$Var1, sep = ": ")
+}
+
+#' Tries to create sensible row and column names if collapsing a
+#' non-QTable 3D or 4D array
+#' @param x a three or four dimensional array
+#' @return a three or four dimensional array with all dimensions named
+#' @seealso \code{\link{provideDimnames}}
+#' @noRd
+#' @keywords internal
+CreateArrayNames <- function(x){
+    dim.names <- dimnames(x)
+    n.dim <- length(dim(x))
+    null.idx <- if (is.null(dim.names))
+                    seq_len(n.dim)
+                else
+                    which((vapply(dim.names, is.null, logical(1L))))
+    if (!length(null.idx))
+        return(x)
+    warning(gettextf("dimnames are missing for some dimensions of %s; creating some before proceeding",
+                     deparse(substitute(x))), call. = FALSE)
+    base <- as.list(paste0("Dim", seq_len(n.dim)))
+    provideDimnames(x, base = base, sep = "_", unique = TRUE)
 }
