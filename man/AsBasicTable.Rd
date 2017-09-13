@@ -8,10 +8,24 @@ AsBasicTable(x)
 }
 \arguments{
 \item{x}{\strong{named} matrix or vector}
+
+\item{as.binary}{logical; if \code{TRUE}, unordered factors are
+represented as dummy variables.  Otherwise, they are
+represented as sequential integers}
 }
 \value{
-An object of class \code{BasicTable} - a named matrix or vector
+An object of class \code{BasicTable} - a named matrix or
+    vector
 }
 \description{
 Creates tables used by Displayr charting functions
+}
+\details{
+\code{factors} will automatically be converted to numeric
+    variables (with a warning) using
+    \code{\link[flipTransformations]{AsNumeric}}; with behaviour
+    dependent upon the value of \code{as.binary}
+}
+\seealso{
+\code{\link[flipTransformations]{AsNumeric}}
 }
