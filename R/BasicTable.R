@@ -24,6 +24,7 @@
 #' @seealso \code{\link{AsBasicTable}}
 #' @return An object of class \code{BasicTable} - a \strong{named}
 #'     matrix or vector
+#' @export
 BasicTable <- function(x, by = NULL, date = NULL,
                        as.binary = FALSE, row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
