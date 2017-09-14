@@ -52,6 +52,7 @@ BasicTable <- function(x, by = NULL, date = NULL,
 #' @return x with updated names
 #' @noRd
 #' @keywords internal
+#' @importFrom stats setNames
 SetDimNames <- function(x, date = NULL){
     dims <- dim(x)
     if (is.null(dims) && is.null(names(x)))
