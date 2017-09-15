@@ -41,6 +41,8 @@ BasicTable <- function(x, by = NULL, date = NULL,
 
 
     ## Handle transpose
+    if (transpose)
+        x <- t(x)
 
     class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
     x
