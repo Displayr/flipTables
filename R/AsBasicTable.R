@@ -24,7 +24,9 @@ AsBasicTable <- function(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim")]
     if (is.character(x))
     {  # assume raw user-entered table
-        x <- ParseEnteredData(x)
+        x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
+                           ## data is always a matrix
+        x <- ParseEnteredData(x, want.data.frame = FALSE, want.factors = as.numeric)
     }else if (IsQTable(x))
     {
         x <- QTableToBasicTable(x)
