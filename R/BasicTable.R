@@ -36,7 +36,7 @@ BasicTable <- function(x, by = NULL, date = NULL,
 
     ## Handle by arg
 
-    x <- SetDimNames(x, date)
+    x <- setDimNames(x, date)
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
 
 
@@ -56,7 +56,7 @@ BasicTable <- function(x, by = NULL, date = NULL,
 #' @noRd
 #' @keywords internal
 #' @importFrom stats setNames
-SetDimNames <- function(x, date = NULL){
+setDimNames <- function(x, date = NULL){
     dims <- dim(x)
     if (is.null(dims))
     {

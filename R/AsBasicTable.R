@@ -61,7 +61,7 @@ AsBasicTable <- function(x)
                       sQuote(classes)))
     }
 
-    x <- SetDimNames(x)  # set labels
+    x <- setDimNames(x)  # set labels
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
