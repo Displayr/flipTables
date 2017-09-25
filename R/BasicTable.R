@@ -58,9 +58,12 @@ BasicTable <- function(x, by = NULL, date = NULL,
 #' @importFrom stats setNames
 SetDimNames <- function(x, date = NULL){
     dims <- dim(x)
-    if (is.null(dims) && is.null(names(x)))
-        return(setNames(x, seq_along(x)))
-
+    if (is.null(dims))
+    {
+        if (is.null(names(x)))
+            names(x) <- seq_along(x)
+        return(x)
+    }
     dim.names <- dimnames(x)
     rnames <- if (!is.null(dim.names[[1L]]))
                   dim.names[[1L]]
