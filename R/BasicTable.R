@@ -58,8 +58,8 @@ BasicTable <- function(x, by = NULL, date = NULL,
 #' @importFrom stats setNames
 setDimNames <- function(x, date = NULL){
     dims <- dim(x)
-    if (is.null(dims))
-    {
+    if (is.null(dims) || length(dims) == 1L)
+    {  # 2nd condition needed for 1D array case
         if (is.null(names(x)))
             names(x) <- seq_along(x)
         return(x)

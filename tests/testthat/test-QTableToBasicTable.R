@@ -4,6 +4,8 @@ context("QTable to BasicTable")
 ## Need to specify use of base's system.file not devtools
 source(file.path(base::system.file("inst", "tests", package="flipTables", mustWork = TRUE),
                  "QTables.R"))
+## source(file.path(base::system.file("tests", package="flipTables", mustWork = TRUE),
+##                  "QTables.R"))
 
 test_that("IsQTable works",
 {
@@ -119,4 +121,16 @@ test_that("1D: number",
 {
     expect_true(IsQTable(q1.os2))
     expect_silent(out <- AsBasicTable(q1.os2))
+})
+
+test_that("1D: setDimNames is okay with 1D array",
+{
+    q1 <- structure(c(42.625, 11.125, 17.875, 9, 2.5, 14.875, 0.75,
+                        1.25, 100), .Dim = 9L, statistic = "%", .Dimnames = list(
+                            c("Coca-Cola", "Diet Coke", "Coke Zero", "Pepsi ", "Diet Pepsi",
+                              "Pepsi Max", "Dislike all cola", "Don't care", "NET")), name = "Preferred cola",
+                        questions = c("Preferred cola",
+                                      "SUMMARY"))
+    expect_true(IsQTable(q1))
+    expect_silent(out <- AsBasicTable(q1))
 })
