@@ -6,10 +6,19 @@ Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Package for handling tables and related objects.
 License: GPL-3
-Imports: stringr, methods, lubridate, flipTime, flipTransformations
+Imports:
+    stringr,
+    methods,
+    lubridate,
+    flipTime,
+    flipTransformations,
+    flipData
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests: gtools, testthat, covr
-Remotes: Displayr/flipTime, Displayr/flipTransformations
+Remotes:
+    Displayr/flipTime,
+    Displayr/flipTransformations,
+    Displayr/flipData
 NeedsCompilation: no
 Packaged: 2017-08-28 02:41:50 UTC; mathew
