@@ -8,7 +8,8 @@
 #' @return An object of class \code{BasicTable} - a named matrix or
 #'     vector
 #' @importFrom utils modifyList
-#' @importFrom flipTransformations ParseEnteredData AsNumeric
+#' @importFrom flipTransformations AsNumeric
+#' @importFrom flipData ParseUserEnteredTable
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
 #'     \code{\link[flipTransformations]{AsNumeric}}; with behaviour
@@ -26,7 +27,7 @@ AsBasicTable <- function(x)
     {  # assume raw user-entered table
         x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
                            ## data is always a matrix
-        x <- ParseEnteredData(x, want.data.frame = FALSE, want.factors = as.numeric)
+        x <- ParseUserEnteredTable(x, want.data.frame = FALSE, want.factors = as.numeric)
     }else if (IsQTable(x))
     {
         x <- QTableToBasicTable(x)
@@ -45,7 +46,7 @@ AsBasicTable <- function(x)
         n.dim <- length(dims)
         if (n.dim > 4)
         {
-            stop("Cannot coerce an array of greater than four dimension to BasicTable")
+            stop("Cannot coerce an array of greater than four dimensions to BasicTable")
         }else if (n.dim == 4 || n.dim == 3)
         {   # Make sure there are sensible dimnames, a statistic attribute,
             #  and flatten as if a QTable
