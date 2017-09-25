@@ -11,8 +11,8 @@ test_that("Works with 4D array",
 {
     a <- array(1:120, dim = 2:5)
     dimnames(a) <- list(NULL, letters[1:3], NULL, LETTERS[1:5])
-    out <- expect_warning(AsBasicTable(a))
-    expect_equal(attr(out, "statistic"), "UNKNOWN")
+    expect_warning(AsBasicTable(a))
+    expect_equal(attr(AsBasicTable(a), "statistic"), "UNKNOWN")
 })
 
 test_that("AsBasicTable: perserves attributes",
