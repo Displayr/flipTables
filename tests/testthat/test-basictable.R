@@ -88,7 +88,6 @@ test_that("BasicTable replaces GetTidyTwoDimensionalArray",
     ## expect_error(GetTidyTwoDimensionalArray(z))
     expect_warning(BasicTable(z))
     dimnames(z) <- list(dimnames(x.with.labels)[[1]], dimnames(x.with.labels)[[2]], 1:2)
-    expect_error(suppressWarnings(GetTidyTwoDimensionalArray(z)), NA)
     expect_silent(BasicTable(z))
 
     ## SUM and NET
