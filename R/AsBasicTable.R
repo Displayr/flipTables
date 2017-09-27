@@ -8,8 +8,7 @@
 #' @return An object of class \code{BasicTable} - a named matrix or
 #'     vector
 #' @importFrom utils modifyList
-#' @importFrom flipTransformations AsNumeric
-#' @importFrom flipData ParseUserEnteredTable
+#' @importFrom flipTransformations AsNumeric ParseUserEnteredTable
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
 #'     \code{\link[flipTransformations]{AsNumeric}}; with behaviour

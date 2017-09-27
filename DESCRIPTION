@@ -11,14 +11,12 @@ Imports:
     methods,
     lubridate,
     flipTime,
-    flipTransformations,
-    flipData
+    flipTransformations
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
-    Displayr/flipTransformations,
-    Displayr/flipData
+    Displayr/flipTransformations
 NeedsCompilation: no
 Packaged: 2017-08-28 02:41:50 UTC; mathew
