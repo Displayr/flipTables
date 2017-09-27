@@ -36,7 +36,8 @@ BasicTable <- function(x, date = FALSE,
         x <- AsBasicTable(x)
 
     x <- setDimNames(x)
-    x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
+    if (length(dim(x)) == 2L)
+        x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
 
     ## Handle transpose
     if (transpose)
