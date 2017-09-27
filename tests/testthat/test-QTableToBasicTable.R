@@ -2,10 +2,12 @@ context("QTable to BasicTable")
 
 ## Load QTables for testing
 ## Need to specify use of base's system.file not devtools
-source(file.path(base::system.file("inst", "tests", package="flipTables", mustWork = TRUE),
+## R CMD check finds ./inst/tests/QTable.R where it gets installed, i.e. in ./tests
+## However, testing this file with testthat functions in an interactive session or on
+## travis-CI requires specifying the file path as ./inst/tests/QTables.R
+source(file.path(base::system.file(ifelse(Sys.info()["sysname"] == "Windows" && !interactive(), "", "inst"),
+                                   "tests", package="flipTables", mustWork = TRUE),
                  "QTables.R"))
-## source(file.path(base::system.file("tests", package="flipTables", mustWork = TRUE),
-##                  "QTables.R"))
 
 test_that("IsQTable works",
 {
