@@ -4,15 +4,11 @@
 \alias{BasicTable}
 \title{Create a BasicTable Object}
 \usage{
-BasicTable(x, by = NULL, date = NULL, row.names.to.remove = NULL,
+BasicTable(x, date = NULL, row.names.to.remove = NULL,
   col.names.to.remove = NULL, transpose = FALSE)
 }
 \arguments{
 \item{x}{a \strong{named} numeric matrix or vector}
-
-\item{by}{vector over which y will be aggregated. Must have the
-same number of elements as y; see
-\code{\link[stats]{aggregate}}}
 
 \item{date}{optional vector of dates, which if supplied, will be
 used for the row names of the returned table; must be unique

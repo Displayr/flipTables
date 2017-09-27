@@ -2,9 +2,6 @@
 #'
 #' Creates tables used by Displayr charting functions
 #' @param x a \strong{named} numeric matrix or vector
-#' @param by vector over which y will be aggregated. Must have the
-#'     same number of elements as y; see
-#'     \code{\link[stats]{aggregate}}
 #' @param date optional vector of dates, which if supplied, will be
 #'     used for the row names of the returned table; must be unique
 #'     and have the same length or number of rows of \code{x}; will
@@ -22,7 +19,7 @@
 #' @return An object of class \code{BasicTable} - a \strong{named}
 #'     matrix or vector
 #' @export
-BasicTable <- function(x, by = NULL, date = NULL,
+BasicTable <- function(x, date = NULL,
                        row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
                        transpose = FALSE)
