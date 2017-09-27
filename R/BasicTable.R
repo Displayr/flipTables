@@ -28,7 +28,7 @@ BasicTable <- function(x, by = NULL, date = NULL,
                        transpose = FALSE)
 {
     ## if not given a numeric vector or matrix, try to coerce to one
-    if (!is.numeric(x) || is.null(dims <- dim(x)) || length(dims) > 2 || IsQTable(x))
+    if (!is.numeric(x) || is.null(dims <- dim(x)) || length(dims) > 2 || isQTable(x))
         x <- AsBasicTable(x)
 
     ## Handle by arg

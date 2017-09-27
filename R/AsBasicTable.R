@@ -25,9 +25,9 @@ AsBasicTable <- function(x)
         x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
                            ## data is always a matrix
         x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
-    }else if (IsQTable(x))
+    }else if (isQTable(x))
     {
-        x <- QTableToBasicTable(x)
+        x <- qTableToBasicTable(x)
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
         if (length(dim(x)) == 1L)  # convert 1D array to named vector
@@ -50,10 +50,10 @@ AsBasicTable <- function(x)
         }else if (n.dim == 4 || n.dim == 3)
         {   # Make sure there are sensible dimnames, a statistic attribute,
             #  and flatten as if a QTable
-            x <- CreateArrayNames(x)
+            x <- createArrayNames(x)
             if (is.null(old.attrs$statistic))
                 old.attrs$statistic <- "UNKNOWN"
-            x <- do.call(paste0("Flatten", n.dim, "DQTable"), list(x))
+            x <- do.call(paste0("flatten", n.dim, "DQTable"), list(x))
         }
     }else
     {
@@ -81,7 +81,7 @@ AsBasicTable <- function(x)
 #' the names of the statistics computed may be present in the dimnames
 #' @keywords internal
 #' @noRd
-IsQTable <- function(x){
+isQTable <- function(x){
     all(c("questions", "name") %in% names(attributes(x)))
 }
 
@@ -104,8 +104,8 @@ IsQTable <- function(x){
 #' dimensions and \code{dimnames}
 #' @noRd
 #' @keywords internal
-QTableToBasicTable <- function(x){
-   stopifnot(IsQTable(x))
+qTableToBasicTable <- function(x){
+   stopifnot(isQTable(x))
    dims <- dim(x)
    n.dim <- length(dims)
    dim.names <- dimnames(x)
@@ -124,9 +124,9 @@ QTableToBasicTable <- function(x){
    }
 
    out <- if (length(dims) == 4L)  # Two group variables
-              Flatten4DQTable(x)
+              flatten4DQTable(x)
           else if (length(dims) == 3L)
-              Flatten3DQTable(x)
+              flatten3DQTable(x)
           else
               x
    if (!has.only.one.stat)  # need to update statistic attribute
@@ -162,11 +162,11 @@ GetFirstStat <- function(x){
 #' @examples
 #'    ta <- array(1:24, dim = 2:4)
 #'    dimnames(ta) <- list(c("one", "two"), letters[1:3], LETTERS[1:4])
-#'    out <- flipTables:::Flatten3DQTable(ta)
+#'    out <- flipTables:::flatten3DQTable(ta)
 #'    all.equal(out["one: B", "c"], ta["one", "c", "B"])
 #' @noRd
 #' @keywords internal
-Flatten3DQTable <- function(a){
+flatten3DQTable <- function(a){
     ## Loop for 3D case
     ## d1 <- dim(a)[1]
     ## d2 <- dim(a)[2]
@@ -189,7 +189,7 @@ Flatten3DQTable <- function(a){
     ## is populated first/varies fastest in R, in Q the third
     ## dim is populated first/varies fastest)
     out <- apply(a, 2L, t)
-    dimnames(out) <- list(CombineNames(dnames[c(3, 1)]), dnames[[2]])
+    dimnames(out) <- list(combineNames(dnames[c(3, 1)]), dnames[[2]])
     out
 }
 
@@ -204,23 +204,23 @@ Flatten3DQTable <- function(a){
 #' @example
 #'    ta <- array(1:120, dim = 2:5)
 #'    dimnames(ta) <- list(c("one", "two"), letters[1:3], LETTERS[1:4], paste0("d", 1:5))
-#'    out <- flipTables:::Flatten4DQTable(ta)
+#'    out <- flipTables:::flatten4DQTable(ta)
 #'    all.equal(out["C: two", "a: d3"], ta["two", "a", "C", "d3"])
 #' @keywords internal
 #' @noRd
-Flatten4DQTable <- function(a){
+flatten4DQTable <- function(a){
     dnames <- dimnames(a)
     ## Commented out code below results in valid 2D table, but
     ##  with wrong dimensions combined compared to Q output
     ## out <- apply(a, 2:3, t)
     ## out <- apply(aperm(out, c(2, 1, 3)), 2, t)
-    ## dimnames(out) <- list(CombineNames(dnames[c(3, 2)]),
-    ##                       CombineNames(dnames[c(4, 1)]))
+    ## dimnames(out) <- list(combineNames(dnames[c(3, 2)]),
+    ##                       combineNames(dnames[c(4, 1)]))
     out <- apply(a, c(2, 4), c)
-    tnames <- CombineNames(dnames[c(3, 1)], flip = TRUE)
+    tnames <- combineNames(dnames[c(3, 1)], flip = TRUE)
     out <- t(apply(out, 1, t))
-    dimnames(out) <- list(CombineNames(dnames[c(3, 1)], flip = TRUE),
-                          CombineNames(dnames[c(4, 2)], flip = FALSE))
+    dimnames(out) <- list(combineNames(dnames[c(3, 1)], flip = TRUE),
+                          combineNames(dnames[c(4, 2)], flip = FALSE))
 
     out
 }
@@ -236,7 +236,7 @@ Flatten4DQTable <- function(a){
 #' \code{length(name.list[[1]])*length(name.list[[2]])}
 #' @noRd
 #' @keywords internal
-CombineNames <- function(name.list, flip = FALSE){
+combineNames <- function(name.list, flip = FALSE){
     if (flip)
         name.list <- rev(name.list)
     name.grid <- expand.grid(name.list)
@@ -250,7 +250,7 @@ CombineNames <- function(name.list, flip = FALSE){
 #' @seealso \code{\link{provideDimnames}}
 #' @noRd
 #' @keywords internal
-CreateArrayNames <- function(x){
+createArrayNames <- function(x){
     dim.names <- dimnames(x)
     n.dim <- length(dim(x))
     null.idx <- if (is.null(dim.names))
