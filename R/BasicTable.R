@@ -47,6 +47,16 @@ BasicTable <- function(x, date = FALSE,
     x
 }
 
+#' Check if an object is FALSE
+#'
+#' Similar to \code{identical(x, FALSE)} except in a few cases
+#' @param x any object
+#' @note Taken from \code{base::isFALSE} which is only available for
+#' R >= 3.5.0
+#' @noRd
+isFALSE <- function(x)
+              is.logical(x) && length(x) == 1L && !is.na(x) && !x
+
 #' Create Dimnames for a BasicTable
 #'
 #' Adds names to a vector or row and column names to a matrix
