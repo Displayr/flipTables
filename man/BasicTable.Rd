@@ -4,9 +4,8 @@
 \alias{BasicTable}
 \title{Create a BasicTable Object}
 \usage{
-BasicTable(x, by = NULL, date = NULL, as.binary = FALSE,
-  row.names.to.remove = NULL, col.names.to.remove = NULL,
-  transpose = FALSE)
+BasicTable(x, by = NULL, date = NULL, row.names.to.remove = NULL,
+  col.names.to.remove = NULL, transpose = FALSE)
 }
 \arguments{
 \item{x}{a \strong{named} numeric matrix or vector}
@@ -19,10 +18,6 @@ same number of elements as y; see
 used for the row names of the returned table; must be unique
 and have the same length or number of rows of \code{x}; will
 overwrite any existing row names present in \code{x}}
-
-\item{as.binary}{logical; if \code{TRUE}, unordered factors in
-\code{x} are represented as dummy variables; otherwise, they
-are represented as sequential integers}
 
 \item{row.names.to.remove}{character vector of row labels
 specifying rows to remove from the returned table}

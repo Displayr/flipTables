@@ -9,9 +9,6 @@
 #'     used for the row names of the returned table; must be unique
 #'     and have the same length or number of rows of \code{x}; will
 #'     overwrite any existing row names present in \code{x}
-#' @param as.binary logical; if \code{TRUE}, unordered factors in
-#'     \code{x} are represented as dummy variables; otherwise, they
-#'     are represented as sequential integers
 #' @param row.names.to.remove character vector of row labels
 #'     specifying rows to remove from the returned table
 #' @param col.names.to.remove character vector of column labels
@@ -26,13 +23,13 @@
 #'     matrix or vector
 #' @export
 BasicTable <- function(x, by = NULL, date = NULL,
-                       as.binary = FALSE, row.names.to.remove = NULL,
+                       row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
                        transpose = FALSE)
 {
     ## if not given a numeric vector or matrix, try to coerce to one
     if (!is.numeric(x) || is.null(dims <- dim(x)) || length(dims) > 2 || IsQTable(x))
-        x <- AsBasicTable(x, as.binary = as.binary)
+        x <- AsBasicTable(x)
 
     ## Handle by arg
 

@@ -8,10 +8,6 @@ AsBasicTable(x)
 }
 \arguments{
 \item{x}{\strong{named} matrix or vector}
-
-\item{as.binary}{logical; if \code{TRUE}, unordered factors are
-represented as dummy variables.  Otherwise, they are
-represented as sequential integers}
 }
 \value{
 An object of class \code{BasicTable} - a named matrix or

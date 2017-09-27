@@ -2,9 +2,6 @@
 #'
 #' Creates tables used by Displayr charting functions
 #' @param x \strong{named} matrix or vector
-#' @param as.binary logical; if \code{TRUE}, unordered factors are
-#'     represented as dummy variables.  Otherwise, they are
-#'     represented as sequential integers
 #' @return An object of class \code{BasicTable} - a named matrix or
 #'     vector
 #' @importFrom utils modifyList
@@ -27,7 +24,7 @@ AsBasicTable <- function(x)
     {  # assume raw user-entered table
         x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
                            ## data is always a matrix
-        x <- ParseUserEnteredTable(x, want.data.frame = FALSE, want.factors = as.numeric)
+        x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
     }else if (IsQTable(x))
     {
         x <- QTableToBasicTable(x)
@@ -38,10 +35,10 @@ AsBasicTable <- function(x)
     }else if (is.data.frame(x))
     {
         x <- ProcessQVariables(x)
-        x <- AsNumeric(x, binary = as.binary, remove.first = FALSE)
+        x <- AsNumeric(x, binary = TRUE, remove.first = FALSE)
     }else if (is.factor(x))
     {
-        x <- AsNumeric(x, binary = as.binary, remove.first = FALSE)
+        x <- AsNumeric(x, binary = TRUE, remove.first = FALSE)
     }else if (is.numeric(x))
     {  # make sure has dimnames and is <= 2D
         dims <- dim(x)
