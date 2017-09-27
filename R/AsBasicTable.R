@@ -9,6 +9,7 @@
 #'     vector
 #' @importFrom utils modifyList
 #' @importFrom flipTransformations AsNumeric ParseUserEnteredTable
+#' @importFrom stats setNames
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
 #'     \code{\link[flipTransformations]{AsNumeric}}; with behaviour
@@ -32,6 +33,8 @@ AsBasicTable <- function(x)
         x <- QTableToBasicTable(x)
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
+        if (length(dim(x)) == 1L)  # convert 1D array to named vector
+            x <- setNames(as.numeric(x), dimnames(x)[[1L]])
     }else if (is.data.frame(x))
     {
         x <- ProcessQVariables(x)
@@ -43,6 +46,7 @@ AsBasicTable <- function(x)
     {  # make sure has dimnames and is <= 2D
         dims <- dim(x)
         n.dim <- length(dims)
+
         if (n.dim > 4)
         {
             stop("Cannot coerce an array of greater than four dimensions to BasicTable")
@@ -65,7 +69,7 @@ AsBasicTable <- function(x)
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
-    class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
+    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim) == 1L) "numeric" else "matrix")
     x
 }
 
