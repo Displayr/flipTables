@@ -4,7 +4,7 @@
 \alias{BasicTable}
 \title{Create a BasicTable Object}
 \usage{
-BasicTable(x, date = NULL, row.names.to.remove = NULL,
+BasicTable(x, date = FALSE, row.names.to.remove = NULL,
   col.names.to.remove = NULL, transpose = FALSE)
 }
 \arguments{
@@ -13,7 +13,10 @@ BasicTable(x, date = NULL, row.names.to.remove = NULL,
 \item{date}{optional vector of dates, which if supplied, will be
 used for the row names of the returned table; must be unique
 and have the same length or number of rows of \code{x}; will
-overwrite any existing row names present in \code{x}}
+overwrite any existing row names present in \code{x}; the
+default, \code{FALSE}, means that no dates are present in the
+data; a value of \code{NULL} indicates that dates are contained
+in x}
 
 \item{row.names.to.remove}{character vector of row labels
 specifying rows to remove from the returned table}
@@ -33,7 +36,8 @@ Creates tables used by Displayr charting functions
 }
 \details{
 If \code{x} is not a numeric vector or matrix, an attempt
-    will be made to coerce it to one using \code{\link{AsBasicTable}}.
+    will be made to coerce it to one using
+    \code{\link{AsBasicTable}}.
 }
 \seealso{
 \code{\link{AsBasicTable}}
