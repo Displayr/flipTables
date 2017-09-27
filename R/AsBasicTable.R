@@ -8,7 +8,7 @@
 #' @return An object of class \code{BasicTable} - a named matrix or
 #'     vector
 #' @importFrom utils modifyList
-#' @importFrom flipTransformations AsNumeric ParseUserEnteredTable
+#' @importFrom flipTransformations AsNumeric ParseUserEnteredTable ProcessQVariables
 #' @importFrom stats setNames
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
