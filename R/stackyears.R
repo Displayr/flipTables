@@ -15,7 +15,7 @@
 #' @export
 StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.number = FALSE, transpose = FALSE)
 {
-    x <- tidyDataForStacking(x, date)
+    x <- BasicTable(x, date)
     date <- ParseDates(names(x))
     latest.year <- year(max(date))
     year.index <- if (calendar)
@@ -56,62 +56,3 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.n
     result
 }
 
-
-
-# Tidies up the data to make it into a neat format for making the stacking straightforward.
-tidyDataForStacking <- function(x, date = NULL)
-{
-    if(is.null(date))
-    {
-        if(is.list(x))
-        {
-            if (length(x) == 1)
-            {
-                date <- rownames(x)
-                x <- x[[1]]
-            } else
-            {
-                date <- x[[1]]
-                x <- x[[2]]
-            }
-        }
-        else if (is.vector(x))
-        {
-            date <- names(x)
-        }
-        else if (is.array(x) & length(dim(x)) == 1)
-        {
-            date <- names(x)
-        }
-        else
-        {
-            if(is.table(x) | is.matrix(x) | is.array(x))
-            {
-                if (length(dim(x)) == 2)
-                {
-                    if(nrow(x) > ncol(x))
-                        x <- t(x)
-                    if (nrow(x) == 1)
-                    {
-                        date <- colnames(x)
-                        x <- as.vector(x)
-                    }
-                    else
-                    {
-                        date <- x[1, ]
-                        x <- x[2, ]
-                    }
-                }
-            }
-            else
-            {
-                stop("Input data is in the wrong format.")
-            }
-        }
-    }
-    if (anyDuplicated(date))
-        stop("Duplicate dates. Dates should be unique.")
-   x <- as.numeric(x)
-   names(x) <- date
-   x
-}
