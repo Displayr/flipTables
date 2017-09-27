@@ -5,7 +5,10 @@
 #' @param date optional vector of dates, which if supplied, will be
 #'     used for the row names of the returned table; must be unique
 #'     and have the same length or number of rows of \code{x}; will
-#'     overwrite any existing row names present in \code{x}
+#'     overwrite any existing row names present in \code{x}; the
+#'     default, \code{FALSE}, means that no dates are present in the
+#'     data; a value of \code{NULL} indicates that dates are contained
+#'     in x
 #' @param row.names.to.remove character vector of row labels
 #'     specifying rows to remove from the returned table
 #' @param col.names.to.remove character vector of column labels
@@ -13,26 +16,27 @@
 #' @param transpose logical; if \code{TRUE} the table will be
 #'     transposed before being returned
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
-#'     will be made to coerce it to one using \code{\link{AsBasicTable}}.
+#'     will be made to coerce it to one using
+#'     \code{\link{AsBasicTable}}.
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso \code{\link{AsBasicTable}}
 #' @return An object of class \code{BasicTable} - a \strong{named}
 #'     matrix or vector
 #' @export
-BasicTable <- function(x, date = NULL,
+BasicTable <- function(x, date = FALSE,
                        row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
                        transpose = FALSE)
 {
-    ## if not given a numeric vector or matrix, try to coerce to one
+    if (!isFALSE(date))
+        x <- processDates(x, date)
+
+    ## if not given a numeric vector or matrix or dates, try to coerce to one
     if (!is.numeric(x) || is.null(dims <- dim(x)) || length(dims) > 2 || isQTable(x))
         x <- AsBasicTable(x)
 
-    ## Handle by arg
-
-    x <- setDimNames(x, date)
+    x <- setDimNames(x)
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
-
 
     ## Handle transpose
     if (transpose)
@@ -50,7 +54,7 @@ BasicTable <- function(x, date = NULL,
 #' @noRd
 #' @keywords internal
 #' @importFrom stats setNames
-setDimNames <- function(x, date = NULL){
+setDimNames <- function(x){
     dims <- dim(x)
     if (is.null(dims) || length(dims) == 1L)
     {  # 2nd condition needed for 1D array case
@@ -70,3 +74,68 @@ setDimNames <- function(x, date = NULL){
     structure(x, dimnames = list(rnames, cnames))
 }
 
+#' Add dates to a BasicTable
+#'
+#' Processes user-supplied dates and adds them to the names
+#' @param x list, vector, array, matrix, or table, possibly containing
+#'     dates
+#' @param date vector of dates; a value of \code{NULL} (the default)
+#'     indicates that the dates are contained in \code{x}
+#' @return a numeric vector with dates for names
+#' @noRd
+processDates <- function(x, date = NULL)
+{
+    if(is.null(date))
+    {
+        if(is.list(x))
+        {
+            if (length(x) == 1)
+            {
+                date <- rownames(x)
+                x <- x[[1]]
+            } else
+            {
+                date <- x[[1]]
+                x <- x[[2]]
+            }
+        }
+        else if (is.vector(x))
+        {
+            date <- names(x)
+        }
+        else if (is.array(x) & length(dim(x)) == 1)
+        {
+            date <- names(x)
+        }
+        else
+        {
+            if(is.table(x) | is.matrix(x) | is.array(x))
+            {
+                if (length(dim(x)) == 2)
+                {
+                    if(nrow(x) > ncol(x))
+                        x <- t(x)
+                    if (nrow(x) == 1)
+                    {
+                        date <- colnames(x)
+                        x <- as.vector(x)
+                    }
+                    else
+                    {
+                        date <- x[1, ]
+                        x <- x[2, ]
+                    }
+                }
+            }
+            else
+            {
+                stop("Input data is in the wrong format.")
+            }
+        }
+    }
+    if (anyDuplicated(date))
+        stop("Duplicate dates. Dates should be unique.")
+   x <- as.numeric(x)
+   names(x) <- date
+   x
+}
