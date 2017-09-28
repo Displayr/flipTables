@@ -66,7 +66,7 @@ AsBasicTable <- function(x)
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
-    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim) == 1L) "numeric" else "matrix")
+    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
     x
 }
 
