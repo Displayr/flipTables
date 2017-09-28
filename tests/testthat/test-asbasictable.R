@@ -50,5 +50,15 @@ test_that("AsBasicTable: errors for unknown inputs",
 
 test_that("AsBasicTable: works for matrices",
 {
+    out <- AsBasicTable(matrix(1:4, 2, 2))
+    expect_equal(dim(out), c(2, 2))
+    expect_equal(colnames(out), paste0("Col ", 1:2))
+})
 
+
+test_that("AsBasicTable: converts 1D array to numeric",
+{
+    out <- AsBasicTable(array(1, dim = 1))
+    expect_null(dim(out))
+    expect_equal(names(out), "1")
 })

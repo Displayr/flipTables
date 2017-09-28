@@ -112,3 +112,10 @@ test_that("BasicTable removes rows and columns properly",
                          col.names.to.remove = "Fun")
     expect_equal(dim(out), dim(x.with.labels) - c(2, 1))
 })
+
+test_that("BasicTable: converts 1D array to numeric",
+{
+    expect_silent(out <- BasicTable(array(1, dim = 3)))
+    expect_null(dim(out))
+    expect_equal(names(out), as.character(1:3))
+})
