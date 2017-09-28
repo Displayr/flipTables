@@ -82,7 +82,8 @@ setDimNames <- function(x){
                   dim.names[[2L]]
               else
                   paste0("Col ", seq_len(dims[2L]))
-    structure(x, dimnames = list(rnames, cnames))
+    ## ensure dimname names are preserved
+    structure(x, dimnames = setNames(list(rnames, cnames), names(dim.names)))
 }
 
 #' Add dates to a BasicTable

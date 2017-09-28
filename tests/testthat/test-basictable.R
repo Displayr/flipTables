@@ -119,3 +119,12 @@ test_that("BasicTable: converts 1D array to numeric",
     expect_null(dim(out))
     expect_equal(names(out), as.character(1:3))
 })
+
+test_that("BasicTable: preserves dimname names",
+{
+    x <- matrix(1:6, 2, 3)
+    dimnames(x) <- list(row_lab = letters[1:2],
+                        col_lab = LETTERS[1:3])
+    out <- BasicTable(x)
+    expect_equal(names(dimnames(out)), names(dimnames(x)))
+})

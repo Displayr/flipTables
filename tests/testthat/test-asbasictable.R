@@ -62,3 +62,14 @@ test_that("AsBasicTable: converts 1D array to numeric",
     expect_null(dim(out))
     expect_equal(names(out), "1")
 })
+
+test_that("AsBasicTable: preserves dimname names",
+{
+    xd <- array(runif(9), dim = c(3, 3, 3),
+                dimnames = list(A = c("a","a","a"),
+                                B = c("a","a","a"), C = c("a","a","a")))
+    attr(xd, "name") <- "My so cool table from Q"
+    attr(xd, "questions") <- "What's the meaning of life?"
+    expect_warning(out <- AsBasicTable(xd), "^Multiple statistic")
+    expect_equal(names(dimnames(out)), c("A",  "B"))
+})
