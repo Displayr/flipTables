@@ -32,7 +32,7 @@ BasicTable <- function(x, date = FALSE,
         x <- processDates(x, date)
 
     ## if not given a numeric vector or matrix or dates, try to coerce to one
-    if (!is.numeric(x) || length(dim(x)) > 2 || isQTable(x))
+    if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || isQTable(x))
         x <- AsBasicTable(x)
 
     x <- setDimNames(x)
@@ -43,7 +43,7 @@ BasicTable <- function(x, date = FALSE,
     if (transpose)
         x <- t(x)
 
-    class(x) <- c("BasicTable", if (is.null(dim(x))) "numeric" else "matrix")
+    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
     x
 }
 

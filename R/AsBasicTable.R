@@ -54,7 +54,8 @@ AsBasicTable <- function(x)
             if (is.null(old.attrs$statistic))
                 old.attrs$statistic <- "UNKNOWN"
             x <- do.call(paste0("flatten", n.dim, "DQTable"), list(x))
-        }
+        }else if (n.dim == 1L)  # convert 1D array to named vector
+            x <- setNames(as.numeric(x), dimnames(x)[[1L]])
     }else
     {
         classes <- paste(class(x), collapse = ", ")
