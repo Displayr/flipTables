@@ -20,6 +20,11 @@
 #'     \code{\link{AsBasicTable}}.
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso \code{\link{AsBasicTable}}
+#' @note If \code{transpose == TRUE}, then the table is transposed
+#' \emph{before} rows and columns are removed, so
+#' \code{row.names.to.remove} should be specified according to the
+#' rownames of the \emph{transposed} table, as should
+#' \code{col.names.to.remove}
 #' @return An object of class \code{BasicTable} - a \strong{named}
 #'     matrix or vector
 #' @export
@@ -36,12 +41,15 @@ BasicTable <- function(x, date = FALSE,
         x <- AsBasicTable(x)
 
     x <- setDimNames(x)
+    ## Handle transpose
+    ## transpose before removal of rows and columns
+    ##   for flipDimensionReduction::CorrespondenceAnalysis !!
+    if (transpose)
+        x <- t(x)
+
     if (length(dim(x)) == 2L)
         x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
 
-    ## Handle transpose
-    if (transpose)
-        x <- t(x)
 
     class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
     x

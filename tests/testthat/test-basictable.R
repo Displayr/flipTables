@@ -10,9 +10,34 @@ test_that("BasicTable: works with by arg",
 
 })
 
-test_that("BasicTable: removes cols or rows properly",
+test_that("BasicTable: removes cols/rows properly (and transposes FIRST)",
 {
+    x <- structure(c(6.125, 57.125, 22.375, 8.875, 61.5, 9.375, 9.25,
+    100, 2, 57.75, 53.5, 2.5, 57.875, 30.625, 17.375, 100, 10.5,
+    21.625, 11.375, 10, 44.625, 6.875, 29.875, 100, 64.625, 22.5,
+    5.375, 39, 9.875, 6.75, 7.25, 100, 22.375, 8.875, 50.625, 16.75,
+    16.625, 49.25, 12.875, 100, 25.5, 4.75, 64, 17.75, 3.75, 44.75,
+    15.25, 100, 9.5, 23.25, 9.75, 13.5, 29.75, 5.5, 38.875, 100,
+    91.25, 14.625, 3, 54.75, 3.75, 4.375, 2.5, 100, 0.5, 76.125,
+    63.875, 0, 76.625, 40.375, 5.75, 100, 98, 91.5, 94.875, 79.625,
+    94.75, 86.375, 57.5, 100), .Dim = c(8L, 10L), statistic = "%", .Dimnames = list(
+        c("Coke", "Diet Coke", "Coke Zero", "Pepsi", "Diet Pepsi",
+        "Pepsi Max", "None of these", "NET"), c("Feminine", "Health-conscious",
+        "Innocent", "Older", "Open to new experiences", "Rebellious",
+        "Sleepy", "Traditional", "Weight-conscious", "NET")), name = "q5", questions = c("q5",
+    "SUMMARY"))
 
+    rr <- c("NET", "Total", "SUM", "Weight-conscious", "Feminine")
+    cr <- c("NET", "Total", "SUM")
+    dn <- dimnames(x)
+
+    out <- BasicTable(x, row.names.to.remove = rr,
+                      col.names.to.remove = cr, transpose = FALSE)
+    expect_equal(dim(out), c(sum(!dn[[1L]] %in% rr), sum(!dn[[2L]] %in% cr)))
+
+    out <- BasicTable(x, row.names.to.remove = rr,
+                      col.names.to.remove = cr, transpose = TRUE)
+    expect_equal(dim(out), c(sum(!dn[[1L]] %in% cr), sum(!dn[[2L]] %in% rr)))
 })
 
 

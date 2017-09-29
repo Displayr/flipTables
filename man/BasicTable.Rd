@@ -39,6 +39,13 @@ If \code{x} is not a numeric vector or matrix, an attempt
     will be made to coerce it to one using
     \code{\link{AsBasicTable}}.
 }
+\note{
+If \code{transpose == TRUE}, then the table is transposed
+\emph{before} rows and columns are removed, so
+\code{row.names.to.remove} should be specified according to the
+rownames of the \emph{transposed} table, as should
+\code{col.names.to.remove}
+}
 \seealso{
 \code{\link{AsBasicTable}}
 }
