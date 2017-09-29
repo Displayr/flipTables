@@ -130,6 +130,14 @@ qTableToBasicTable <- function(x){
               flatten3DQTable(x)
           else
               x
+   ## convert to numeric
+   if (is.character(out))
+   {
+       if (all(out == "" | !is.na(suppressWarnings(as.numeric(out)))))
+           storage.mode(out) <- "numeric"
+       else
+           warning("the supplied QTable contains character entries which could not be converted to numeric")
+   }
    if (!has.only.one.stat)  # need to update statistic attribute
        attr(out, "statistic") <- stat
    out

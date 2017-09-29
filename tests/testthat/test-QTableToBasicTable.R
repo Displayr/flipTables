@@ -93,6 +93,26 @@ test_that("3D: multi stat. character entries",
 {
     expect_warning(out <- AsBasicTable(q3.ms3))
     expect_length(dim(out), 2L)
+
+    ## first stat. can't be converted to numeric
+    x <- q3.ms3
+    x[,, 1] <- x[,, 2]
+    expect_warning(out <- AsBasicTable(x), regexp = "QTable contains character entries",
+                   all = FALSE)
+    expect_is(out[1, 1], "character")
+
+    ## empty chars are converted to NA with no warning
+    x <- q3.ms3
+    x[1:3, 1, 1] <- ""
+    expect_warning(out <- AsBasicTable(x), "^Multiple statistics", all = TRUE)
+    expect_equal(sum(is.na(out)), 3L)
+
+    ## single statistic table with characters
+    x <- q3.ms3
+    attr(x, "statistic") <- "mean"
+    expect_warning(out <- AsBasicTable(x), regexp = "QTable contains character entries",
+                   all = FALSE)
+    expect_equal(dim(out), c(dim(q3.ms3)[1]*dim(q3.ms3)[3], dim(q3.ms3)[2]))
 })
 
 test_that("2D: qdate x cat, 1 stat",
