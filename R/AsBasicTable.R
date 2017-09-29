@@ -20,18 +20,18 @@ AsBasicTable <- function(x)
 
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim")]
-    if (is.character(x))
-    {  # assume raw user-entered table
-        x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
-                           ## data is always a matrix
-        x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
-    }else if (isQTable(x))
+    if (isQTable(x))
     {
         x <- qTableToBasicTable(x)
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
         if (length(dim(x)) == 1L)  # convert 1D array to named vector
             x <- setNames(as.numeric(x), dimnames(x)[[1L]])
+    }else if (is.character(x))
+    {  # assume raw user-entered table
+        x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
+                           ## data is always a matrix
+        x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
     }else if (is.data.frame(x))
     {
         x <- ProcessQVariables(x)

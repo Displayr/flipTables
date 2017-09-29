@@ -73,18 +73,26 @@ test_that("3D: categorical by pick1 multi, one statistic",
 {
     expect_true(isQTable(q3.os2))
     expect_silent(out <- AsBasicTable(q3.os2))
+    expect_length(dim(out), 2L)
 })
 
 test_that("3D: categorical x numeric, multi stat.",
 {
     expect_true(isQTable(q3.ms))
     expect_warning(out <- AsBasicTable(q3.ms))
+    expect_length(dim(out), 2L)
 })
 
 test_that("3D: grid, multi stat",
 {
     expect_true(isQTable(q3.ms2))
     expect_warning(out <- AsBasicTable(q3.ms2))
+})
+
+test_that("3D: multi stat. character entries",
+{
+    expect_warning(out <- AsBasicTable(q3.ms3))
+    expect_length(dim(out), 2L)
 })
 
 test_that("2D: qdate x cat, 1 stat",
@@ -136,3 +144,4 @@ test_that("1D: setDimNames is okay with 1D array",
     expect_true(isQTable(q1))
     expect_silent(out <- AsBasicTable(q1))
 })
+
