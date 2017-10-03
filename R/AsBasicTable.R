@@ -19,7 +19,8 @@ AsBasicTable <- function(x)
         return(x)
 
     old.attrs <- attributes(x)
-    old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim")]
+    old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
+                                                    "names", "class")]
     if (isQTable(x))
     {
         x <- qTableToBasicTable(x)
@@ -34,11 +35,15 @@ AsBasicTable <- function(x)
         x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
     }else if (is.data.frame(x))
     {
+        ## convert data.frame default row names to BasicTable default Row 1, Row 2, etc.
+        if (identical(attr(x, "row.names"), seq_len(nrow(x))))
+            row.names(x) <- paste0("Row ", seq_len(nrow(x)))
         x <- ProcessQVariables(x)
-        x <- AsNumeric(x, binary = TRUE, remove.first = FALSE)
+        x <- as.matrix(AsNumeric(x, binary = TRUE, remove.first = FALSE))
     }else if (is.factor(x))
     {
-        x <- AsNumeric(x, binary = TRUE, remove.first = FALSE)
+        x <- as.matrix(AsNumeric(data.frame(x, row.names = paste0("Row ", seq_along((x)))),
+                       binary = TRUE, remove.first = FALSE))
     }else if (is.numeric(x))
     {  # make sure has dimnames and is <= 2D
         dims <- dim(x)

@@ -73,3 +73,30 @@ test_that("AsBasicTable: preserves dimname names",
     expect_warning(out <- AsBasicTable(xd), "^Multiple statistic")
     expect_equal(names(dimnames(out)), c("A",  "B"))
 })
+
+test_that("AsBasicTable: data.frame inputs",
+{
+    df <- data.frame(1, row.names = "a")
+    out <- AsBasicTable(df)
+    expect_is(out, c("BasicTable", "numeric"))
+    expect_equal(rownames(out), rownames(df))
+
+    df <- data.frame(x = 1:10, y = as.factor(rep(1:2, 5)))
+    out <- AsBasicTable(df)
+    expect_equal(rownames(out), paste0("Row ", seq_len(nrow(df))))
+    expect_equal(ncol(out), 3)
+    expect_equal(colnames(out), c("x", paste0("y.", 1:nlevels(df$y))))
+    expect_true(all(out[, -1] == 0 | out[, -1] == 1))
+})
+
+test_that("AsBasicTable: factor input",
+{
+    f <- as.factor(rep(1:3, each = 2))
+    out <- AsBasicTable(f)
+    expect_is(out, c("BasicTable", "matix"))
+    expect_equal(rownames(out), paste0("Row ", seq_along(f)))
+
+    expect_equal(ncol(out), nlevels(f))
+    expect_equal(colnames(out), paste0("x.", 1:nlevels(f)))
+    expect_true(all(out == 0 | out == 1))
+})

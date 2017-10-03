@@ -153,3 +153,14 @@ test_that("BasicTable: preserves dimname names",
     out <- BasicTable(x)
     expect_equal(names(dimnames(out)), names(dimnames(x)))
 })
+
+test_that("BasicTable data.frame input, names set okay",
+{
+
+    df <- structure(list(A = c(1, 2, 4, 5, 6, 7, 9, 10), B = c(2, 3, 5,
+    6, 7, 8, 10, 11)), .Names = c("A", "B"), row.names = c("A", "B",
+    "D", "E", "F", "G", "I", "J"), class = "data.frame")
+    out <- BasicTable(df)
+    expect_equal(rownames(out), rownames(df))
+    expect_is(out, c("BasicTable", "matrix"))
+})
