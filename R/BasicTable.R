@@ -18,6 +18,10 @@
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
 #'     will be made to coerce it to one using
 #'     \code{\link{AsBasicTable}}.
+#'
+#' If a named vector \code{BasicTable} is created from \code{x}, then
+#' \code{row.names.to.remove} and \code{col.names.to.remove} will be
+#' combined (using \code{\link[base]{union}}) to determine entries to remove.
 #' @importFrom flipTransformations RemoveRowsAndOrColumns
 #' @seealso \code{\link{AsBasicTable}}
 #' @note If \code{transpose == TRUE}, then the table is transposed
@@ -49,6 +53,8 @@ BasicTable <- function(x, date = FALSE,
 
     if (length(dim(x)) == 2L)
         x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
+    else
+        x <- removeByName(x, union(row.names.to.remove, col.names.to.remove))
 
 
     class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
@@ -160,4 +166,25 @@ processDates <- function(x, date = NULL)
    x <- as.numeric(x)
    names(x) <- date
    x
+}
+
+#' Remove indices from a vector by name
+#' @param x named vector to remove entries from
+#'  @param rnames character, vector giving entry names to remove
+#' @return \code{x} with entries specified in \code{rnames} removed
+#' @note An error is thrown if removal would result in an empty vector
+#' @examples
+#' x <- c(a = 1, b = 2)
+#' removeByName(x, "a")
+#' @noRd
+removeByName <- function(x, rnames)
+{
+    xnames <- names(x)
+    if (is.null(xnames) || is.null(rnames))
+        return(x)
+
+    if (all(xnames %in% rnames))
+        stop("Removing entries gives empty BasicTable/vector")
+
+    x[setdiff(xnames, rnames)]
 }

@@ -164,3 +164,31 @@ test_that("BasicTable data.frame input, names set okay",
     expect_equal(rownames(out), rownames(df))
     expect_is(out, c("BasicTable", "matrix"))
 })
+
+test_that("BasicTable removes rows and columns properly",
+{
+    out <- BasicTable(x.with.labels, row.names.to.remove = c("Coke", "V"),
+                         col.names.to.remove = "Fun")
+    expect_equal(dim(out), dim(x.with.labels) - c(2, 1))
+})
+
+test_that("BasicTable removes entries from vector properly",
+{
+    q1.os <- structure(c(7.08868501529052, 3.84709480122324, 17.4617737003058
+    ), .Dim = 3L, statistic = "Average", .Dimnames = list(c("Colas (e.g., Coca-Cola, Pepsi Max)?",
+    "Sparkling mineral water", "SUM")), name = "Number Multi", questions = c("Number Multi",
+                                                                             "SUMMARY"))
+    out <- BasicTable(q1.os, row.names.to.remove = "SUM")
+    expect_is(out, c("BasicTable", "numeric"))
+    expect_equal(names(out), names(q1.os)[-3])
+
+    expect_error(BasicTable(q1.os, col.names.to.remove = names(q1.os)))
+
+    x <- c(a = 1, b = 2, c = 3)
+    out <- BasicTable(x, row.names.to.remove = "c", col.names.to.remove = c("a", "c"))
+    expect_equal(names(out), "b")
+
+    x <- 1:4
+    out <- BasicTable(x, row.names.to.remove = "a")
+    expect_equal(names(out), as.character(x))
+})

@@ -38,6 +38,10 @@ Creates tables used by Displayr charting functions
 If \code{x} is not a numeric vector or matrix, an attempt
     will be made to coerce it to one using
     \code{\link{AsBasicTable}}.
+
+If a named vector \code{BasicTable} is created from \code{x}, then
+\code{row.names.to.remove} and \code{col.names.to.remove} will be
+combined (using \code{\link[base]{union}}) to determine entries to remove.
 }
 \note{
 If \code{transpose == TRUE}, then the table is transposed
