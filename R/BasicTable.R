@@ -186,5 +186,12 @@ removeByName <- function(x, rnames)
     if (all(xnames %in% rnames))
         stop("Removing entries gives empty BasicTable/vector")
 
-    x[setdiff(xnames, rnames)]
+    old.attrs <- attributes(x)
+    old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
+                                                    "names", "class")]
+
+    x <- x[setdiff(xnames, rnames)]
+    if (length(old.attrs))
+        attributes(x) <- modifyList(old.attrs, attributes(x))
+    x
 }

@@ -181,6 +181,9 @@ test_that("BasicTable removes entries from vector properly",
     out <- BasicTable(q1.os, row.names.to.remove = "SUM")
     expect_is(out, c("BasicTable", "numeric"))
     expect_equal(names(out), names(q1.os)[-3])
+    expect_equal(attr(out, "name"), attr(q1.os, "name"))
+    expect_equal(attr(out, "questions"), attr(q1.os, "questions"))
+    expect_equal(attr(out, "statistic"), attr(q1.os, "statistic"))
 
     expect_error(BasicTable(q1.os, col.names.to.remove = names(q1.os)))
 
