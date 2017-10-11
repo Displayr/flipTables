@@ -190,3 +190,18 @@ test_that("BasicTable removes entries from vector properly",
     out <- BasicTable(x, row.names.to.remove = "a")
     expect_equal(names(out), as.character(x))
 })
+
+test_that("BasicTable rm entries from vector comma sep. names",
+{
+
+    x <- c(a = 1, b = 2, c = 3)
+    out <- BasicTable(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
+    expect_equal(names(out), "b")
+
+    out <- BasicTable(x, row.names.to.remove = "c;  b  ")
+    expect_equal(names(out), "a")
+
+    x <- 1:4
+    out <- BasicTable(x, row.names.to.remove = "a;b")
+    expect_equal(names(out), as.character(x))
+})

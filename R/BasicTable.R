@@ -54,7 +54,7 @@ BasicTable <- function(x, date = FALSE,
     if (length(dim(x)) == 2L)
         x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
     else
-        x <- removeByName(x, union(row.names.to.remove, col.names.to.remove))
+        x <- removeByName(x, row.names.to.remove, col.names.to.remove)
 
 
     class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
@@ -172,18 +172,34 @@ processDates <- function(x, date = NULL)
 
 #' Remove indices from a vector by name
 #' @param x named vector to remove entries from
-#'  @param rnames character, vector giving entry names to remove
+#' @param rnames character, vector giving entry names to remove; or a single
+#' string containing comma or semi-colon separated names to remove
 #' @return \code{x} with entries specified in \code{rnames} removed
+#' @param cnames character, same as \code{rnames}; if both are provided,
+#' they will be combined using \code{\link{union}}
 #' @note An error is thrown if removal would result in an empty vector
 #' @examples
 #' x <- c(a = 1, b = 2)
 #' removeByName(x, "a")
 #' @noRd
-removeByName <- function(x, rnames)
+removeByName <- function(x, rnames, cnames)
 {
     xnames <- names(x)
-    if (is.null(xnames) || is.null(rnames))
+    if (is.null(xnames) || (is.null(rnames) && is.null(cnames)))
         return(x)
+
+    ## deal with possible comma or semi-colon separated names
+    sep <- if (length(rnames) == 1)
+               gsub("[^;,]", "", rnames)
+    if (!is.null(sep) && nzchar(sep))
+        rnames <- trimws(strsplit(rnames, sep)[[1L]])
+
+    sep <- if (length(cnames) == 1)
+               gsub("[^;,]", "", cnames)
+    if (!is.null(sep) && nzchar(sep))
+        cnames <- trimws(strsplit(cnames, sep)[[1L]])
+
+    rnames <- union(rnames, cnames)
 
     if (all(xnames %in% rnames))
         stop("Removing entries gives empty BasicTable/vector")
