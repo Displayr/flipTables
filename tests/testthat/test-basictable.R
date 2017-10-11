@@ -5,11 +5,6 @@ test_that("BasicTable: works with date arg",
 
 })
 
-test_that("BasicTable: works with by arg",
-{
-
-})
-
 test_that("BasicTable: removes cols/rows properly (and transposes FIRST)",
 {
     x <- structure(c(6.125, 57.125, 22.375, 8.875, 61.5, 9.375, 9.25,
@@ -162,7 +157,7 @@ test_that("BasicTable data.frame input, names set okay",
     "D", "E", "F", "G", "I", "J"), class = "data.frame")
     out <- BasicTable(df)
     expect_equal(rownames(out), rownames(df))
-    expect_is(out, c("BasicTable", "matrix"))
+    expect_is(out, "matrix")
 })
 
 test_that("BasicTable removes rows and columns properly",
@@ -179,7 +174,7 @@ test_that("BasicTable removes entries from vector properly",
     "Sparkling mineral water", "SUM")), name = "Number Multi", questions = c("Number Multi",
                                                                              "SUMMARY"))
     out <- BasicTable(q1.os, row.names.to.remove = "SUM")
-    expect_is(out, c("BasicTable", "numeric"))
+    expect_is(out, "numeric")
     expect_equal(names(out), names(q1.os)[-3])
     expect_equal(attr(out, "name"), attr(q1.os, "name"))
     expect_equal(attr(out, "questions"), attr(q1.os, "questions"))

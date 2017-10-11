@@ -78,7 +78,7 @@ test_that("AsBasicTable: data.frame inputs",
 {
     df <- data.frame(1, row.names = "a")
     out <- AsBasicTable(df)
-    expect_is(out, c("BasicTable", "numeric"))
+    expect_is(out, "matrix")
     expect_equal(rownames(out), rownames(df))
 
     df <- data.frame(x = 1:10, y = as.factor(rep(1:2, 5)))
@@ -93,7 +93,7 @@ test_that("AsBasicTable: factor input",
 {
     f <- as.factor(rep(1:3, each = 2))
     out <- AsBasicTable(f)
-    expect_is(out, c("BasicTable", "matix"))
+    expect_is(out, "matrix")
     expect_equal(rownames(out), paste0("Row ", seq_along(f)))
 
     expect_equal(ncol(out), nlevels(f))

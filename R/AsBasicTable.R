@@ -15,9 +15,6 @@
 #' @export
 AsBasicTable <- function(x)
 {
-    if (inherits(x, "BasicTable"))
-        return(x)
-
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
                                                     "names", "class")]
@@ -72,7 +69,9 @@ AsBasicTable <- function(x)
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
-    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
+    class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
+                    "numeric"
+                else "matrix"
     x
 }
 

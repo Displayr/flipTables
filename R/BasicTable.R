@@ -57,7 +57,9 @@ BasicTable <- function(x, date = FALSE,
         x <- removeByName(x, union(row.names.to.remove, col.names.to.remove))
 
 
-    class(x) <- c("BasicTable", if (is.null(dim(x)) || length(dim(x)) == 1L) "numeric" else "matrix")
+    class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
+                    "numeric"
+                else "matrix"
     x
 }
 
