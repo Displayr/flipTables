@@ -1,7 +1,7 @@
 Package: flipTables
 Type: Package
 Title: Package for handling tables and related objects
-Version: 1.0.1
+Version: 1.1.0
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Package for handling tables and related objects.
@@ -11,7 +11,7 @@ Imports:
     methods,
     lubridate,
     flipTime,
-    flipTransformations
+    flipTransformations (>= 1.1.0)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests: gtools, testthat, covr
