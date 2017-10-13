@@ -1,7 +1,8 @@
 #' Create a BasicTable Object
 #'
 #' Creates tables used by Displayr charting functions
-#' @param x a \strong{named} numeric matrix or vector
+#' @param x a numeric matrix or vector; should be named, but if names
+#' are not present they will be created in the output
 #' @param date optional vector of dates, which if supplied, will be
 #'     used for the row names of the returned table; must be unique
 #'     and have the same length or number of rows of \code{x}; will

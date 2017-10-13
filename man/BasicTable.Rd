@@ -8,7 +8,8 @@ BasicTable(x, date = FALSE, row.names.to.remove = NULL,
   col.names.to.remove = NULL, transpose = FALSE)
 }
 \arguments{
-\item{x}{a \strong{named} numeric matrix or vector}
+\item{x}{a numeric matrix or vector; should be named, but if names
+are not present they will be created in the output}
 
 \item{date}{optional vector of dates, which if supplied, will be
 used for the row names of the returned table; must be unique
