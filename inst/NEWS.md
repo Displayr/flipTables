@@ -1,3 +1,11 @@
+Changes in Version 2.0.0 (2017-10-18)
+--------------------------------------------------------
+
+NEW FEATURES
+
+* `BasicTable` has been renamed to `TidyTabularData` (DS-1471)
+* `AsBasicTable` has been renamed to `AsTidyTabularData` (DS-1471)
+
 Changes in Version 1.0.1 (2017-10-11)
 --------------------------------------------------------
 

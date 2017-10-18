@@ -1,4 +1,4 @@
-context("AsBasicTable")
+context("AsTidyTabularData")
 
 test_that("Works with 3D array",
 {
@@ -11,11 +11,11 @@ test_that("Works with 4D array",
 {
     a <- array(1:120, dim = 2:5)
     dimnames(a) <- list(NULL, letters[1:3], NULL, LETTERS[1:5])
-    expect_warning(AsBasicTable(a))
-    expect_equal(attr(suppressWarnings(AsBasicTable(a)), "statistic"), "UNKNOWN")
+    expect_warning(AsTidyTabularData(a))
+    expect_equal(attr(suppressWarnings(AsTidyTabularData(a)), "statistic"), "UNKNOWN")
 })
 
-test_that("AsBasicTable: 1D array becomes named vector",
+test_that("AsTidyTabularData: 1D array becomes named vector",
 {
     formTables <- list(structure(c(0.12, 0.3, 0.26, 0.16, 0.04, 0.12), .Names = c("Blueberry",
                       "Cherry", "Apple", "Boston Cream", "Other", "Vanilla Cream")),
@@ -25,7 +25,7 @@ test_that("AsBasicTable: 1D array becomes named vector",
                               "Pepsi Max", "Dislike all cola", "Don't care", "NET")), name = "Preferred cola",
                         questions = c("Preferred cola",
                                       "SUMMARY")))
-    out <- AsBasicTable(formTables[[2L]])
+    out <- AsTidyTabularData(formTables[[2L]])
     expect_null(dim(out))
     expect_true(inherits(out, "numeric"))
     expect_equal(names(out), c("Coca-Cola", "Diet Coke", "Coke Zero", "Pepsi ", "Diet Pepsi",
@@ -33,66 +33,66 @@ test_that("AsBasicTable: 1D array becomes named vector",
     expect_equal(attr(out, "statistic"), "%")
 })
 
-test_that("AsBasicTable: works with QDates",
+test_that("AsTidyTabularData: works with QDates",
 {
 
 })
 
-test_that("AsBasicTable: as labels to vector",
+test_that("AsTidyTabularData: as labels to vector",
 {
 
 })
 
-test_that("AsBasicTable: errors for unknown inputs",
+test_that("AsTidyTabularData: errors for unknown inputs",
 {
 
 })
 
-test_that("AsBasicTable: works for matrices",
+test_that("AsTidyTabularData: works for matrices",
 {
-    out <- AsBasicTable(matrix(1:4, 2, 2))
+    out <- AsTidyTabularData(matrix(1:4, 2, 2))
     expect_equal(dim(out), c(2, 2))
     expect_equal(colnames(out), paste0("Col ", 1:2))
 })
 
 
-test_that("AsBasicTable: converts 1D array to numeric",
+test_that("AsTidyTabularData: converts 1D array to numeric",
 {
-    out <- AsBasicTable(array(1, dim = 1))
+    out <- AsTidyTabularData(array(1, dim = 1))
     expect_null(dim(out))
     expect_equal(names(out), "1")
 })
 
-test_that("AsBasicTable: preserves dimname names",
+test_that("AsTidyTabularData: preserves dimname names",
 {
     xd <- array(runif(9), dim = c(3, 3, 3),
                 dimnames = list(A = c("a","a","a"),
                                 B = c("a","a","a"), C = c("a","a","a")))
     attr(xd, "name") <- "My so cool table from Q"
     attr(xd, "questions") <- "What's the meaning of life?"
-    expect_warning(out <- AsBasicTable(xd), "^Multiple statistic")
+    expect_warning(out <- AsTidyTabularData(xd), "^Multiple statistic")
     expect_equal(names(dimnames(out)), c("A",  "B"))
 })
 
-test_that("AsBasicTable: data.frame inputs",
+test_that("AsTidyTabularData: data.frame inputs",
 {
     df <- data.frame(1, row.names = "a")
-    out <- AsBasicTable(df)
+    out <- AsTidyTabularData(df)
     expect_is(out, "matrix")
     expect_equal(rownames(out), rownames(df))
 
     df <- data.frame(x = 1:10, y = as.factor(rep(1:2, 5)))
-    out <- AsBasicTable(df)
+    out <- AsTidyTabularData(df)
     expect_equal(rownames(out), paste0("Row ", seq_len(nrow(df))))
     expect_equal(ncol(out), 3)
     expect_equal(colnames(out), c("x", paste0("y.", 1:nlevels(df$y))))
     expect_true(all(out[, -1] == 0 | out[, -1] == 1))
 })
 
-test_that("AsBasicTable: factor input",
+test_that("AsTidyTabularData: factor input",
 {
     f <- as.factor(rep(1:3, each = 2))
-    out <- AsBasicTable(f)
+    out <- AsTidyTabularData(f)
     expect_is(out, "matrix")
     expect_equal(rownames(out), paste0("Row ", seq_along(f)))
 

@@ -1,11 +1,11 @@
-context("Basic Table")
+context("TidyTabularData")
 
-test_that("BasicTable: works with date arg",
+test_that("TidyTabularData: works with date arg",
 {
 
 })
 
-test_that("BasicTable: removes cols/rows properly (and transposes FIRST)",
+test_that("TidyTabularData: removes cols/rows properly (and transposes FIRST)",
 {
     x <- structure(c(6.125, 57.125, 22.375, 8.875, 61.5, 9.375, 9.25,
     100, 2, 57.75, 53.5, 2.5, 57.875, 30.625, 17.375, 100, 10.5,
@@ -26,34 +26,34 @@ test_that("BasicTable: removes cols/rows properly (and transposes FIRST)",
     cr <- c("NET", "Total", "SUM")
     dn <- dimnames(x)
 
-    out <- BasicTable(x, row.names.to.remove = rr,
+    out <- TidyTabularData(x, row.names.to.remove = rr,
                       col.names.to.remove = cr, transpose = FALSE)
     expect_equal(dim(out), c(sum(!dn[[1L]] %in% rr), sum(!dn[[2L]] %in% cr)))
 
-    out <- BasicTable(x, row.names.to.remove = rr,
+    out <- TidyTabularData(x, row.names.to.remove = rr,
                       col.names.to.remove = cr, transpose = TRUE)
     expect_equal(dim(out), c(sum(!dn[[1L]] %in% cr), sum(!dn[[2L]] %in% rr)))
 })
 
 
 
-test_that("BasicTable: works when needs to call AsBasicTable first",
+test_that("TidyTabularData: works when needs to call AsTidyTabularData first",
 {
     ## check QTable
-    ## check identical to just calling AsBasicTable
+    ## check identical to just calling AsTidyTabularData
 })
 
-test_that("BasicTable: remove all rows or columns",
+test_that("TidyTabularData: remove all rows or columns",
 {
 
 })
 
-test_that("BasicTable: remove all but one row or column",
+test_that("TidyTabularData: remove all but one row or column",
 {
 
 })
 
-test_that("BasicTable: transpose arg works",
+test_that("TidyTabularData: transpose arg works",
 {
 
 })
@@ -90,25 +90,25 @@ dimnames(x.with.labels) <- list(Brand=c('Coke','V',"Red\nBull",
                                             'Fun',  'When tired',
                                             'Relax'))
 
-test_that("BasicTable replaces GetTidyTwoDimensionalArray",
+test_that("TidyTabularData replaces GetTidyTwoDimensionalArray",
 {
     ## out.gta <- flipData::GetTidyTwoDimensionalArray(x.with.labels, "NET", "NET")
-    ## out.bt <- BasicTable(x.with.labels, row.names.to.remove = "NET",
+    ## out.bt <- TidyTabularData(x.with.labels, row.names.to.remove = "NET",
     ##                      col.names.to.remove = "NET")
-    expect_silent(BasicTable(x.with.labels, row.names.to.remove = "NET",
+    expect_silent(TidyTabularData(x.with.labels, row.names.to.remove = "NET",
                          col.names.to.remove = "Kids"))
-    expect_silent(BasicTable(x))
+    expect_silent(TidyTabularData(x))
 
     ## 3D array with no names
     z <- array(NA, c(8,11,2))
     z[,,1] <- x
-    ## current BasicTable behaviour is to flatten **any** 3D or 4D array
+    ## current TidyTabularData behaviour is to flatten **any** 3D or 4D array
     ## and warn if some dimnames are missing
     ## GetTidyTwoDimensionalArray behaviour was to error if dimnames are missin
     ## expect_error(GetTidyTwoDimensionalArray(z))
-    expect_warning(BasicTable(z))
+    expect_warning(TidyTabularData(z))
     dimnames(z) <- list(dimnames(x.with.labels)[[1]], dimnames(x.with.labels)[[2]], 1:2)
-    expect_silent(BasicTable(z))
+    expect_silent(TidyTabularData(z))
 
     ## SUM and NET
     dimnames(x.with.labels) <- list(Brand=c('SUM','NET',"Red\nBull",
@@ -123,85 +123,85 @@ test_that("BasicTable replaces GetTidyTwoDimensionalArray",
                                                 'Up-to-date',   'Fun',
                                                 'When tired',
                                                 'Relax'))
-    expect_silent(BasicTable(x.with.labels))
+    expect_silent(TidyTabularData(x.with.labels))
 })
 
-test_that("BasicTable removes rows and columns properly",
+test_that("TidyTabularData removes rows and columns properly",
 {
-    out <- BasicTable(x.with.labels, row.names.to.remove = c("Coke", "V"),
+    out <- TidyTabularData(x.with.labels, row.names.to.remove = c("Coke", "V"),
                          col.names.to.remove = "Fun")
     expect_equal(dim(out), dim(x.with.labels) - c(2, 1))
 })
 
-test_that("BasicTable: converts 1D array to numeric",
+test_that("TidyTabularData: converts 1D array to numeric",
 {
-    expect_silent(out <- BasicTable(array(1, dim = 3)))
+    expect_silent(out <- TidyTabularData(array(1, dim = 3)))
     expect_null(dim(out))
     expect_equal(names(out), as.character(1:3))
 })
 
-test_that("BasicTable: preserves dimname names",
+test_that("TidyTabularData: preserves dimname names",
 {
     x <- matrix(1:6, 2, 3)
     dimnames(x) <- list(row_lab = letters[1:2],
                         col_lab = LETTERS[1:3])
-    out <- BasicTable(x)
+    out <- TidyTabularData(x)
     expect_equal(names(dimnames(out)), names(dimnames(x)))
 })
 
-test_that("BasicTable data.frame input, names set okay",
+test_that("TidyTabularData data.frame input, names set okay",
 {
 
     df <- structure(list(A = c(1, 2, 4, 5, 6, 7, 9, 10), B = c(2, 3, 5,
     6, 7, 8, 10, 11)), .Names = c("A", "B"), row.names = c("A", "B",
     "D", "E", "F", "G", "I", "J"), class = "data.frame")
-    out <- BasicTable(df)
+    out <- TidyTabularData(df)
     expect_equal(rownames(out), rownames(df))
     expect_is(out, "matrix")
 })
 
-test_that("BasicTable removes rows and columns properly",
+test_that("TidyTabularData removes rows and columns properly",
 {
-    out <- BasicTable(x.with.labels, row.names.to.remove = c("Coke", "V"),
+    out <- TidyTabularData(x.with.labels, row.names.to.remove = c("Coke", "V"),
                          col.names.to.remove = "Fun")
     expect_equal(dim(out), dim(x.with.labels) - c(2, 1))
 })
 
-test_that("BasicTable removes entries from vector properly",
+test_that("TidyTabularData removes entries from vector properly",
 {
     q1.os <- structure(c(7.08868501529052, 3.84709480122324, 17.4617737003058
     ), .Dim = 3L, statistic = "Average", .Dimnames = list(c("Colas (e.g., Coca-Cola, Pepsi Max)?",
     "Sparkling mineral water", "SUM")), name = "Number Multi", questions = c("Number Multi",
                                                                              "SUMMARY"))
-    out <- BasicTable(q1.os, row.names.to.remove = "SUM")
+    out <- TidyTabularData(q1.os, row.names.to.remove = "SUM")
     expect_is(out, "numeric")
     expect_equal(names(out), names(q1.os)[-3])
     expect_equal(attr(out, "name"), attr(q1.os, "name"))
     expect_equal(attr(out, "questions"), attr(q1.os, "questions"))
     expect_equal(attr(out, "statistic"), attr(q1.os, "statistic"))
 
-    expect_error(BasicTable(q1.os, col.names.to.remove = names(q1.os)))
+    expect_error(TidyTabularData(q1.os, col.names.to.remove = names(q1.os)))
 
     x <- c(a = 1, b = 2, c = 3)
-    out <- BasicTable(x, row.names.to.remove = "c", col.names.to.remove = c("a", "c"))
+    out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a", "c"))
     expect_equal(names(out), "b")
 
     x <- 1:4
-    out <- BasicTable(x, row.names.to.remove = "a")
+    out <- TidyTabularData(x, row.names.to.remove = "a")
     expect_equal(names(out), as.character(x))
 })
 
-test_that("BasicTable rm entries from vector comma sep. names",
+test_that("TidyTabularData rm entries from vector comma sep. names",
 {
 
     x <- c(a = 1, b = 2, c = 3)
-    out <- BasicTable(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
+    out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
     expect_equal(names(out), "b")
 
-    out <- BasicTable(x, row.names.to.remove = "c;  b  ")
+    out <- TidyTabularData(x, row.names.to.remove = "c;  b  ")
     expect_equal(names(out), "a")
 
     x <- 1:4
-    out <- BasicTable(x, row.names.to.remove = "a;b")
+    out <- TidyTabularData(x, row.names.to.remove = "a;b")
     expect_equal(names(out), as.character(x))
 })

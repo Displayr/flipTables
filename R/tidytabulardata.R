@@ -1,4 +1,4 @@
-#' Create a BasicTable Object
+#' Create a Tidy Table or Vector
 #'
 #' Creates tables used by Displayr charting functions
 #' @param x a numeric matrix or vector; should be named, but if names
@@ -18,22 +18,21 @@
 #'     transposed before being returned
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
 #'     will be made to coerce it to one using
-#'     \code{\link{AsBasicTable}}.
+#'     \code{\link{AsTidyTabularData}}.
 #'
 #' If a named vector \code{BasicTable} is created from \code{x}, then
 #' \code{row.names.to.remove} and \code{col.names.to.remove} will be
 #' combined (using \code{\link[base]{union}}) to determine entries to remove.
 #' @importFrom flipTransformations RemoveRowsAndOrColumns RemoveByName
-#' @seealso \code{\link{AsBasicTable}}
+#' @seealso \code{\link{AsTidyTabularData}}
 #' @note If \code{transpose == TRUE}, then the table is transposed
 #' \emph{before} rows and columns are removed, so
 #' \code{row.names.to.remove} should be specified according to the
 #' rownames of the \emph{transposed} table, as should
 #' \code{col.names.to.remove}
-#' @return An object of class \code{BasicTable} - a \strong{named}
-#'     matrix or vector
+#' @return A \strong{named} matrix or vector; a tidy version of \code{x}
 #' @export
-BasicTable <- function(x, date = FALSE,
+TidyTabularData <- function(x, date = FALSE,
                        row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
                        transpose = FALSE)
@@ -43,7 +42,7 @@ BasicTable <- function(x, date = FALSE,
 
     ## if not given a numeric vector or matrix or dates, try to coerce to one
     if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || isQTable(x))
-        x <- AsBasicTable(x)
+        x <- AsTidyTabularData(x)
 
     x <- setDimNames(x)
     ## Handle transpose

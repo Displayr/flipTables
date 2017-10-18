@@ -1,26 +1,25 @@
-#' Create a BasicTable Object
+#' Coerce an R Object To a Tidy Table
 #'
 #' Creates tables used by Displayr charting functions
-#' @param x \strong{named} matrix or vector
-#' @return An object of class \code{BasicTable} - a named matrix or
-#'     vector
+#' @param x  An object to be coerced to a tidy table.
+#' @return A \strong{named} matrix or
+#'     vector; a tidy version of \code{x}
 #' @importFrom utils modifyList
 #' @importFrom flipTransformations AsNumeric ParseUserEnteredTable ProcessQVariables
 #' @importFrom stats setNames
 #' @details \code{factors} will automatically be converted to numeric
 #'     variables (with a warning) using
-#'     \code{\link[flipTransformations]{AsNumeric}}; with behaviour
-#'     dependent upon the value of \code{as.binary}
+#'     \code{\link[flipTransformations]{AsNumeric}}.
 #' @seealso \code{\link[flipTransformations]{AsNumeric}}
 #' @export
-AsBasicTable <- function(x)
+AsTidyTabularData <- function(x)
 {
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
                                                     "names", "class")]
     if (isQTable(x))
     {
-        x <- qTableToBasicTable(x)
+        x <- qTableToTidyTable(x)
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
         if (length(dim(x)) == 1L)  # convert 1D array to named vector
@@ -32,7 +31,7 @@ AsBasicTable <- function(x)
         x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
     }else if (is.data.frame(x))
     {
-        ## convert data.frame default row names to BasicTable default Row 1, Row 2, etc.
+        ## convert data.frame default row names to tidy table default Row 1, Row 2, etc.
         if (identical(attr(x, "row.names"), seq_len(nrow(x))))
             row.names(x) <- paste0("Row ", seq_len(nrow(x)))
         x <- ProcessQVariables(x)
@@ -48,7 +47,7 @@ AsBasicTable <- function(x)
 
         if (n.dim > 4)
         {
-            stop("Cannot coerce an array of greater than four dimensions to BasicTable")
+            stop("Cannot coerce an array of greater than four dimensions to a tidy table.")
         }else if (n.dim == 4 || n.dim == 3)
         {   # Make sure there are sensible dimnames, a statistic attribute,
             #  and flatten as if a QTable
@@ -61,7 +60,7 @@ AsBasicTable <- function(x)
     }else
     {
         classes <- paste(class(x), collapse = ", ")
-        stop(gettextf("Cannot coerce object of type (%s) to BasicTable",
+        stop(gettextf("Cannot coerce object of type (%s) to a  tidy table.",
                       sQuote(classes)))
     }
 
@@ -100,7 +99,7 @@ isQTable <- function(x){
 ##                   "Multiple Comparison Adjustment", "Not Duplicate", "Column Names",
 ##                   "Columns Compared", "Column Comparisons")
 
-#' Converts a QTable to a BasicTable
+#' Converts a QTable to a tidy table
 #' @param x a QTable (an array with attributes \code{"name"}, \code{"statistic"},
 #' and \code{"questions"} and named dimensions)
 #' @details If a Qtable contains multiple statistics, only the first will be used to
@@ -109,7 +108,7 @@ isQTable <- function(x){
 #' dimensions and \code{dimnames}
 #' @noRd
 #' @keywords internal
-qTableToBasicTable <- function(x){
+qTableToTidyTable <- function(x){
    stopifnot(isQTable(x))
    dims <- dim(x)
    n.dim <- length(dims)

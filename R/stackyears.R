@@ -14,7 +14,7 @@
 #' @export
 StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE, period.number = FALSE, transpose = FALSE)
 {
-    x <- BasicTable(x, date)
+    x <- TidyTabularData(x, date)
     date <- AsDate(names(x))
     latest.year <- year(max(date))
     year.index <- if (calendar)
