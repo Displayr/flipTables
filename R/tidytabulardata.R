@@ -23,7 +23,6 @@
 #' If a named vector \code{BasicTable} is created from \code{x}, then
 #' \code{row.names.to.remove} and \code{col.names.to.remove} will be
 #' combined (using \code{\link[base]{union}}) to determine entries to remove.
-#' @importFrom flipTransformations RemoveRowsAndOrColumns RemoveByName
 #' @seealso \code{\link{AsTidyTabularData}}
 #' @note If \code{transpose == TRUE}, then the table is transposed
 #' \emph{before} rows and columns are removed, so
