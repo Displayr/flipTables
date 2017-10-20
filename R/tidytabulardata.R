@@ -80,7 +80,8 @@ isFALSE <- function(x)
 #' @noRd
 #' @keywords internal
 #' @importFrom stats setNames
-setDimNames <- function(x){
+setDimNames <- function(x)
+{
     dims <- dim(x)
     if (is.null(dims) || length(dims) == 1L)
     {  # 2nd condition needed for 1D array case

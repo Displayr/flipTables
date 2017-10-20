@@ -85,7 +85,8 @@ AsTidyTabularData <- function(x)
 #' the names of the statistics computed may be present in the dimnames
 #' @keywords internal
 #' @noRd
-isQTable <- function(x){
+isQTable <- function(x)
+{
     all(c("questions", "name") %in% names(attributes(x)))
 }
 
@@ -108,7 +109,8 @@ isQTable <- function(x){
 #' dimensions and \code{dimnames}
 #' @noRd
 #' @keywords internal
-qTableToTidyTable <- function(x){
+qTableToTidyTable <- function(x)
+{
    stopifnot(isQTable(x))
    dims <- dim(x)
    n.dim <- length(dims)
@@ -158,7 +160,8 @@ qTableToTidyTable <- function(x){
 #' dimensions of \code{x} will be dropped in the returned array
 #' @noRd
 #' @keywords internal
-GetFirstStat <- function(x){
+GetFirstStat <- function(x)
+{
     text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
     eval(parse(text = text))
 }
@@ -178,7 +181,8 @@ GetFirstStat <- function(x){
 #'    all.equal(out["one: B", "c"], ta["one", "c", "B"])
 #' @noRd
 #' @keywords internal
-flatten3DQTable <- function(a){
+flatten3DQTable <- function(a)
+{
     ## Loop for 3D case
     ## d1 <- dim(a)[1]
     ## d2 <- dim(a)[2]
@@ -220,7 +224,8 @@ flatten3DQTable <- function(a){
 #'    all.equal(out["C: two", "a: d3"], ta["two", "a", "C", "d3"])
 #' @keywords internal
 #' @noRd
-flatten4DQTable <- function(a){
+flatten4DQTable <- function(a)
+{
     dnames <- dimnames(a)
     ## Commented out code below results in valid 2D table, but
     ##  with wrong dimensions combined compared to Q output
@@ -248,7 +253,8 @@ flatten4DQTable <- function(a){
 #' \code{length(name.list[[1]])*length(name.list[[2]])}
 #' @noRd
 #' @keywords internal
-combineNames <- function(name.list, flip = FALSE){
+combineNames <- function(name.list, flip = FALSE)
+{
     if (flip)
         name.list <- rev(name.list)
     name.grid <- expand.grid(name.list)
@@ -262,7 +268,8 @@ combineNames <- function(name.list, flip = FALSE){
 #' @seealso \code{\link{provideDimnames}}
 #' @noRd
 #' @keywords internal
-createArrayNames <- function(x){
+createArrayNames <- function(x)
+{
     dim.names <- dimnames(x)
     n.dim <- length(dim(x))
     null.idx <- if (is.null(dim.names))
