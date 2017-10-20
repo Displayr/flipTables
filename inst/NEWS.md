@@ -1,3 +1,12 @@
+Changes in Version 2.1.0 (2017-10-20)
+--------------------------------------------------------
+
+NEW FEATURES
+
+* New functions `RemoveByName`, `RemoveRowsAndOrColumns`,
+and `RetainedRowsAndOrColumns` for removing entries from a vector or 
+rows or columns of a matrix/data.frame/table by name (DS-1471)
+
 Changes in Version 2.0.0 (2017-10-18)
 --------------------------------------------------------
 
