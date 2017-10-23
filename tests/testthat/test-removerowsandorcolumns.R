@@ -35,6 +35,16 @@ test_that("RemoveRowsAndOrColumns list of tables",
               expect_equal(nrow(out[[2L]]), 6)
           })
 
+test_that("RemoveRowsAndOrColumns: list with both matrix + vector",
+{
+    x <- list(dat, c(a = 1, aa = 2, aaa = 3))
+    out <- RemoveRowsAndOrColumns(x,
+                                  column.names.to.remove = "a; aa ", split = "[;,]")
+
+    expect_is(out, "list")
+    expect_equal(dim(out[[1L]]), dim(dat) - c(1, 0))
+    expect_equal(out[[2L]], x[[2L]][3])
+})
 
 test_that("RemoveRowsAndOrColumns handles trailing spaces",
           {
@@ -270,3 +280,20 @@ test_that("RemoveRowsAndOrColumns DS-1565 CC comment",
     expect_silent(RemoveRowsAndOrColumns(dat))
     expect_equal(dim(RemoveRowsAndOrColumns(dat)), dim(dat))
 })
+
+test_that("RemoveRowsAndOrColumns works with vectors; vector names",
+{
+
+    x <- c(a = 1, b = 2, c = 3)
+    expect_error(RemoveRowsAndOrColumns(x, names(x)))
+    expect_equal(x[-1], RemoveRowsAndOrColumns(x, "a"))
+})
+
+test_that("RemoveRowsAndOrColumns: vector with comma-separated names",
+{
+    x <- c(a = 1, aa = 2, aaa = 3)
+    expect_error(RemoveRowsAndOrColumns(x, "a; aa;aaa  ", split = "[;,]"),
+                 "Removing entries gives empty vector.")
+    expect_equal(x[-3], RemoveRowsAndOrColumns(x, "aaa"))
+})
+

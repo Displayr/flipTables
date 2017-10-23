@@ -22,6 +22,10 @@ RemoveRowsAndOrColumns <- function(x,
         return(lapply(x, RemoveRowsAndOrColumns, row.names.to.remove = row.names.to.remove,
                       column.names.to.remove = column.names.to.remove, split = split))
 
+    if (is.null(dim(x)))
+        return(RemoveByName(x, list(row.names.to.remove,
+                                    column.names.to.remove), sep = split))
+
     ind <- RetainedRowsAndOrColumns(x = x, row.names.to.remove = row.names.to.remove,
                                 column.names.to.remove = column.names.to.remove,
                                 split = split)

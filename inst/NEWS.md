@@ -1,3 +1,12 @@
+Changes in Version 2.2.0 (2017-10-23)
+--------------------------------------------------------
+
+NEW FEATURES
+
+* `RemoveByName` now supports lists of vectors (DS-1530, DS-1471)
+* `RemoveRowsAndOrColumns` now supports vectors and lists
+of vectors, matrices, or data.frames (DS-1530, DS-1471)
+
 Changes in Version 2.1.0 (2017-10-20)
 --------------------------------------------------------
 
