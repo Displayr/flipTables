@@ -198,7 +198,7 @@ test_that("TidyTabularData rm entries from vector comma sep. names",
     out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
     expect_equal(names(out), "b")
 
-    out <- TidyTabularData(x, row.names.to.remove = "c;  b  ")
+    out <- TidyTabularData(x, row.names.to.remove = "c;  b  ", split = "[;,]")
     expect_equal(names(out), "a")
 
     x <- 1:4

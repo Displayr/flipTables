@@ -16,6 +16,8 @@
 #'     specifying columns to remove from the returned table
 #' @param transpose logical; if \code{TRUE} the table will be
 #'     transposed before being returned
+#' @param split Character delimiter to split \code{row.names.to.remove}
+#' and \code{col.names.to.remove} on
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
 #'     will be made to coerce it to one using
 #'     \code{\link{AsTidyTabularData}}.
@@ -34,7 +36,7 @@
 TidyTabularData <- function(x, date = FALSE,
                        row.names.to.remove = NULL,
                        col.names.to.remove = NULL,
-                       transpose = FALSE)
+                       transpose = FALSE, split = "[;,]")
 {
     if (!isFALSE(date))
         x <- processDates(x, date)
@@ -50,11 +52,8 @@ TidyTabularData <- function(x, date = FALSE,
     if (transpose)
         x <- t(x)
 
-    if (length(dim(x)) == 2L)
-        x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove)
-    else
-        x <- RemoveByName(x, list(row.names.to.remove, col.names.to.remove))
-
+    x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove,
+                                split)
 
     class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
                     "numeric"

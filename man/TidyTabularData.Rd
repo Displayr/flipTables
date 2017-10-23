@@ -5,7 +5,7 @@
 \title{Create a Tidy Table or Vector}
 \usage{
 TidyTabularData(x, date = FALSE, row.names.to.remove = NULL,
-  col.names.to.remove = NULL, transpose = FALSE)
+  col.names.to.remove = NULL, transpose = FALSE, split = "[;,]")
 }
 \arguments{
 \item{x}{a numeric matrix or vector; should be named, but if names
@@ -27,6 +27,9 @@ specifying columns to remove from the returned table}
 
 \item{transpose}{logical; if \code{TRUE} the table will be
 transposed before being returned}
+
+\item{split}{Character delimiter to split \code{row.names.to.remove}
+and \code{col.names.to.remove} on}
 }
 \value{
 A \strong{named} matrix or vector; a tidy version of \code{x}
