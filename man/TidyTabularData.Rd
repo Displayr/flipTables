@@ -35,14 +35,16 @@ and \code{col.names.to.remove} on}
 A \strong{named} matrix or vector; a tidy version of \code{x}
 }
 \description{
-Creates tables used by Displayr charting functions
+Creates tables that are ensured to be in a tidy format.  Output is
+guaranteed to always have row and column names and there is special
+handling of arrays and tables from \code{Q}.
 }
 \details{
 If \code{x} is not a numeric vector or matrix, an attempt
     will be made to coerce it to one using
     \code{\link{AsTidyTabularData}}.
 
-If a named vector \code{BasicTable} is created from \code{x}, then
+If a named vector is created from \code{x}, then
 \code{row.names.to.remove} and \code{col.names.to.remove} will be
 combined (using \code{\link[base]{union}}) to determine entries to remove.
 }

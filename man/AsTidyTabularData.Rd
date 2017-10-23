@@ -14,7 +14,10 @@ A \strong{named} matrix or
     vector; a tidy version of \code{x}
 }
 \description{
-Creates tables used by Displayr charting functions
+Coerces R objects to a tidy tabular format.  Recognized inputs include
+tables from \code{Q}, arrays, matrices, data.frames, and pasted
+tables (character matrices).  Output will always be named and always
+be either a vector or matrix.
 }
 \details{
 \code{factors} will automatically be converted to numeric

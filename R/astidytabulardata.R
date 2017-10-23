@@ -1,6 +1,9 @@
 #' Coerce an R Object To a Tidy Table
 #'
-#' Creates tables used by Displayr charting functions
+#' Coerces R objects to a tidy tabular format.  Recognized inputs include
+#' tables from \code{Q}, arrays, matrices, data.frames, and pasted
+#' tables (character matrices).  Output will always be named and always
+#' be either a vector or matrix.
 #' @param x  An object to be coerced to a tidy table.
 #' @return A \strong{named} matrix or
 #'     vector; a tidy version of \code{x}
