@@ -26,6 +26,16 @@ test_that("RemoveRowsAndOrColumns handles spaces in middle",
               expect_equal(nrow(d3), 6)
           })
 
+test_that("RemoveRowsAndOrColumns list of tables",
+          {
+              out <- RemoveRowsAndOrColumns(list(dat, dat),
+                                           row.names.to.remove = "NET Sugarless,NET Sugarred,   Net")
+              expect_is(out, "list")
+              expect_equal(nrow(out[[1L]]), 6)
+              expect_equal(nrow(out[[2L]]), 6)
+          })
+
+
 test_that("RemoveRowsAndOrColumns handles trailing spaces",
           {
               d4 <- RemoveRowsAndOrColumns(dat, row.names.to.remove = "Pepsi")

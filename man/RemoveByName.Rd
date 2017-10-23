@@ -7,24 +7,29 @@
 RemoveByName(x, rnames)
 }
 \arguments{
-\item{x}{named vector, data.frame, or list to remove entries from}
+\item{x}{Named vector, data.frame, or list to remove entries from,
+or a list of these; see the details.}
 
-\item{rnames}{either 1) a character, vector giving entry names to remove; 2) a single
+\item{rnames}{Either 1) a character, vector giving entry names to remove; 2) a single
 string containing comma or semi-colon separated names to remove, 3) a list where each
-element is either 1) or 2)}
+element is either 1) or 2).}
 }
 \value{
 \code{x} with entries specified in \code{rnames} removed
-they will be combined using \code{\link{union}}
+they will be combined using \code{\link{union}}.
 }
 \description{
 Remove elements from a vector while preserving attributes
 }
 \details{
-Will also work for data.frame \code{x}
+In the case when \code{x} inherits from class \code{"list"}, it is first
+checked whether any of \code{rnames} appears in the names of the elements of
+\code{x}; if they do, then elements will be removed from each element of \code{x}.
+If the the check finds no matches in any element, then an attempt is made to remove
+entire elements of \code{x} whose names appear in \code{rnames}.
 }
 \note{
-An error is thrown if removal would result in an empty vector
+An error is thrown if removal would result in an empty vector.
 }
 \examples{
 x <- c(a = 1, b = 2, c = 3, d = 4, e = 5)

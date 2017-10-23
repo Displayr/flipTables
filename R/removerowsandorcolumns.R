@@ -1,7 +1,8 @@
 
 #' \code{RemoveRowsAndOrColumns}
 #' @description Removes rows or columns from the table.
-#' @param x The data that is being analyzed
+#' @param x Data to remove rows and columns from; can be a matrix or data.frame or
+#' a list of matrices and data.frames.
 #' @param row.names.to.remove A vector or comma-separated string containing the row labels to remove.
 #' @param column.names.to.remove A vector or comma-separated string containing the column labels to remove.
 #' @param split Delimiter to split string on.
@@ -16,6 +17,11 @@ RemoveRowsAndOrColumns <- function(x,
 {
     if (is.null(row.names.to.remove) && is.null(column.names.to.remove))
         return(x)
+
+    if(inherits(x, "list"))
+        return(lapply(x, RemoveRowsAndOrColumns, row.names.to.remove = row.names.to.remove,
+                      column.names.to.remove = column.names.to.remove, split = split))
+
     ind <- RetainedRowsAndOrColumns(x = x, row.names.to.remove = row.names.to.remove,
                                 column.names.to.remove = column.names.to.remove,
                                 split = split)
@@ -29,8 +35,10 @@ RemoveRowsAndOrColumns <- function(x,
 #' \code{RetainedRowsAndOrColumns}
 #' @description Produces a list of 2 vectors, indices of rows and columns from a table.
 #' @param x The data that is being analyzed.
-#' @param row.names.to.remove A vector or comma-separated string containing the row labels to remove.
-#' @param column.names.to.remove A vector or comma-separated string containing the column labels to remove.
+#' @param row.names.to.remove A vector or comma-separated string containing the
+#' row labels to remove.
+#' @param column.names.to.remove A vector or comma-separated string containing
+#' the column labels to remove.
 #' @param split Delimiter to split string on.
 #' @details Trailing spaces are removed and lower/upper case is ignored.
 #' @export

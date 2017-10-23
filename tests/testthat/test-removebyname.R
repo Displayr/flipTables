@@ -31,7 +31,7 @@ test_that("RemoveByName data.frame",
     expect_error(RemoveByName(x, list(names(x))))
 })
 
-test_that("RemoveByName list",
+test_that("RemoveByName remove list elements",
 {
     x <- list(a = 1, b = 2, c = 3, d = 4, e = 5)
     expect_equal(x[c("d", "e")], RemoveByName(x, list(c("a", "b"), "c")))
@@ -41,4 +41,13 @@ test_that("RemoveByName list",
                  attr(RemoveByName(x, list(c("a", "b"), "c"))[["e"]], "foo"))
     expect_error(RemoveByName(x, as.list(names(x))))
     expect_error(RemoveByName(x, list(names(x))))
+})
+
+test_that("RemoveByName: list of vectors",
+{
+    x <- c(a = 1, aa = 2, aaa = 3)
+    x <- list(x, x)
+    expect_error(RemoveByNames(x, "a; aa;aaa  "))
+    expect_equal(x[[1L]][-3], RemoveByName(x, "aaa")[[1L]])
+    expect_equal(x[[2L]][-3], RemoveByName(x, "aaa")[[2L]])
 })

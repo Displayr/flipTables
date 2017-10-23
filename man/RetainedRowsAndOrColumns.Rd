@@ -10,9 +10,11 @@ RetainedRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
 \arguments{
 \item{x}{The data that is being analyzed.}
 
-\item{row.names.to.remove}{A vector or comma-separated string containing the row labels to remove.}
+\item{row.names.to.remove}{A vector or comma-separated string containing the
+row labels to remove.}
 
-\item{column.names.to.remove}{A vector or comma-separated string containing the column labels to remove.}
+\item{column.names.to.remove}{A vector or comma-separated string containing
+the column labels to remove.}
 
 \item{split}{Delimiter to split string on.}
 }

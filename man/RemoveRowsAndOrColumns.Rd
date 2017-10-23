@@ -8,7 +8,8 @@ RemoveRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
   column.names.to.remove = c("NET", "Total", "SUM"), split = ",")
 }
 \arguments{
-\item{x}{The data that is being analyzed}
+\item{x}{Data to remove rows and columns from; can be a matrix or data.frame or
+a list of matrices and data.frames.}
 
 \item{row.names.to.remove}{A vector or comma-separated string containing the row labels to remove.}
 
