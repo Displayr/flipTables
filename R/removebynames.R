@@ -6,6 +6,8 @@
 #' @param rnames Either 1) a character, vector giving entry names to remove; 2) a single
 #' string containing comma or semi-colon separated names to remove, 3) a list where each
 #' element is either 1) or 2).
+#' @param sep Character string specifying a possible separator in \code{rnames}.  Can be
+#' a regular expression; the default checks for both \code{","} and \code{";"}.
 #' @return \code{x} with entries specified in \code{rnames} removed
 #' they will be combined using \code{\link{union}}.
 #' @note An error is thrown if removal would result in an empty vector.
@@ -21,18 +23,18 @@
 #' RemoveByName(x, "a; b")
 #' RemoveByName(x, list(c("a", "b"), " c,  d"))
 #' @export
-RemoveByName <- function(x, rnames)
+RemoveByName <- function(x, rnames, sep = "[;,]")
 {
     if (!length(rnames) || !nzchar(rnames))
         return(x)
 
     rnames <- if(is.list(rnames))
-                  unique(unlist(lapply(rnames, sepNames)))  # Reduce("union", lapply(rnames, sepNames))
+                  unique(unlist(lapply(rnames, sepNames, sep)))  # Reduce("union", lapply(rnames, sepNames))
               else
-                  sepNames(rnames)
+                  sepNames(rnames, sep)
 
     ## deal with possible comma or semi-colon separated names
-    rnames <- sepNames(rnames)
+    rnames <- sepNames(rnames, sep)
 
     if (inherits(x, "list"))
     {  ## try to guess if user wants names removed from
@@ -52,17 +54,17 @@ RemoveByName <- function(x, rnames)
         return(x)
 
     if (all(xnames %in% rnames))
-        stop("Removing entries gives empty vector")
+        stop("Removing entries gives empty vector.")
 
     CopyAttributes(x[setdiff(xnames, rnames)], x)
 }
 
 #' @noRd
-sepNames <- function(rnames)
+sepNames <- function(rnames, sep = "[;,]")
 {
     sep <- if (length(rnames) == 1)
-               gsub("[^;,]", "", rnames)
-    if (!is.null(sep) && nzchar(sep))
+               regmatches(rnames, regexpr(sep, rnames))
+    if (length(sep) && nzchar(sep))
         rnames <- trimws(strsplit(rnames, sep)[[1L]])
     rnames
 }

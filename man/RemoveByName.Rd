@@ -4,7 +4,7 @@
 \alias{RemoveByName}
 \title{Remove indices from a vector by name}
 \usage{
-RemoveByName(x, rnames)
+RemoveByName(x, rnames, sep = "[;,]")
 }
 \arguments{
 \item{x}{Named vector, data.frame, or list to remove entries from,
@@ -13,6 +13,9 @@ or a list of these; see the details.}
 \item{rnames}{Either 1) a character, vector giving entry names to remove; 2) a single
 string containing comma or semi-colon separated names to remove, 3) a list where each
 element is either 1) or 2).}
+
+\item{sep}{Character string specifying a possible separator in \code{rnames}.  Can be
+a regular expression; the default checks for both \code{","} and \code{";"}.}
 }
 \value{
 \code{x} with entries specified in \code{rnames} removed
