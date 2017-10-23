@@ -13,7 +13,7 @@
 RemoveRowsAndOrColumns <- function(x,
                                    row.names.to.remove = c("NET", "Total", "SUM"),
                                    column.names.to.remove = c("NET", "Total", "SUM"),
-                                   split = ",")
+                                   split = "[;,]")
 {
     if (is.null(row.names.to.remove) && is.null(column.names.to.remove))
         return(x)
@@ -49,7 +49,7 @@ RemoveRowsAndOrColumns <- function(x,
 RetainedRowsAndOrColumns <- function(x,
                                    row.names.to.remove = c("NET", "Total", "SUM"),
                                    column.names.to.remove = c("NET", "Total", "SUM"),
-                                   split = ",")
+                                   split = "[;,]")
 {
     ind <- list(retained.rows = 1:nrow(x), retained.cols = 1:ncol(x))
     for (i in 1:2)

@@ -5,7 +5,7 @@
 \title{\code{RemoveRowsAndOrColumns}}
 \usage{
 RemoveRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
-  column.names.to.remove = c("NET", "Total", "SUM"), split = ",")
+  column.names.to.remove = c("NET", "Total", "SUM"), split = "[;,]")
 }
 \arguments{
 \item{x}{Data to remove rows and columns from; can be a matrix or data.frame or

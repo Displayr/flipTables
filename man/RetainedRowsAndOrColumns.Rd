@@ -5,7 +5,7 @@
 \title{\code{RetainedRowsAndOrColumns}}
 \usage{
 RetainedRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
-  column.names.to.remove = c("NET", "Total", "SUM"), split = ",")
+  column.names.to.remove = c("NET", "Total", "SUM"), split = "[;,]")
 }
 \arguments{
 \item{x}{The data that is being analyzed.}
