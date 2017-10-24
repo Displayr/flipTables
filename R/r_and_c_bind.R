@@ -21,7 +21,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     # reset names of vectors which have been lost and are used as rownames.
     object.names <- as.character(substitute(list(...)))[-1L]
     named.objects <- sapply(object.names, exists)
-    names(tables)[named.objects] <- as.character(substitute(list(...)))[-1L][named.objects]
+    names(tables)[named.objects] <- object.names[named.objects]
     bind.tables <- suppressWarnings(do.call(bind, tables))
 
     tables <- list(...)   # reset to full size matrices
