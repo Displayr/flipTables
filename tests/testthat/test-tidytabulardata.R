@@ -1,9 +1,7 @@
 context("TidyTabularData")
 
-test_that("TidyTabularData: works with date arg",
-{
-
-})
+## Note that unit tests for the date argument of TidyTabularData are contained in
+##    ./tests/testthat/test-stackyears.R
 
 test_that("TidyTabularData: removes cols/rows properly (and transposes FIRST)",
 {
@@ -40,22 +38,41 @@ test_that("TidyTabularData: removes cols/rows properly (and transposes FIRST)",
 test_that("TidyTabularData: works when needs to call AsTidyTabularData first",
 {
     ## check QTable
-    ## check identical to just calling AsTidyTabularData
+    q1.os <- structure(c(7.08868501529052, 3.84709480122324, 17.4617737003058
+    ), .Dim = 3L, statistic = "Average", .Dimnames = list(c("Colas (e.g., Coca-Cola, Pepsi Max)?",
+    "Sparkling mineral water", "SUM")), name = "Number Multi", questions = c("Number Multi",
+                                                                             "SUMMARY"))
+    out <- TidyTabularData(q1.os)
+    expect_identical(out, AsTidyTabularData(q1.os))
+    expect_equal(attr(out, "name"), attr(q1.os, "name"))
+    expect_null(dim(out))
 })
 
 test_that("TidyTabularData: remove all rows or columns",
 {
-
+    df <- data.frame(x = 1, y= 2)
+    expect_error(TidyTabularData(df, col.names.to.remove = c("x", "y")),
+                 "Removing rows/columns gives empty input matrix")
 })
 
 test_that("TidyTabularData: remove all but one row or column",
 {
+    x <- matrix(1:6, 2, 3)
+    rownames(x) <- letters[1:2]
+    colnames(x) <- LETTERS[1:3]
+    out <- TidyTabularData(x, row.names.to.remove = "a")
+    expect_equal(dim(out), dim(x)- c(1, 0))
 
+    out <- TidyTabularData(x, col.names.to.remove = c("A", "B"))
+    expect_equal(dim(out), dim(x)- c(0, 2))
 })
 
 test_that("TidyTabularData: transpose arg works",
 {
-
+    x <- rbind(letters[1:2], 1:2, 3:4, 5:6)
+    out <- TidyTabularData(x, transpose = TRUE)
+    expect_equal(rownames(out), x[1, ])
+    expect_equal(dim(out), rev(dim(x[-1, ])))
 })
 
 x <- matrix(c(0.3004, 0.6864, 0.4975, 0.2908, 0.2781, 0.2642, 0.1916, 0.284,  0.3514, 0.2534, 0.2089,
@@ -193,7 +210,6 @@ test_that("TidyTabularData removes entries from vector properly",
 
 test_that("TidyTabularData rm entries from vector comma sep. names",
 {
-
     x <- c(a = 1, b = 2, c = 3)
     out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
     expect_equal(names(out), "b")
