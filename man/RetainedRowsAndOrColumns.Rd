@@ -2,7 +2,7 @@
 % Please edit documentation in R/removerowsandorcolumns.R
 \name{RetainedRowsAndOrColumns}
 \alias{RetainedRowsAndOrColumns}
-\title{\code{RetainedRowsAndOrColumns}}
+\title{Determine indices to be kept in a table}
 \usage{
 RetainedRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
   column.names.to.remove = c("NET", "Total", "SUM"), split = "[;,]")
@@ -10,16 +10,25 @@ RetainedRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
 \arguments{
 \item{x}{The data that is being analyzed.}
 
-\item{row.names.to.remove}{A vector or comma-separated string containing the
+\item{row.names.to.remove}{A character vector or delimited string containing the
 row labels to remove.}
 
-\item{column.names.to.remove}{A vector or comma-separated string containing
+\item{column.names.to.remove}{A character vector or delimited string containing
 the column labels to remove.}
 
-\item{split}{Delimiter to split string on.}
+\item{split}{Character delimiter to split \code{row.names.to.remove}
+and \code{col.names.to.remove} on. Default is to split on either of
+\code{","} or \code{";"}. Assumed to be a regular expression; see
+\code{\link{strsplit}}.}
+}
+\value{
+A list of 2 vectors, indices of rows and columns from a table that
+do not match names in \code{row.names.to.remove} and
+\code{column.names.to.remove}, respectively.
 }
 \description{
-Produces a list of 2 vectors, indices of rows and columns from a table.
+For given vectors or delimited strings of row and column names, deterimnes the
+indices in tabular data that does \emph{not} match the specified names.
 }
 \details{
 Trailing spaces are removed and lower/upper case is ignored.

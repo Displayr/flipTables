@@ -8,31 +8,33 @@ TidyTabularData(x, date = FALSE, row.names.to.remove = NULL,
   col.names.to.remove = NULL, transpose = FALSE, split = "[;,]")
 }
 \arguments{
-\item{x}{a numeric matrix or vector; should be named, but if names
+\item{x}{Numeric matrix or vector; should be named, but if names
 are not present they will be created in the output}
 
-\item{date}{optional vector of dates, which if supplied, will be
+\item{date}{Optional vector of dates, which if supplied, will be
 used for the row names of the returned table; must be unique
 and have the same length or number of rows of \code{x}; will
 overwrite any existing row names present in \code{x}; the
 default, \code{FALSE}, means that no dates are present in the
 data; a value of \code{NULL} indicates that dates are contained
-in x}
+in x.}
 
-\item{row.names.to.remove}{character vector of row labels
-specifying rows to remove from the returned table}
+\item{row.names.to.remove}{Character vector or delimited string
+of row labels specifying rows to remove from the returned table.}
 
-\item{col.names.to.remove}{character vector of column labels
-specifying columns to remove from the returned table}
+\item{col.names.to.remove}{Character vector or delimited string of column
+labels specifying columns to remove from the returned table}
 
 \item{transpose}{logical; if \code{TRUE} the table will be
 transposed before being returned}
 
 \item{split}{Character delimiter to split \code{row.names.to.remove}
-and \code{col.names.to.remove} on}
+and \code{col.names.to.remove} on. Default is to split on either of
+\code{","} or \code{";"}.  Assumed to be a regular expression; see
+\code{\link{strsplit}}.}
 }
 \value{
-A \strong{named} matrix or vector; a tidy version of \code{x}
+A \strong{named} matrix or vector; a tidy version of \code{x}.
 }
 \description{
 Creates tables that are ensured to be in a tidy format.  Output is

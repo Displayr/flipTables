@@ -1,12 +1,20 @@
 
-#' \code{RemoveRowsAndOrColumns}
-#' @description Removes rows or columns from the table.
+#' Remove Rows and Columns From Tabular Data By Names
+#'
+#' Given tabular data and character vectors or delimited strings of row and column
+#' names, produces a table with the specified rows and columns removed.
 #' @param x Data to remove rows and columns from; can be a matrix or data.frame or
 #' a list of matrices and data.frames.
-#' @param row.names.to.remove A vector or comma-separated string containing the row labels to remove.
-#' @param column.names.to.remove A vector or comma-separated string containing the column labels to remove.
-#' @param split Delimiter to split string on.
+#' @param row.names.to.remove A vector or comma-separated string containing the
+#' row labels to remove.
+#' @param column.names.to.remove A vector or comma-separated string containing the
+#' column labels to remove.
+#' @param split Character delimiter to split \code{row.names.to.remove}
+#' and \code{col.names.to.remove} on. Default is to split on either of
+#' \code{","} or \code{";"}. Assumed to be a regular expression; see \code{\link{strsplit}}.
 #' @details Trailing spaces are removed and lower/upper case is ignored.
+#' @return \code{x} with the rows specified in \code{row.names.to.remove} and
+#' columns specified in \code{column.names.to.remove} removed.
 #' @importFrom flipFormat ConvertCommaSeparatedStringToVector
 #' @importFrom flipU CopyAttributes
 #' @export
@@ -36,15 +44,23 @@ RemoveRowsAndOrColumns <- function(x,
     CopyAttributes(x[ind[[1]], ind[[2]], drop = FALSE], x)
 }
 
-#' \code{RetainedRowsAndOrColumns}
-#' @description Produces a list of 2 vectors, indices of rows and columns from a table.
+#' Determine indices to be kept in a table
+#'
+#' For given vectors or delimited strings of row and column names, deterimnes the
+#' indices in tabular data that does \emph{not} match the specified names.
 #' @param x The data that is being analyzed.
-#' @param row.names.to.remove A vector or comma-separated string containing the
+#' @param row.names.to.remove A character vector or delimited string containing the
 #' row labels to remove.
-#' @param column.names.to.remove A vector or comma-separated string containing
+#' @param column.names.to.remove A character vector or delimited string containing
 #' the column labels to remove.
-#' @param split Delimiter to split string on.
+#' @param split Character delimiter to split \code{row.names.to.remove}
+#' and \code{col.names.to.remove} on. Default is to split on either of
+#' \code{","} or \code{";"}. Assumed to be a regular expression; see
+#' \code{\link{strsplit}}.
 #' @details Trailing spaces are removed and lower/upper case is ignored.
+#' @return A list of 2 vectors, indices of rows and columns from a table that
+#' do not match names in \code{row.names.to.remove} and
+#' \code{column.names.to.remove}, respectively.
 #' @export
 RetainedRowsAndOrColumns <- function(x,
                                    row.names.to.remove = c("NET", "Total", "SUM"),
