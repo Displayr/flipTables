@@ -82,15 +82,15 @@ test_that("Cbind",
               expect_equivalent(Cbind(a, b, keep.all = FALSE), t(a.and.b))
           })
 
-# test_that("Cbind",
-#           {
-#
-#               for (i in 1:nrow(perms)) {
-#                   if (i %in% c(1, 6, 7, 8, 13, 14, 43, 44, 49, 50, 51, 56))
-#                       expect_error(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), NA)
-#                   else
-#                       expect_warning(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "There are no matching.")
-#               }
-#
-#           })
+test_that("Cbind",
+          {
+
+              for (i in 1:nrow(perms)) {
+                  if (i %in% c(1, 6, 7, 8, 13, 14, 43, 44, 49, 50, 51, 56))
+                      expect_error(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), NA)
+                  else
+                      expect_warning(Cbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "There are no matching.")
+              }
+
+          })
 
