@@ -5,9 +5,16 @@ context("QTable to TidyTabularData")
 ## R CMD check finds ./inst/tests/QTable.R where it gets installed, i.e. in ./tests
 ## However, testing this file with testthat functions in an interactive session or on
 ## travis-CI requires specifying the file path as ./inst/tests/QTables.R
-source(file.path(base::system.file(ifelse(Sys.info()["sysname"] == "Windows" && !interactive(), "", "inst"),
-                                   "tests", package="flipTables", mustWork = TRUE),
-                 "QTables.R"))
+findInstDirFile <- function(pkg, inst.sub.dir, file)
+{
+    ## use devtools version of system.file if pkg loaded with devtools::load_all
+    sf.fun <- if (identical(Sys.getenv("TRAVIS"), "true"))
+                  base::system.file
+                  else system.file
+    file.path(sf.fun(inst.sub.dir, package = pkg, mustWork = TRUE),
+                 file)
+}
+source(findInstDirFile("flipTables", "tests", "QTables.R"))
 
 test_that("isQTable works",
 {
