@@ -22,14 +22,14 @@ r_github_packages:
 script:
   - R CMD build --no-manual --no-build-vignettes --no-resave-data .
   - R CMD check --as-cran --no-manual --no-build-vignettes --no-tests *.tar.gz
-  - echo "devtools::load_all(".")" > rcode
-  - echo "res<-devtools::test()" >> rcode
-  - echo "df <- as.data.frame(res)" >> rcode
-  - echo "pass <- sum(df$failed)==0 && all(!df$error)" >> rcode
-  - echo "write.csv(df, file="test_results.csv")" >> rcode
-  - echo "quit(status=1-pass, save="no")" >> rcode
+  - rcode="devtools::load_all('.');"
+  - rcode+="res<-devtools::test();"
+  - rcode+="df <- as.data.frame(res);"
+  - rcode+="pass <- sum(df$failed)==0 && all(!df$error);"
+  - rcode+="write.csv(df, file='test_results.csv');"
+  - rcode+="quit(status=1-pass, save='no');"
   - if [ -d tests/testthat ]; then
-    Rscript --default-packages='datasets,utils,grDevices,graphics,stats,methods' ./rcode;
+    Rscript --default-packages='datasets,utils,grDevices,graphics,stats,methods' -e "$rcode";
     fi
 
 notifications:
