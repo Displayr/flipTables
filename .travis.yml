@@ -29,8 +29,7 @@ script:
   - echo "write.csv(df, file="test_results.csv")" >> rcode
   - echo "quit(status=1-pass, save="no")" >> rcode
   - if [ -d tests/testthat ]; then
-    Rscript --default-packages='datasets,utils,grDevices,graphics,stats,methods' \
-    ./rcode;
+    Rscript --default-packages='datasets,utils,grDevices,graphics,stats,methods' ./rcode;
     fi
 
 notifications:
