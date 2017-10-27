@@ -38,11 +38,11 @@ AsTidyTabularData <- function(x)
         if (identical(attr(x, "row.names"), seq_len(nrow(x))))
             row.names(x) <- paste0("Row ", seq_len(nrow(x)))
         x <- ProcessQVariables(x)
-        x <- as.matrix(AsNumeric(x, binary = TRUE, remove.first = FALSE))
+        x <- as.matrix(AsNumeric(x, binary = FALSE, remove.first = FALSE))
     }else if (is.factor(x))
     {
         x <- as.matrix(AsNumeric(data.frame(x, row.names = paste0("Row ", seq_along((x)))),
-                       binary = TRUE, remove.first = FALSE))
+                       binary = FALSE, remove.first = FALSE))
     }else if (is.numeric(x))
     {  # make sure has dimnames and is <= 2D
         dims <- dim(x)

@@ -110,21 +110,21 @@ test_that("AsTidyTabularData: data.frame inputs",
     expect_equal(rownames(out), rownames(df))
 
     df <- data.frame(x = 1:10, y = as.factor(rep(1:2, 5)))
-    out <- AsTidyTabularData(df)
+    out <- suppressWarnings(AsTidyTabularData(df))
     expect_equal(rownames(out), paste0("Row ", seq_len(nrow(df))))
-    expect_equal(ncol(out), 3)
-    expect_equal(colnames(out), c("x", paste0("y.", 1:nlevels(df$y))))
-    expect_true(all(out[, -1] == 0 | out[, -1] == 1))
+    expect_equal(ncol(out), 2)
+    expect_equal(colnames(out), c("x", "y"))
+
 })
 
 test_that("AsTidyTabularData: factor input",
 {
     f <- as.factor(rep(1:3, each = 2))
-    out <- AsTidyTabularData(f)
+    out <- suppressWarnings(AsTidyTabularData(f))
     expect_is(out, "matrix")
     expect_equal(rownames(out), paste0("Row ", seq_along(f)))
 
-    expect_equal(ncol(out), nlevels(f))
-    expect_equal(colnames(out), paste0("x.", 1:nlevels(f)))
-    expect_true(all(out == 0 | out == 1))
+    expect_equal(ncol(out), 1)
+    expect_equal(colnames(out), paste0("x"))
+    #expect_true(all(out == 0 | out == 1))
 })
