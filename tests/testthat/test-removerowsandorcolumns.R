@@ -322,3 +322,21 @@ test_that("RemoveRowsAndOrColumns: Named list of un-named vector",
               expect_equal(RemoveRowsAndOrColumns(x), list(B = 2:11))
           })
 
+test_that("RemoveRowsAndOrColumns: Rows from a 1D array",
+          {
+              x2 <- structure(c(17, 83, 56, 144, 138, 26, 26, 206, 196, 4, 312), .Dim = 11L, statistic = "Count", .Dimnames = list(
+                  c("iPad", "iPod", "iPhone", "Nokia mobile phone", "Other mobile phone (not Nokia and not iPhone)",
+                    "Mac computer - desktop", "Mac computer – laptop", "PC (non-Mac)",
+                    "Laptop computer (non-Mac)", "None of these", "NET")), name = "Q6", questions = c("Q6","SUMMARY"))
+              expect_equal(length(flipTables::RemoveRowsAndOrColumns(x2)), 10)
+          })
+
+test_that("RemoveRowsAndOrColumns: Rows from a named vector",
+          {
+              x2 <- c(17, 83, 56, 144, 138, 26, 26, 206, 196, 4, 312)
+              names(x2) = c("iPad", "iPod", "iPhone", "Nokia mobile phone", "Other mobile phone (not Nokia and not iPhone)",
+                    "Mac computer - desktop", "Mac computer – laptop", "PC (non-Mac)","Laptop computer (non-Mac)", "None of these", "NET")
+              expect_equal(length(flipTables::RemoveRowsAndOrColumns(x2)), 10)
+          })
+
+

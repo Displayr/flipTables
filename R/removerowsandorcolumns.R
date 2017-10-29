@@ -36,7 +36,7 @@ RemoveRowsAndOrColumns <- function(x,
                       column.names.to.remove = column.names.to.remove, split = split))
     }
 
-    if (is.null(dim(x)))
+    if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
         return(RemoveByName(x, list(row.names.to.remove,
                                     column.names.to.remove), sep = split))
 
@@ -75,6 +75,7 @@ RetainedRowsAndOrColumns <- function(x,
                                    column.names.to.remove = c("NET", "Total", "SUM"),
                                    split = "[;,]")
 {
+
     list(RemoveCharacterElements(rownames(x), row.names.to.remove, split),
          RemoveCharacterElements(colnames(x), column.names.to.remove, split))
 }
