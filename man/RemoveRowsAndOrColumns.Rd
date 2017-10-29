@@ -27,7 +27,9 @@ columns specified in \code{column.names.to.remove} removed.
 }
 \description{
 Given tabular data and character vectors or delimited strings of row and column
-names, produces a table with the specified rows and columns removed.
+names, produces a table with the specified rows and columns removed. Where a
+list is supplied, elements of the list are treated as columns, and the algorithm
+is applied to elements within the list.
 }
 \details{
 Trailing spaces are removed and lower/upper case is ignored.

@@ -1,5 +1,5 @@
 
-context("table")
+context("RemoveRowsAndOrColumns")
 test_that("RemoveRowsAndOrColumns works",
           {
               x <- matrix(NA, 3, 3, dimnames = list(LETTERS[1:3],LETTERS[1:3]))
@@ -296,4 +296,29 @@ test_that("RemoveRowsAndOrColumns: vector with comma-separated names",
                  "Removing entries gives empty vector.")
     expect_equal(x[-3], RemoveRowsAndOrColumns(x, "aaa"))
 })
+
+
+test_that("RemoveRowsAndOrColumns: Named List of tables",
+          {
+              x = matrix(1:4, 2, dimnames = list(c("NET", "row"), c("column", "SUM")))
+              zx = RemoveRowsAndOrColumns(x)
+              expect_equal(RemoveRowsAndOrColumns(list(x, x)), list(zx, zx))
+              expect_equal(RemoveRowsAndOrColumns(list(A = x, "NET" = x)), list(A = zx))
+
+
+          })
+
+test_that("RemoveRowsAndOrColumns: Un-Named list of un-named vector",
+          {
+              x = list(1:10, 1:10)
+              expect_equal(RemoveRowsAndOrColumns(x), x)
+          })
+
+test_that("RemoveRowsAndOrColumns: Named list of un-named vector",
+          {
+              x = list(SUM = 1:10, NET = 2:11)
+              expect_true(length(RemoveRowsAndOrColumns(x)) == 0)
+              x = list(SUM = 1:10, B = 2:11)
+              expect_equal(RemoveRowsAndOrColumns(x), list(B = 2:11))
+          })
 

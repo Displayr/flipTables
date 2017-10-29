@@ -2,7 +2,7 @@
 % Please edit documentation in R/removerowsandorcolumns.R
 \name{RetainedRowsAndOrColumns}
 \alias{RetainedRowsAndOrColumns}
-\title{Determine indices to be kept in a table}
+\title{RetainedRowsAndOrColumns}
 \usage{
 RetainedRowsAndOrColumns(x, row.names.to.remove = c("NET", "Total", "SUM"),
   column.names.to.remove = c("NET", "Total", "SUM"), split = "[;,]")
@@ -22,14 +22,15 @@ and \code{col.names.to.remove} on. Default is to split on either of
 \code{\link{strsplit}}.}
 }
 \value{
-A list of 2 vectors, indices of rows and columns from a table that
-do not match names in \code{row.names.to.remove} and
+A list of 2 vectors, containing the names that have not been removed.
 \code{column.names.to.remove}, respectively.
 }
 \description{
-For given vectors or delimited strings of row and column names, deterimnes the
-indices in tabular data that does \emph{not} match the specified names.
+Determine row and column names to be kept in a table
 }
 \details{
+For given vectors or delimited strings of row and column names, determines the
+names in tabular data that does \emph{not} match the specified names.
+
 Trailing spaces are removed and lower/upper case is ignored.
 }
