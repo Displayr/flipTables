@@ -10,7 +10,7 @@ Imports:
     stringr,
     methods,
     lubridate,
-    flipU,
+    flipU (>= 1.0.0),
     flipFormat,
     flipTime,
     flipTransformations (>= 1.1.0)
