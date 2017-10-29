@@ -304,22 +304,30 @@ test_that("RemoveRowsAndOrColumns: Named List of tables",
               zx = RemoveRowsAndOrColumns(x)
               expect_equal(RemoveRowsAndOrColumns(list(x, x)), list(zx, zx))
               expect_equal(RemoveRowsAndOrColumns(list(A = x, "NET" = x)), list(A = zx))
-
-
           })
 
-test_that("RemoveRowsAndOrColumns: Un-Named list of un-named vector",
+test_that("RemoveRowsAndOrColumns: Un-Named list ",
           {
               x = list(1:10, 1:10)
               expect_equal(RemoveRowsAndOrColumns(x), x)
           })
 
-test_that("RemoveRowsAndOrColumns: Named list of un-named vector",
+test_that("RemoveRowsAndOrColumns: Named list",
           {
               x = list(SUM = 1:10, NET = 2:11)
               expect_true(length(RemoveRowsAndOrColumns(x)) == 0)
               x = list(SUM = 1:10, B = 2:11)
               expect_equal(RemoveRowsAndOrColumns(x), list(B = 2:11))
+          })
+
+test_that("RemoveRowsAndOrColumns: Matrix with missing dimnames",
+          {
+              x1 <- as.matrix(c(A=1, Bbbbbb=3.6, Cc=2.8))
+              expect_error(RemoveRowsAndOrColumns(x1), NA)
+              expect_error(RemoveRowsAndOrColumns(t(x1)), NA)
+              dimnames(x1) <- NULL
+              expect_error(RemoveRowsAndOrColumns(x1), NA)
+
           })
 
 test_that("RemoveRowsAndOrColumns: Rows from a 1D array",
@@ -329,6 +337,7 @@ test_that("RemoveRowsAndOrColumns: Rows from a 1D array",
                     "Mac computer - desktop", "Mac computer – laptop", "PC (non-Mac)",
                     "Laptop computer (non-Mac)", "None of these", "NET")), name = "Q6", questions = c("Q6","SUMMARY"))
               expect_equal(length(flipTables::RemoveRowsAndOrColumns(x2)), 10)
+
           })
 
 test_that("RemoveRowsAndOrColumns: Rows from a named vector",

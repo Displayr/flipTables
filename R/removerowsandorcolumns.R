@@ -44,10 +44,16 @@ RemoveRowsAndOrColumns <- function(x,
                                 column.names.to.remove = column.names.to.remove,
                                 split = split)
 
-    if (length(ind[[1]]) == 0 || length(ind[[2]]) == 0)
+    if (length(ind[[1]]) == 0 && !is.null(ind[[1]])|| length(ind[[2]]) == 0 && !is.null(ind[[2]]))
         stop ("Removing rows/columns gives empty input matrix\n")
 
-    CopyAttributes(x[ind[[1]], ind[[2]], drop = FALSE], x)
+    out <- x
+    if (!is.null(ind[[1]]))
+        out <- out[ind[[1]], , drop = FALSE]
+    if (!is.null(ind[[2]]))
+        out <- out[, ind[[2]], drop = FALSE]
+
+    CopyAttributes(out, x)
 }
 
 #' RetainedRowsAndOrColumns
