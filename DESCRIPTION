@@ -10,17 +10,17 @@ Imports:
     stringr,
     methods,
     lubridate,
-    flipU (>= 1.0.0),
     flipFormat,
     flipTime,
-    flipTransformations (>= 1.1.0)
+    flipTransformations (>= 1.1.0),
+    flipU (>= 1.0.0)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests: gtools, testthat, covr
 Remotes:
-    Displayr/flipU,
     Displayr/flipFormat,
     Displayr/flipTime,
-    Displayr/flipTransformations
+    Displayr/flipTransformations,
+    Displayr/flipU
 NeedsCompilation: no
 Packaged: 2017-08-28 02:41:50 UTC; mathew
