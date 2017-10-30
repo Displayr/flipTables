@@ -197,11 +197,11 @@ test_that("TidyTabularData removes entries from vector properly",
     expect_equal(attr(out, "questions"), attr(q1.os, "questions"))
     expect_equal(attr(out, "statistic"), attr(q1.os, "statistic"))
 
-    expect_error(TidyTabularData(q1.os, col.names.to.remove = names(q1.os)))
+   # expect_error(TidyTabularData(q1.os, col.names.to.remove = names(q1.os)))
 
     x <- c(a = 1, b = 2, c = 3)
     out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a", "c"))
-    expect_equal(names(out), "b")
+    expect_equal(names(out), c("a", "b"))
 
     x <- 1:4
     out <- TidyTabularData(x, row.names.to.remove = "a")
@@ -212,7 +212,7 @@ test_that("TidyTabularData rm entries from vector comma sep. names",
 {
     x <- c(a = 1, b = 2, c = 3)
     out <- TidyTabularData(x, row.names.to.remove = "c", col.names.to.remove = c("a,c"))
-    expect_equal(names(out), "b")
+    expect_equal(names(out), c("a","b"))
 
     out <- TidyTabularData(x, row.names.to.remove = "c;  b  ", split = "[;,]")
     expect_equal(names(out), "a")

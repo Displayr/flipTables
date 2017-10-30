@@ -43,7 +43,7 @@ test_that("RemoveRowsAndOrColumns: list with both matrix + vector",
 
     expect_is(out, "list")
     expect_equal(dim(out[[1L]]), dim(dat) - c(1, 0))
-    expect_equal(out[[2L]], x[[2L]][3])
+    expect_equal(out[[2L]], x[[2L]])
 })
 
 test_that("RemoveRowsAndOrColumns handles trailing spaces",
@@ -66,32 +66,32 @@ test_that("RemoveRowsAndOrColumns perserves attriubtes",
     expect_equal(attr(out, "statistic"), attr(dat, "statistic"))
 })
 
-        dat <- structure(list(Q6_A = structure(c(3L, 5L, 5L, 6L, 4L, 1L, 3L,
+dat <- structure(list(Q6_A = structure(c(3L, 5L, 5L, 6L, 4L, 1L, 3L,
     6L, 5L, 6L, 6L, 5L, 5L, 4L, 3L, 6L, 6L, 5L, 5L, 4L), .Label = c("Don t Know",
     "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
     ), class = "factor", label = structure("Q6. Coca Cola", .Names = "Q6_A")),
-        Q6_B = structure(c(5L, 2L, 6L, 3L, 6L, 1L, 4L, 3L, 5L, 6L,
-        2L, 3L, 3L, 3L, 6L, 5L, 5L, 3L, 3L, 4L), .Label = c("Don t Know",
-        "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
-        ), class = "factor", label = structure("Q6. Diet Coke", .Names = "Q6_B")),
-        Q6_C = structure(c(3L, 5L, 3L, 3L, 4L, 1L, 5L, 5L, 1L, 6L,
-        2L, 3L, 3L, 5L, 3L, 5L, 5L, 3L, 5L, 6L), .Label = c("Don t Know",
-        "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
-        ), class = "factor", label = structure("Q6. Coke Zero", .Names = "Q6_C")),
-        Q6_D = structure(c(4L, 5L, 4L, 3L, 4L, 1L, 3L, 4L, 5L, 5L,
-        6L, 5L, 4L, 4L, 5L, 5L, 3L, 5L, 4L, 4L), .Label = c("Don t Know",
-        "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
-        ), class = "factor", label = structure("Q6. Pepsi", .Names = "Q6_D")),
-        Q6_E = structure(c(2L, 4L, 2L, 3L, 6L, 6L, 3L, 3L, 5L, 5L,
-        2L, 3L, 3L, 4L, 6L, 1L, 2L, 3L, 4L, 4L), .Label = c("Don t Know",
-        "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
-        ), class = "factor", label = structure("Q6. Pepsi Light", .Names = "Q6_E")),
-        Q6_F = structure(c(6L, 6L, 2L, 3L, 3L, 6L, 3L, 5L, 4L, 4L,
-        2L, 3L, 3L, 5L, 3L, 1L, 2L, 3L, 4L, 4L), .Label = c("Don t Know",
-        "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
-        ), class = "factor", label = structure("Q6. Pepsi Max", .Names = "Q6_F"))), .Names = c("Q6_A",
+    Q6_B = structure(c(5L, 2L, 6L, 3L, 6L, 1L, 4L, 3L, 5L, 6L,
+    2L, 3L, 3L, 3L, 6L, 5L, 5L, 3L, 3L, 4L), .Label = c("Don t Know",
+    "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
+    ), class = "factor", label = structure("Q6. Diet Coke", .Names = "Q6_B")),
+    Q6_C = structure(c(3L, 5L, 3L, 3L, 4L, 1L, 5L, 5L, 1L, 6L,
+    2L, 3L, 3L, 5L, 3L, 5L, 5L, 3L, 5L, 6L), .Label = c("Don t Know",
+    "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
+    ), class = "factor", label = structure("Q6. Coke Zero", .Names = "Q6_C")),
+    Q6_D = structure(c(4L, 5L, 4L, 3L, 4L, 1L, 3L, 4L, 5L, 5L,
+    6L, 5L, 4L, 4L, 5L, 5L, 3L, 5L, 4L, 4L), .Label = c("Don t Know",
+    "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
+    ), class = "factor", label = structure("Q6. Pepsi", .Names = "Q6_D")),
+    Q6_E = structure(c(2L, 4L, 2L, 3L, 6L, 6L, 3L, 3L, 5L, 5L,
+    2L, 3L, 3L, 4L, 6L, 1L, 2L, 3L, 4L, 4L), .Label = c("Don t Know",
+    "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
+    ), class = "factor", label = structure("Q6. Pepsi Light", .Names = "Q6_E")),
+    Q6_F = structure(c(6L, 6L, 2L, 3L, 3L, 6L, 3L, 5L, 4L, 4L,
+    2L, 3L, 3L, 5L, 3L, 1L, 2L, 3L, 4L, 4L), .Label = c("Don t Know",
+    "Hate", "Dislike", "Neither like nor dislike", "Like", "Love"
+    ), class = "factor", label = structure("Q6. Pepsi Max", .Names = "Q6_F"))), .Names = c("Q6_A",
     "Q6_B", "Q6_C", "Q6_D", "Q6_E", "Q6_F"), row.names = c(NA, 20L
-                                                           ), class = "data.frame")
+                                                       ), class = "data.frame")
     attr(dat, "statistic") <- "means"
 
 test_that("RemoveRowsAndOrColumns keeps data.frame col. attrs",
@@ -285,15 +285,14 @@ test_that("RemoveRowsAndOrColumns works with vectors; vector names",
 {
 
     x <- c(a = 1, b = 2, c = 3)
-    expect_error(RemoveRowsAndOrColumns(x, names(x)))
+    expect_true(length(RemoveRowsAndOrColumns(x, names(x))) == 0)
     expect_equal(x[-1], RemoveRowsAndOrColumns(x, "a"))
 })
 
 test_that("RemoveRowsAndOrColumns: vector with comma-separated names",
 {
     x <- c(a = 1, aa = 2, aaa = 3)
-    expect_error(RemoveRowsAndOrColumns(x, "a; aa;aaa  ", split = "[;,]"),
-                 "Removing entries gives empty vector.")
+    expect_equal(length(RemoveRowsAndOrColumns(x, "a; aa;aaa  ", split = "[;,]")),0)
     expect_equal(x[-3], RemoveRowsAndOrColumns(x, "aaa"))
 })
 
@@ -336,7 +335,7 @@ test_that("RemoveRowsAndOrColumns: Rows from a 1D array",
                   c("iPad", "iPod", "iPhone", "Nokia mobile phone", "Other mobile phone (not Nokia and not iPhone)",
                     "Mac computer - desktop", "Mac computer – laptop", "PC (non-Mac)",
                     "Laptop computer (non-Mac)", "None of these", "NET")), name = "Q6", questions = c("Q6","SUMMARY"))
-              expect_equal(length(flipTables::RemoveRowsAndOrColumns(x2)), 10)
+              expect_equal(length(RemoveRowsAndOrColumns(x2)), 10)
 
           })
 
