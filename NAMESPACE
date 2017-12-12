@@ -2,6 +2,9 @@
 
 export(AsTidyTabularData)
 export(Cbind)
+export(GetNonEmptyElements)
+export(GetNonEmptyRowsAndColumns)
+export(HideEmptyRowsAndColumns)
 export(Merge2Tables)
 export(MergeTables)
 export(Rbind)
