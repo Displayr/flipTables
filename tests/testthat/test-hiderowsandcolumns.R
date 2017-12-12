@@ -106,3 +106,9 @@ test_that("GetNonEmptyRowsAndColumns",
     expect_equal(unname(out[[1L]]), (1:nrow(q2.os))[-c(2, 3)])
     expect_equal(unname(out[[2L]]), (1:ncol(q2.os))[c(-6, -7)])
 })
+
+test_that("HideEmptyRowsAndColumns list input",
+{
+    x <- list(x = 1:3, y = NULL, z = matrix(0, 2, 2))
+    expect_equal(HideEmptyRowsAndColumns(x), x[-2L])
+})

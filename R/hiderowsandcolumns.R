@@ -88,7 +88,10 @@ GetNonEmptyElements <- function(x, use.names = TRUE, is.percent = NULL)
     {
         if (is.null(is.percent))
             is.percent <- !is.null(attr(x, "statistic")) && grepl("%", attr(x, "statistic"))
-        idx <- which(!vapply(x, is.null, FALSE) & !is.na(x)  & !(is.percent & x == 0))
+        idx <- if (inherits(x, "list"))
+                      !vapply(x, is.null, FALSE)
+                 else
+                     which(!is.na(x)  & !(is.percent & x == 0))
     }
     if (use.names)
         return(names(idx))
