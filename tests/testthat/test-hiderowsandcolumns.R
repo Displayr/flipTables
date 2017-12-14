@@ -112,3 +112,16 @@ test_that("HideEmptyRowsAndColumns list input",
     x <- list(x = 1:3, y = NULL, z = matrix(0, 2, 2))
     expect_equal(HideEmptyRowsAndColumns(x), x[-2L])
 })
+
+test_that("GetNonEmptyElements character input",
+{
+    x <- c("a", "", "")
+    expect_equal(HideEmptyRowsAndColumns(x), x[1L])
+})
+
+test_that("GetNonEmptyRowsAndColumns character matrix",
+{
+    x <- matrix("", 2, 2)
+    x[1, 1] <- "1"
+    expect_equal(HideEmptyRowsAndColumns(x), x[1L, 1L, drop = FALSE])
+})

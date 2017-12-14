@@ -1,3 +1,19 @@
+Changes in Version 2.4.2 (2017-12-14)
+-------------------------------------------------------
+
+NEW FEATURES
+
+* `TidyTabularData` gains argument   "hide.empty.rows.and.columns",
+which if `TRUE`, will call `HideEmptyRowsAndColumns` before returning
+the tidy table (DS-1492)
+
+BUG FIXES
+
+* `GetNonEmptyRowsAndColumns` now correctly handles character 
+matrices (DS-1492, DS-1628)
+* `GetNonEmptyElements` now correctly handles character 
+vector (DS-1492, DS-1628)
+
 Changes in Version 2.3.0 (2017-12-11)
 --------------------------------------------------------
 
@@ -7,6 +23,7 @@ NEW FEATURES
   `GetNonEmptyRowsAndColumns`, and `GetNonEmptyElements` support
   deletion/detection of row and columns of a matrix or elements of a
   vector that contain all NA or 0-percentages (DS-1492)
+
 
 Changes in Version 2.1.0 (2017-10-20)
 --------------------------------------------------------

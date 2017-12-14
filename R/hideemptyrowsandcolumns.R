@@ -49,8 +49,8 @@ HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
 GetNonEmptyRowsAndColumns <- function(x, use.names = TRUE, is.percent = NULL)
 {
     if (is.character(x))
-        out <- list(which(apply(x, 1, function(x) all(nzchar(x)))),
-                    which(apply(x, 2, function(x) all(nzchar(x)))))
+        out <- list(which(apply(x, 1, function(x) any(nzchar(x)))),
+                    which(apply(x, 2, function(x) any(nzchar(x)))))
     else
     {
         if (is.null(is.percent))
