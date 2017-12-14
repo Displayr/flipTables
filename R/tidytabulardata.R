@@ -22,6 +22,11 @@
 #' and \code{col.names.to.remove} on. Default is to split on either of
 #' \code{","} or \code{";"}.  Assumed to be a regular expression; see
 #' \code{\link{strsplit}}.
+#' @param hide.empty.rows.and.columns Logical; if \code{TRUE} empty
+#'     rows and columns will be removed from the data.  Empty here
+#'     meaning that a row or column contains all \code{NA} values, or
+#'     in the case of percentages, that a row or column contains only
+#'     0's.
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
 #'     will be made to coerce it to one using
 #'     \code{\link{AsTidyTabularData}}.
@@ -29,7 +34,8 @@
 #' If a named vector is created from \code{x}, then
 #' \code{row.names.to.remove} and \code{col.names.to.remove} will be
 #' combined (using \code{\link[base]{union}}) to determine entries to remove.
-#' @seealso \code{\link{AsTidyTabularData}}
+#' @seealso \code{\link{AsTidyTabularData}}, \code{\link{HideEmptyRowsAndColumns}},
+#' \code{\link{RemoveRowsAndOrColumns}}
 #' @note If \code{transpose == TRUE}, then the table is transposed
 #' \emph{before} rows and columns are removed, so
 #' \code{row.names.to.remove} should be specified according to the
@@ -37,10 +43,14 @@
 #' \code{col.names.to.remove}
 #' @return A \strong{named} matrix or vector; a tidy version of \code{x}.
 #' @export
-TidyTabularData <- function(x, date = FALSE,
-                       row.names.to.remove = NULL,
-                       col.names.to.remove = NULL,
-                       transpose = FALSE, split = "[;,]")
+TidyTabularData <- function(
+                            x,
+                            date = FALSE,
+                            row.names.to.remove = NULL,
+                            col.names.to.remove = NULL,
+                            transpose = FALSE,
+                            split = "[;,]",
+                            hide.empty.rows.and.columns = FALSE)
 {
     if (!isFALSE(date))
         x <- processDates(x, date)
@@ -58,6 +68,8 @@ TidyTabularData <- function(x, date = FALSE,
 
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove,
                                 split)
+    if (hide.empty.rows.and.columns)
+        x <- HideEmptyRowsAndColumns(x)
 
     class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
                     "numeric"

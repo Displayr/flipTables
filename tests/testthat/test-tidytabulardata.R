@@ -221,3 +221,19 @@ test_that("TidyTabularData rm entries from vector comma sep. names",
     out <- TidyTabularData(x, row.names.to.remove = "a;b")
     expect_equal(names(out), as.character(x))
 })
+
+test_that("TIdyTabularData hide empty rows and columns",
+{
+    x <- matrix("", 3, 3)
+    x[1, -1] <- letters[1:2]
+    x[-1, 1] <- LETTERS[1:2]
+    x[2, 2] <- "1"
+    x[2, 3] <- "2"
+    out <- TidyTabularData(x, hide.empty.rows.and.columns = FALSE)
+    expect_equal(dim(out), dim(x) - c(1, 1))
+    expect_true(all(is.na(out[2, ])))
+
+    out <- TidyTabularData(x, hide.empty.rows.and.columns = TRUE)
+    expect_equal(dim(out), dim(x) - c(2, 1))
+    expect_false(any(is.na(out)))
+})
