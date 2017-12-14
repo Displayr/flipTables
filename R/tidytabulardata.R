@@ -4,7 +4,7 @@
 #' guaranteed to always have row and column names and there is special
 #' handling of arrays and tables from \code{Q}.
 #' @param x Numeric matrix or vector; should be named, but if names
-#' are not present they will be created in the output
+#'     are not present they will be created in the output
 #' @param date Optional vector of dates, which if supplied, will be
 #'     used for the row names of the returned table; must be unique
 #'     and have the same length or number of rows of \code{x}; will
@@ -12,21 +12,25 @@
 #'     default, \code{FALSE}, means that no dates are present in the
 #'     data; a value of \code{NULL} indicates that dates are contained
 #'     in x.
-#' @param row.names.to.remove Character vector or delimited string
-#' of row labels specifying rows to remove from the returned table.
-#' @param col.names.to.remove Character vector or delimited string of column
-#' labels specifying columns to remove from the returned table
+#' @param row.names.to.remove Character vector or delimited string of
+#'     row labels specifying rows to remove from the returned table.
+#' @param col.names.to.remove Character vector or delimited string of
+#'     column labels specifying columns to remove from the returned
+#'     table
 #' @param transpose logical; if \code{TRUE} the table will be
 #'     transposed before being returned
-#' @param split Character delimiter to split \code{row.names.to.remove}
-#' and \code{col.names.to.remove} on. Default is to split on either of
-#' \code{","} or \code{";"}.  Assumed to be a regular expression; see
-#' \code{\link{strsplit}}.
+#' @param split Character delimiter to split
+#'     \code{row.names.to.remove} and \code{col.names.to.remove}
+#'     on. Default is to split on either of \code{","} or \code{";"}.
+#'     Assumed to be a regular expression; see \code{\link{strsplit}}.
 #' @param hide.empty.rows.and.columns Logical; if \code{TRUE} empty
 #'     rows and columns will be removed from the data.  Empty here
 #'     meaning that a row or column contains all \code{NA} values, or
 #'     in the case of percentages, that a row or column contains only
 #'     0's.
+#' @param ... Additional arguments passed to
+#'     \code{\link[flipTransformations]{ParseUserEnteredTable}} in the
+#'     case that \code{x} has character entries.
 #' @details If \code{x} is not a numeric vector or matrix, an attempt
 #'     will be made to coerce it to one using
 #'     \code{\link{AsTidyTabularData}}.
@@ -50,16 +54,19 @@ TidyTabularData <- function(
                             col.names.to.remove = NULL,
                             transpose = FALSE,
                             split = "[;,]",
-                            hide.empty.rows.and.columns = FALSE)
+                            hide.empty.rows.and.columns = FALSE,
+                            ...)
 {
     if (!isFALSE(date))
         x <- processDates(x, date)
 
     ## if not given a numeric vector or matrix or dates, try to coerce to one
     if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || isQTable(x))
-        x <- AsTidyTabularData(x)
+        x <- AsTidyTabularData(x, ...)
 
-    x <- setDimNames(x)
+    if (!is.data.frame(x))
+        x <- setDimNames(x)
+
     ## Handle transpose
     ## transpose before removal of rows and columns
     ##   for flipDimensionReduction::CorrespondenceAnalysis !!
@@ -71,9 +78,10 @@ TidyTabularData <- function(
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
 
-    class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
-                    "numeric"
-                else "matrix"
+    if (is.null(dim(x)) || length(dim(x)) == 1L)
+        class(x) <- "numeric"
+    else if (!is.data.frame(x))
+        class(x) <- "matrix"
     x
 }
 

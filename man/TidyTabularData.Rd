@@ -6,7 +6,7 @@
 \usage{
 TidyTabularData(x, date = FALSE, row.names.to.remove = NULL,
   col.names.to.remove = NULL, transpose = FALSE, split = "[;,]",
-  hide.empty.rows.and.columns = FALSE)
+  hide.empty.rows.and.columns = FALSE, ...)
 }
 \arguments{
 \item{x}{Numeric matrix or vector; should be named, but if names
@@ -20,25 +20,30 @@ default, \code{FALSE}, means that no dates are present in the
 data; a value of \code{NULL} indicates that dates are contained
 in x.}
 
-\item{row.names.to.remove}{Character vector or delimited string
-of row labels specifying rows to remove from the returned table.}
+\item{row.names.to.remove}{Character vector or delimited string of
+row labels specifying rows to remove from the returned table.}
 
-\item{col.names.to.remove}{Character vector or delimited string of column
-labels specifying columns to remove from the returned table}
+\item{col.names.to.remove}{Character vector or delimited string of
+column labels specifying columns to remove from the returned
+table}
 
 \item{transpose}{logical; if \code{TRUE} the table will be
 transposed before being returned}
 
-\item{split}{Character delimiter to split \code{row.names.to.remove}
-and \code{col.names.to.remove} on. Default is to split on either of
-\code{","} or \code{";"}.  Assumed to be a regular expression; see
-\code{\link{strsplit}}.}
+\item{split}{Character delimiter to split
+\code{row.names.to.remove} and \code{col.names.to.remove}
+on. Default is to split on either of \code{","} or \code{";"}.
+Assumed to be a regular expression; see \code{\link{strsplit}}.}
 
 \item{hide.empty.rows.and.columns}{Logical; if \code{TRUE} empty
 rows and columns will be removed from the data.  Empty here
 meaning that a row or column contains all \code{NA} values, or
 in the case of percentages, that a row or column contains only
 0's.}
+
+\item{...}{Additional arguments passed to
+\code{\link[flipTransformations]{ParseUserEnteredTable}} in the
+case that \code{x} has character entries.}
 }
 \value{
 A \strong{named} matrix or vector; a tidy version of \code{x}.

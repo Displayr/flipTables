@@ -1,4 +1,4 @@
-Changes in Version 2.4.2 (2017-12-14)
+Changes in Version 2.5.0 (2017-12-14)
 -------------------------------------------------------
 
 NEW FEATURES
@@ -6,6 +6,10 @@ NEW FEATURES
 * `TidyTabularData` gains argument   "hide.empty.rows.and.columns",
 which if `TRUE`, will call `HideEmptyRowsAndColumns` before returning
 the tidy table (DS-1492)
+* `TidyTabularData`  and `AsTidyTabularData` both  gain `...` argument
+  to pass arguments on to flipTransformations::ParseUserEnteredTable
+  in the case of character input data.  Ignored for all other type 
+  of inputs.  (DS-1688)
 
 BUG FIXES
 

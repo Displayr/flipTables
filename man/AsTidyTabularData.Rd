@@ -4,10 +4,14 @@
 \alias{AsTidyTabularData}
 \title{Coerce an R Object To a Tidy Table}
 \usage{
-AsTidyTabularData(x)
+AsTidyTabularData(x, ...)
 }
 \arguments{
 \item{x}{An object to be coerced to a tidy table.}
+
+\item{...}{Additional arguments passed to
+\code{\link[flipTransformations]{ParseUserEnteredTable}} in the
+case that \code{x} has character entries.}
 }
 \value{
 A \strong{named} matrix or

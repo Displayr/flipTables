@@ -5,6 +5,9 @@
 #' tables (character matrices).  Output will always be named and always
 #' be either a vector or matrix.
 #' @param x  An object to be coerced to a tidy table.
+#' @param ... Additional arguments passed to
+#'     \code{\link[flipTransformations]{ParseUserEnteredTable}} in the
+#'     case that \code{x} has character entries.
 #' @return A \strong{named} matrix or
 #'     vector; a tidy version of \code{x}
 #' @importFrom utils modifyList
@@ -15,7 +18,7 @@
 #'     \code{\link[flipTransformations]{AsNumeric}}.
 #' @seealso \code{\link[flipTransformations]{AsNumeric}}
 #' @export
-AsTidyTabularData <- function(x)
+AsTidyTabularData <- function(x, ...)
 {
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
@@ -31,7 +34,11 @@ AsTidyTabularData <- function(x)
     {  # assume raw user-entered table
         x <- as.matrix(x)  # ParseEnteredData fails for vectors (since user-entered
                            ## data is always a matrix
-        x <- ParseUserEnteredTable(x, want.data.frame = FALSE)
+        dots <- list(...)
+        dots$raw.matrix <- x
+        if (is.null(dots$want.data.frame))
+            dots$want.data.frame <- FALSE
+        x <- do.call("ParseUserEnteredTable", dots)
     }else if (is.data.frame(x))
     {
         ## convert data.frame default row names to tidy table default Row 1, Row 2, etc.
@@ -71,9 +78,10 @@ AsTidyTabularData <- function(x)
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
-    class(x) <- if (is.null(dim(x)) || length(dim(x)) == 1L)
-                    "numeric"
-                else "matrix"
+    if (is.null(dim(x)) || length(dim(x)) == 1L)
+        class(x) <- "numeric"
+    else if (!is.data.frame(x))
+        class(x) <- "matrix"
     x
 }
 
