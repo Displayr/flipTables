@@ -78,7 +78,9 @@ AsTidyTabularData <- function(x, ...)
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))
-    if (is.null(dim(x)) || length(dim(x)) == 1L)
+    if (is.null(dim(x)))
+        x <- AsNumeric(x)
+    else if (length(dim(x)) == 1L)
         class(x) <- "numeric"
     else if (!is.data.frame(x))
         class(x) <- "matrix"
