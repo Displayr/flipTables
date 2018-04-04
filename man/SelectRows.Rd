@@ -4,7 +4,7 @@
 \alias{SelectRows}
 \title{\code{SelectRows}}
 \usage{
-SelectRows(x, select = "")
+SelectRows(x, select = NULL)
 }
 \arguments{
 \item{x}{Matrix or dataframe from which rows will be extracted}
