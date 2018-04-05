@@ -31,7 +31,7 @@ HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
     idx <- GetNonEmptyRowsAndColumns(x, FALSE, is.percent = is.percent)
     if (!length(idx[[1L]]) || !length(idx[[2L]]))
         stop ("Hiding empty rows/columns gives empty input matrix.")
-    CopyAttributes(x[idx[[1L]], idx[[2L]], drop = FALSE], x)
+    extractArray(x, idx[[1L]], idx[[2L]])
 }
 
 #' Get Names of Empty Entries From a Table Or Vector
