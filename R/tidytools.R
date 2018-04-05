@@ -1,3 +1,15 @@
+# Function to extract rows/columns from array
+# It handles both 2d matrices and 3d arrays
+# Will always try to copy attributes
+extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x))
+{
+    if (isTableWithStats(x))
+        res <- x[row.index, col.index,, drop = FALSE]
+    else
+        res <- x[row.index, col.index, drop = FALSE]
+    return(CopyAttributes(res, x))
+}
+
 #' \code{SelectRows}
 #' @description Select rows from a matrix or dataframe.
 #' @param x Matrix or dataframe from which rows will be extracted
@@ -13,12 +25,7 @@ SelectRows <- function(x, select = NULL)
         return(x)
 
     sel.ind <- getMatchIndex(select, rownames(x, do.NULL = FALSE, prefix = ""))
-    if (isTableWithStats(x))
-        res <- x[sel.ind, , ]
-    else
-        res <- x[sel.ind, ]
-
-    return(res)
+    extractArray(x, row.index = sel.ind)
 }
 
 #' \code{SelectColumns}
@@ -36,12 +43,7 @@ SelectColumns <- function(x, select = "")
         return(x)
 
     sel.ind <- getMatchIndex(select, colnames(x, do.NULL = FALSE, prefix = ""))
-    if (isTableWithStats(x))
-        res <- x[, sel.ind, ]
-    else
-        res <- x[,sel.ind]
-
-    return(res)
+    extractArray(x, col.index = sel.ind)
 }
 
 #' \code{SortRows}
@@ -97,11 +99,7 @@ SortRows <- function(x,
     ord.ind <- if (isTableWithStats(x)) order(x[rows.incl, col.ind, 1], decreasing = decreasing)
                else order(x[rows.incl, col.ind], decreasing = decreasing)
     ind <- c(rows.incl[ord.ind], rows.excl)
-
-    if (isTableWithStats(x))
-        return(x[ind,,])
-    else
-        return(x[ind,])
+    extractArray(x, row.index = ind)
 }
 
 # This is a wrapper for matchNameOrIndex
@@ -210,12 +208,12 @@ HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
     if (length(col.rm) > 0)
     {
         warning("Columns ", paste(col.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
-        x <- x[,-col.rm,]
+        x <- extractArray(x, col.index = -col.rm)
     }
     if (all(dim(x) > 0) && length(row.rm) > 0)
     {
         warning("Rows ", paste(row.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
-        x <- x[-row.rm, ,]
+        x <- extractArray(x, row.index = -row.rm)
     }
     x
 }
@@ -234,11 +232,7 @@ TopKAndSpecifiedRows <- function(x, K, select = NULL)
     
     sel.ind <- getMatchIndex(select, rownames(x, do.NULL = FALSE, prefix = ""))
     sel.ind <- c(1:K, setdiff(sel.ind, 1:K))
-    
-    if (isTableWithStats(x))
-        return(x[sel.ind, , ])
-    else
-        return(x[sel.ind,])
+    extractArray(x, row.index = sel.ind)    
 }
     
 
@@ -257,10 +251,7 @@ LastKColumns <- function(x, K)
         return(x)
 
     sel.ind <- ncol(x) - ((K:1)-1)
-    if (isTableWithStats(x))
-        return(CopyAttributes(x[,sel.ind,], x))
-    else
-        return(CopyAttributes(x[,sel.ind], x))
+    extractArray(x, col.index = sel.ind)
 }
 
 # Automatic ordering uses correspondence analysis ca::ca
@@ -278,10 +269,7 @@ LastKRows <- function(x, K)
         return(x)
    
     sel.ind <- nrow(x)-((K:1)-1)
-    if (isTableWithStats(x))
-        return(CopyAttributes(x[sel.ind, ,], x))
-    else
-        return(CopyAttributes(x[sel.ind,], x)) 
+    extractArray(x, row.index = sel.ind)
 }
 
 
