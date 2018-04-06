@@ -10,43 +10,121 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x))
     return(CopyAttributes(res, x))
 }
 
-#' \code{SelectRows}
-#' @description Select rows from a matrix or dataframe.
+# Converts vector or 1-d array into matrix
+# so that the other functions for tidying tables can be used
+# note that no checking is done
+convertToMatrix <- function(x)
+{
+    res <- as.matrix(x)
+    return(CopyAttributes(res, x))
+}
+
+#' Reverse rows of a table
+#' @description Reverse order of rows in matrix, dataframe or array
+#' @param x Input table which may be a matrix, dataframe or array.
+#'    Vectors or 1-d arrays will be converted into a matrix with 1 column
+ReverseRows <- function(x)
+{
+    if (length(dim(x)) < 2)
+        x <- convertToMatrix(x)
+    n <- nrow(x)
+    extractArray(x, row.index = n:1)
+}
+
+#' Reverse columns of a table
+#' @description Reverse order of columns in matrix, dataframe or array
+#' @param x Input table which may be a matrix, dataframe or array.
+#'    Vectors or 1-d arrays will be ignored
+ReverseColumns <- function(x)
+{
+    if (length(dim(x)) < 2)
+        x <- return(x)
+    n <- ncol(x)
+    extractArray(x, col.index = n:1)
+}
+
+#' Select rows from a table
+#' @description Function to select row from a table, either by rownames
+#'   or as range from the top or bottom.
 #' @param x Matrix or dataframe from which rows will be extracted
 #' @param select A string containing a comma seperated list of the
 #'  names or indices of the rows to be selected.
+#' @param first.k If a number greater than zero is supplied,
+#'   The first \code{first.k} rows will also be selected
+#' @param last.k If a number greater than zero is supplied,
+#'   The last \code{last.k} rows will also be selected
 #' @importFrom flipTransformations TextAsVector
+#' @importFrom flipU CopyAttributes
 #' @export
-SelectRows <- function(x, select = NULL)
+SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
-    if (!checkIsTable(x))
-        return(x)
-    if (sum(nchar(select), na.rm = TRUE) == 0)
-        return(x)
-
-    sel.ind <- getMatchIndex(select, rownames(x, do.NULL = FALSE, prefix = ""))
-    extractArray(x, row.index = sel.ind)
+    ind <- indexSelected(x, "row", select, first.k, last.k)
+    extractArray(x, row.index = ind)
 }
 
-#' \code{SelectColumns}
-#' @description Select rows from a matrix or dataframe.
+#' Select column from a table
+#' @description Function to select column from a table, either by colnames
+#'   or as range from the top or bottom.
 #' @param x Matrix or dataframe from which columns will be extracted
 #' @param select A string containing a comma seperated list of the
 #'  names or indices of the columns to be selected.
-#' @importFrom flipTransformations TextAsVector
+#' @param first.k If a number greater than zero is supplied,
+#'   The first \code{first.k} columns will also be selected
+#' @param last.k If a number greater than zero is supplied,
+#'   The last \code{last.k} columns will also be selected
 #' @export
-SelectColumns <- function(x, select = "")
+SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
-    if (!checkIsTable(x))
-        return(x)
-    if (sum(nchar(select), na.rm = TRUE) == 0)
-        return(x)
-
-    sel.ind <- getMatchIndex(select, colnames(x, do.NULL = FALSE, prefix = ""))
-    extractArray(x, col.index = sel.ind)
+    ind <- indexSelected(x, "column", select, first.k, last.k)
+    extractArray(x, col.index = ind)
 }
 
-#' \code{SortRows}
+indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = NA)
+{
+    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+        return(x)
+    if (length(dim(x)) < 2)
+        x <- convertToMatrix(x) 
+    if (!checkIsTable(x))
+        return(x)
+   
+    sel.ind <- NULL
+    dim.names <- if (dim == "column") colnames(x, do.NULL = FALSE, prefix = "")
+                 else                 rownames(x, do.NULL = FALSE, prefix = "")
+    max.dim <- if (dim == "column") ncol(x)
+               else                 nrow(x)
+    min.dim <- max(0, first.k, last.k, na.rm = TRUE)
+    if (max.dim < min.dim)
+        stop("Input table has less than ", min.dim, " ", dim, "s.")
+
+    if (sum(nchar(select), na.rm = TRUE) > 0)
+        sel.ind <- getMatchIndex(select, dim.names)
+    if (sum(first.k, na.rm = TRUE) > 0)
+        sel.ind <- c(1:first.k, sel.ind)
+    if (sum(last.k, na.rm = TRUE) > 0)
+        sel.ind <- c(sel.ind, max.dim -((last.k:1)-1))
+    return(sel.ind)
+}
+
+indexSortedByValues <- function(x, 
+                         values,
+                         decreasing = FALSE,
+                         exclude = "NET, SUM, Total",
+                         dim = "row")
+{
+    max.dim <- if (dim == "column") ncol(x)
+               else                 nrow(x)
+    dim.names <- if (dim == "column") colnames(x, do.NULL = FALSE, prefix = "")
+                 else                 rownames(x, do.NULL = FALSE, prefix = "")
+    
+    ind.excl <- getMatchIndex(exclude, dim.names, dim, warn = FALSE)
+    ind.incl <- setdiff(1:max.dim, ind.excl)
+    ord.ind <- order(values[ind.incl], decreasing = decreasing)
+    return(c(ord.ind, ind.excl))
+} 
+
+    
+#' Sort rows of a table
 #' @description Sorts the rows of the table based on the values in the specified column
 #' @details This function differs from the QScript in a number of ways.
 #' 1) Sorting does not respect spans.
@@ -57,17 +135,22 @@ SelectColumns <- function(x, select = "")
 #'    that entries in 'Exclude from sort' must match the rowname exactly, instead of
 #'    a partial match used in the QScript
 #' @param x Input matrix or dataframe which is being sorted. Values must be numeric.
+#'  Vectors and 1-d arrays will be converted to a matrix.
 #' @param decreasing Order to sort values.
-#' @param column The column to 
-#' @param rows.to.exclude A string containing a comma-separated list of rows
+#' @param column The column to sort by. If none is specified and the 'Column n'
+#'  statistic is present in the table, it will use the column with the largest
+#'  value of 'Column n'. Otherwise it will pick the right-most column. 
+#' @param exclude A string containing a comma-separated list of rows
 #'    (either by name or index) which should not be sorted. These rows
 #'    will remain at the bottom of the output table
 #' @export
 SortRows <- function(x,
                  decreasing = FALSE,
                  column = NULL, # integer, otherwise largest column
-                 rows.to.exclude = "NET, Sum, Total")
+                 exclude = "NET, SUM, Total")
 {
+    if (length(dim(x)) < 2)
+        x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
     if ((isTableWithStats(x) && !is.numeric(x[,,1])) || !is.numeric(x))
@@ -89,29 +172,74 @@ SortRows <- function(x,
 
     } else
     {
-        col.ind <- NCOL(x)
+        col.ind <- ncol(x)
+    }
+    ind <- indexSortedByValues(x, 
+                 values = if (isTableWithStats(x)) x[,col.ind,1] else x[,col.ind],
+                 decreasing, exclude, "row")
+    extractArray(x, row.index = ind)
+}
+
+#' Sort columns of a table
+#' @description Sorts the columns of the table based on the values in the specified column
+#' @param x Input matrix or dataframe which is being sorted. Values must be numeric.
+#'      Vectors and 1-d arrays will be ignored.
+#' @param decreasing Order to sort values.
+#' @param row The row to sort by. If none is specified and the 'Row n'
+#'  statistic is present in the table, it will use the row with the largest
+#'  value of 'Row n'. Otherwise it will pick the bottom row. 
+#' @param exclude A string containing a comma-separated list of columns
+#'    (either by name or index) which should not be sorted. These columns
+#'    will remain at the end of the output table
+#' @export
+SortColumns <- function(x,
+                 decreasing = FALSE,
+                 row = NULL, # integer, otherwise largest column
+                 exclude = "NET, SUM, Total")
+{
+    if (length(dim(x)) < 2)
+        return(x)
+    if (!checkIsTable(x))
+        return(x)
+    if ((isTableWithStats(x) && !is.numeric(x[,,1])) || !is.numeric(x))
+        stop("Sorting cannot be applied to non-numeric tables.")
+
+    # Finding the row to sort on
+    if (!is.null(row))
+    {
+        row.ind <- matchNameOrIndex(row[1], 
+            rownames(x, do.NULL = FALSE, prefix = ""))
+        if (length(row.ind) == 0)
+            stop("Row '", row, "' was not found in the table.")
+        if (length(row) > 1)
+            warning("Only row '", row[1], "' was used to sort the table.")
+    
+    } else if (isTableWithStats(x) && "Row n" %in% dimnames(x)[[3]])
+    {
+        d.ind <- which(dimnames(x)[[3]] == "Row n")
+        row.ind <- which.max(x[,1,d.ind])
+
+    } else
+    {
+        row.ind <- nrow(x)
     }
 
-    rows.excl <- matchNameOrIndex(TextAsVector(rows.to.exclude),
-                                  rownames(x, do.NULL = FALSE, prefix = ""))
-    rows.excl <- rows.excl[!is.na(rows.excl)]
-    rows.incl <- setdiff(1:nrow(x), rows.excl)
-    ord.ind <- if (isTableWithStats(x)) order(x[rows.incl, col.ind, 1], decreasing = decreasing)
-               else order(x[rows.incl, col.ind], decreasing = decreasing)
-    ind <- c(rows.incl[ord.ind], rows.excl)
-    extractArray(x, row.index = ind)
+    ind <- indexSortedByValues(x, 
+                 values = if (isTableWithStats(x)) x[row.ind,,1] else x[row.ind,],
+                 decreasing, exclude, "column")
+    extractArray(x, col.index = ind)
 }
 
 # This is a wrapper for matchNameOrIndex
 # It will break up the pattern from a commma-separated list to a vector
 # It will also check for unmatched entries and give warnings
-getMatchIndex <- function(pattern, x, type = "rows")
+getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
     sel.vec <- TextAsVector(pattern)
     sel.ind <- matchNameOrIndex(sel.vec, x)
     sel.na <- which(is.na(sel.ind))
-    if (length(sel.na) > 0)
-        warning("Table does not contain ", type, " '",
+    if (warn && length(sel.na) > 0)
+        warning("Table does not contain ", dim, "s '",
             paste(sel.vec[sel.na], collapse = "','"), "'.")
     return(sel.ind[which(!is.na(sel.ind))])
 }
@@ -153,18 +281,6 @@ checkIsTable <- function(x)
     return(res)
 }
 
-
-checkTableDim <- function(x, min.nrow = 0, min.ncol = 0)
-{
-    res <- TRUE
-    res <- res && (nrow(x) > min.nrow)
-    if (!res)
-        warning("Input table must have at least ", min.nrow,  " rows.")
-    res <- res && (ncol(x) > min.ncol)
-    if (!res)
-        warning("Input table must have at least ", min.ncol, " columns.")
-    return(res)
-}
 
 #' HideOutputsWithSmallSampleSizes
 #' @description Throws an error if any of the 'Base n' values in the table are too small
@@ -217,59 +333,3 @@ HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
     }
     x
 }
-
-
-#' \code{TopKAndSpecifiedRows}
-#' @description Returns the first K rows (no sorting), and additional rows listed
-#' @param x Input table
-#' @param K Number of rows from the top of the table to return.
-#' @param select Optional string containing comma separated list of names 
-#'    or indices of the rows to be selected
-TopKAndSpecifiedRows <- function(x, K, select = NULL)
-{
-    if (!checkIsTable(x))
-        return(x)
-    
-    sel.ind <- getMatchIndex(select, rownames(x, do.NULL = FALSE, prefix = ""))
-    sel.ind <- c(1:K, setdiff(sel.ind, 1:K))
-    extractArray(x, row.index = sel.ind)    
-}
-    
-
-# Automatic ordering uses correspondence analysis ca::ca
-#' LastKColumns
-#' @description Extract last K columns from table
-#' @param x Input matrix or dataframe
-#' @param K Number of columns to retain.
-#' @importFrom flipU CopyAttributes
-#' @export
-LastKColumns <- function(x, K)
-{
-    if (!checkIsTable(x))
-        return(x)
-    if (!checkTableDim(x, min.nrow = K))
-        return(x)
-
-    sel.ind <- ncol(x) - ((K:1)-1)
-    extractArray(x, col.index = sel.ind)
-}
-
-# Automatic ordering uses correspondence analysis ca::ca
-#' LastKRows
-#' @description Extract last K rows from table
-#' @param x Input matrix or dataframe
-#' @param K Number of rows to retain.
-#' @importFrom flipU CopyAttributes
-#' @export
-LastKRows <- function(x, K)
-{
-    if (!checkIsTable(x))
-        return(x)
-    if (!checkTableDim(x, min.nrow = K))
-        return(x)
-   
-    sel.ind <- nrow(x)-((K:1)-1)
-    extractArray(x, row.index = sel.ind)
-}
-
-

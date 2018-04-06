@@ -2,16 +2,23 @@
 % Please edit documentation in R/tidytools.R
 \name{SelectColumns}
 \alias{SelectColumns}
-\title{\code{SelectColumns}}
+\title{Select column from a table}
 \usage{
-SelectColumns(x, select = "")
+SelectColumns(x, select = NULL, first.k = NA, last.k = NA)
 }
 \arguments{
 \item{x}{Matrix or dataframe from which columns will be extracted}
 
 \item{select}{A string containing a comma seperated list of the
 names or indices of the columns to be selected.}
+
+\item{first.k}{If a number greater than zero is supplied,
+The first \code{first.k} columns will also be selected}
+
+\item{last.k}{If a number greater than zero is supplied,
+The last \code{last.k} columns will also be selected}
 }
 \description{
-Select rows from a matrix or dataframe.
+Function to select column from a table, either by colnames
+  or as range from the top or bottom.
 }

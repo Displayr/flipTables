@@ -69,7 +69,11 @@ tabWithN <- structure(c(12.2448979591837, 6.12244897959184, 4.08163265306122,
     "Once a week", "Once every 2 weeks", "Once a month", "Less than once a month",
     "Never"), c("Column %", "Column n", "Base n")), name = "Age by Exercise frequency",         questions = c("Age", "Exercise frequency"))
 
-test_that("SelectRows",
+set.seed(1234)
+array1d <- table(rpois(20, 4))
+attr(array1d, "statistic") <- "Count"
+
+test_that("Select Rows",
 {
     xx <- matrix(1:12, 3, 4, dimnames=list(LETTERS[1:3], letters[1:4]))
     x2 <- SelectRows(xx, "A,A,C")
@@ -84,16 +88,26 @@ test_that("SelectRows",
     res <- SelectRows(tabWithN, "18 to 24, 25 to 29, 3")
     expect_equal(dim(res), c(3, 8, 3))
     expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34"))
+
+    res <- SelectRows(tabWithN, first.k = 4, "65 or more, NET")
+    expect_equal(dim(res), c(6, 8, 3))
+    expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34", "35 to 39", "65 or more", "NET"))
+
+    res <- SelectRows(tabWithN, last.k = 3)
+    expect_equal(dim(res), c(3, 8, 3))
 })
 
-test_that("SelectColumns",
+test_that("Select Columns",
 {
     res <- SelectColumns(tabWithN, "1, 2, Never")
     expect_equal(dim(res), c(10, 3, 3))
     expect_equal(colnames(res), c("Every or nearly every day", "4 to 5 days a week", "Never"))
+    res <- SelectColumns(dat, last.k = 4)
+    expect_equal(colnames(res), c("50 to 54", "55 to 64", "65 or more", "NET"))
+    expect_equal(attr(res, "statistic"), "Total %")
 })
 
-test_that("SortRows",
+test_that("Sort Rows",
 {
     res <- SortRows(dat, decreasing = TRUE)
     expect_equal(dim(res), c(10, 10))
@@ -104,37 +118,22 @@ test_that("SortRows",
                        "30 to 34", "35 to 39", "45 to 49", "50 to 54", "NET")
 })
 
-test_that("HideOutputWithSmallSampleSizes",
+test_that("Reverse rows and columns",
+{
+    res <- ReverseRows(array1d)
+    expect_equal(rownames(res), rev(names(array1d)))
+    expect_equal(attr(res, "statistic"), attr(array1d, "statistic"))
+})
+
+
+test_that("Checking for small sample sizes",
 {
     expect_silent(HideOutputsWithSmallSampleSizes(tabWithN, 30))
     expect_error(HideOutputsWithSmallSampleSizes(tabWithN, 1000))
-})
 
-test_that("HideRowsAndColumnsWithSmallSampleSizes",
-{
     expect_silent(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 30))
     expect_warning(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 100),
                    "Columns 1,2,5,6,8 have sample size less than 100 and have been removed")
-})
-
-test_that("TopKAndSpecifiedRows",
-{
-    res <- TopKAndSpecifiedRows(tabWithN, 4, "65 or more, NET")
-    expect_equal(dim(res), c(6, 8, 3))
-    expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34", "35 to 39", "65 or more", "NET"))
-})
-
-test_that("LastKRows",
-{
-    res <- LastKRows(tabWithN, 3)
-    expect_equal(dim(res), c(3, 8, 3))
-})
-
-test_that("LastKColumns",
-{
-    res <- LastKColumns(dat, 4)
-    expect_equal(colnames(res), c("50 to 54", "55 to 64", "65 or more", "NET"))
-    expect_equal(attr(res, "statistic"), "Total %")
 })
 
 

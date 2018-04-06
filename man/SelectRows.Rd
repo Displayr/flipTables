@@ -2,16 +2,23 @@
 % Please edit documentation in R/tidytools.R
 \name{SelectRows}
 \alias{SelectRows}
-\title{\code{SelectRows}}
+\title{Select rows from a table}
 \usage{
-SelectRows(x, select = NULL)
+SelectRows(x, select = NULL, first.k = NA, last.k = NA)
 }
 \arguments{
 \item{x}{Matrix or dataframe from which rows will be extracted}
 
 \item{select}{A string containing a comma seperated list of the
 names or indices of the rows to be selected.}
+
+\item{first.k}{If a number greater than zero is supplied,
+The first \code{first.k} rows will also be selected}
+
+\item{last.k}{If a number greater than zero is supplied,
+The last \code{last.k} rows will also be selected}
 }
 \description{
-Select rows from a matrix or dataframe.
+Function to select row from a table, either by rownames
+  or as range from the top or bottom.
 }
