@@ -15,7 +15,7 @@
 #' @param transpose If TRUE, the result is transposed.
 #' @return A \code{\link{matrix}}, with the column names containing the dates or time periods,
 #' and the rows the years.
-#' @importFrom lubridate year years interval duration
+#' @importFrom lubridate year years interval duration day
 #' @importFrom flipTime AsDate
 #' @export
 StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
@@ -42,12 +42,15 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
     #year.table <- year.table[length(year.table):1]
     n.periods <- max(year.table)
     date.diff = date[2] - date[1]
-    colnm <- if(period.number) 1:n.periods
-        else
-            {
-                first.2 <- date[year.index == 1][1:2]
-                seq(first.2[1], by = date.diff, length.out = n.periods)
-            }
+    colnm <- if(period.number)
+        1:n.periods
+    else
+        {
+            first <- date[year.index == 1][1]
+            if (date.diff == 7 && calendar) # if weekly, make first date 1st Jan
+                first <- first - day(first) + 1
+            seq(first, by = date.diff, length.out = n.periods)
+        }
     rnm <- latest.year:(latest.year - n.years + 1)
     result <- matrix(NA, nrow = n.years, ncol = n.periods,
         dimnames = list(Year = rnm, Date = as.character(colnm)))
