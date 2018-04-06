@@ -2,19 +2,22 @@
 % Please edit documentation in R/tidytools.R
 \name{SortRows}
 \alias{SortRows}
-\title{\code{SortRows}}
+\title{Sort rows of a table}
 \usage{
 SortRows(x, decreasing = FALSE, column = NULL,
-  rows.to.exclude = "NET, Sum, Total")
+  exclude = "NET, SUM, Total")
 }
 \arguments{
-\item{x}{Input matrix or dataframe which is being sorted. Values must be numeric.}
+\item{x}{Input matrix or dataframe which is being sorted. Values must be numeric.
+Vectors and 1-d arrays will be converted to a matrix.}
 
 \item{decreasing}{Order to sort values.}
 
-\item{column}{The column to}
+\item{column}{The column to sort by. If none is specified and the 'Column n'
+statistic is present in the table, it will use the column with the largest
+value of 'Column n'. Otherwise it will pick the right-most column.}
 
-\item{rows.to.exclude}{A string containing a comma-separated list of rows
+\item{exclude}{A string containing a comma-separated list of rows
 (either by name or index) which should not be sorted. These rows
 will remain at the bottom of the output table}
 }
