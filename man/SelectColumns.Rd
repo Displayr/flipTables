@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidytools.R
 \name{SelectColumns}
 \alias{SelectColumns}
-\title{Select column from a table}
+\title{Select columns from a table}
 \usage{
 SelectColumns(x, select = NULL, first.k = NA, last.k = NA)
 }

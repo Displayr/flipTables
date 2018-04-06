@@ -23,6 +23,7 @@ convertToMatrix <- function(x)
 #' @description Reverse order of rows in matrix, dataframe or array
 #' @param x Input table which may be a matrix, dataframe or array.
 #'    Vectors or 1-d arrays will be converted into a matrix with 1 column
+#' @export
 ReverseRows <- function(x)
 {
     if (length(dim(x)) < 2)
@@ -35,6 +36,7 @@ ReverseRows <- function(x)
 #' @description Reverse order of columns in matrix, dataframe or array
 #' @param x Input table which may be a matrix, dataframe or array.
 #'    Vectors or 1-d arrays will be ignored
+#' @export
 ReverseColumns <- function(x)
 {
     if (length(dim(x)) < 2)
@@ -58,11 +60,14 @@ ReverseColumns <- function(x)
 #' @export
 SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
+    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+        return(x)
+
     ind <- indexSelected(x, "row", select, first.k, last.k)
     extractArray(x, row.index = ind)
 }
 
-#' Select column from a table
+#' Select columns from a table
 #' @description Function to select column from a table, either by colnames
 #'   or as range from the top or bottom.
 #' @param x Matrix or dataframe from which columns will be extracted
@@ -75,19 +80,20 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @export
 SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
+    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+        return(x)
+
     ind <- indexSelected(x, "column", select, first.k, last.k)
     extractArray(x, col.index = ind)
 }
 
 indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = NA)
 {
-    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
-        return(x)
     if (length(dim(x)) < 2)
-        x <- convertToMatrix(x) 
+        x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
-   
+
     sel.ind <- NULL
     dim.names <- if (dim == "column") colnames(x, do.NULL = FALSE, prefix = "")
                  else                 rownames(x, do.NULL = FALSE, prefix = "")
@@ -106,7 +112,7 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
     return(sel.ind)
 }
 
-indexSortedByValues <- function(x, 
+indexSortedByValues <- function(x,
                          values,
                          decreasing = FALSE,
                          exclude = "NET, SUM, Total",
@@ -116,14 +122,14 @@ indexSortedByValues <- function(x,
                else                 nrow(x)
     dim.names <- if (dim == "column") colnames(x, do.NULL = FALSE, prefix = "")
                  else                 rownames(x, do.NULL = FALSE, prefix = "")
-    
+
     ind.excl <- getMatchIndex(exclude, dim.names, dim, warn = FALSE)
     ind.incl <- setdiff(1:max.dim, ind.excl)
     ord.ind <- order(values[ind.incl], decreasing = decreasing)
     return(c(ord.ind, ind.excl))
-} 
+}
 
-    
+
 #' Sort rows of a table
 #' @description Sorts the rows of the table based on the values in the specified column
 #' @details This function differs from the QScript in a number of ways.
@@ -139,7 +145,7 @@ indexSortedByValues <- function(x,
 #' @param decreasing Order to sort values.
 #' @param column The column to sort by. If none is specified and the 'Column n'
 #'  statistic is present in the table, it will use the column with the largest
-#'  value of 'Column n'. Otherwise it will pick the right-most column. 
+#'  value of 'Column n'. Otherwise it will pick the right-most column.
 #' @param exclude A string containing a comma-separated list of rows
 #'    (either by name or index) which should not be sorted. These rows
 #'    will remain at the bottom of the output table
@@ -164,7 +170,7 @@ SortRows <- function(x,
             stop("Column '", column, "' was not found in the table.")
         if (length(column) > 1)
             warning("Only column '", column[1], "' was used to sort the table.")
-    
+
     } else if (isTableWithStats(x) && "Column n" %in% dimnames(x)[[3]])
     {
         d.ind <- which(dimnames(x)[[3]] == "Column n")
@@ -174,7 +180,7 @@ SortRows <- function(x,
     {
         col.ind <- ncol(x)
     }
-    ind <- indexSortedByValues(x, 
+    ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[,col.ind,1] else x[,col.ind],
                  decreasing, exclude, "row")
     extractArray(x, row.index = ind)
@@ -187,7 +193,7 @@ SortRows <- function(x,
 #' @param decreasing Order to sort values.
 #' @param row The row to sort by. If none is specified and the 'Row n'
 #'  statistic is present in the table, it will use the row with the largest
-#'  value of 'Row n'. Otherwise it will pick the bottom row. 
+#'  value of 'Row n'. Otherwise it will pick the bottom row.
 #' @param exclude A string containing a comma-separated list of columns
 #'    (either by name or index) which should not be sorted. These columns
 #'    will remain at the end of the output table
@@ -207,13 +213,13 @@ SortColumns <- function(x,
     # Finding the row to sort on
     if (!is.null(row))
     {
-        row.ind <- matchNameOrIndex(row[1], 
+        row.ind <- matchNameOrIndex(row[1],
             rownames(x, do.NULL = FALSE, prefix = ""))
         if (length(row.ind) == 0)
             stop("Row '", row, "' was not found in the table.")
         if (length(row) > 1)
             warning("Only row '", row[1], "' was used to sort the table.")
-    
+
     } else if (isTableWithStats(x) && "Row n" %in% dimnames(x)[[3]])
     {
         d.ind <- which(dimnames(x)[[3]] == "Row n")
@@ -224,7 +230,7 @@ SortColumns <- function(x,
         row.ind <- nrow(x)
     }
 
-    ind <- indexSortedByValues(x, 
+    ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[row.ind,,1] else x[row.ind,],
                  decreasing, exclude, "column")
     extractArray(x, col.index = ind)
@@ -253,7 +259,7 @@ matchNameOrIndex <- function(p.list, x)
 {
     # Looking for exact string-to-string match
     ind <- match(p.list, x)
-    
+
     # Try to convert unmatched entries to index numbers
     ind.na <- which(is.na(ind))
     if (length(ind.na))
@@ -262,7 +268,7 @@ matchNameOrIndex <- function(p.list, x)
 
     return(ind)
 }
- 
+
 isTableWithStats <- function(x)
 {
     if (class(x) == "array" && length(dim(x)) == 3)
@@ -282,10 +288,11 @@ checkIsTable <- function(x)
 }
 
 
-#' HideOutputsWithSmallSampleSizes
+#' Throws error if table has small sample size
 #' @description Throws an error if any of the 'Base n' values in the table are too small
 #' @param x Input table, which must contain the 'Base n' statistic.
 #' @param min.size Minimum sample size required.
+#' @export
 HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     if (!isTableWithStats(x) && "Base n" %in% dimnames(x)[[3]])
@@ -298,11 +305,19 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
         return(x)
 }
 
+#' Removes rows and columns with small sample sizes
+#' @description Using the 'Column n' (preferred) or 'Column n' statistic
+#'   this funcion will remove any rows/column from \code{x}, where all
+#'   are smaller than \code{min.size}. If any rows/columns are removed
+#'   then warnings will be given.
+#' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
+#' @param min.size Minimum sample size required.
+#' @export
 HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     if (!isTableWithStats(x) && ("Column n" %in% dimnames(x)[[3]] || "Base n" %in% dimnames(x)[[3]]))
         stop("Table does not have 'Column n' or 'Base n'")
-    
+
     d.ind <- which(dimnames(x)[[3]] == "Column n")
     if (length(d.ind) == 0)
         d.ind <- which(dimnames(x)[[3]] == "Base n")

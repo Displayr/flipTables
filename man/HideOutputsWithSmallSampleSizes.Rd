@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidytools.R
 \name{HideOutputsWithSmallSampleSizes}
 \alias{HideOutputsWithSmallSampleSizes}
-\title{HideOutputsWithSmallSampleSizes}
+\title{Throws error if table has small sample size}
 \usage{
 HideOutputsWithSmallSampleSizes(x, min.size = 30)
 }

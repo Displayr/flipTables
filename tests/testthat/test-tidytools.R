@@ -85,6 +85,9 @@ test_that("Select Rows",
     expect_warning(x5 <- SelectRows(xx, "A,B,C,3,2,1,0,7"), "Table does not contain rows '0','7'.")
     expect_equal(x5[,1], c(A=1,B=2,C=3,C=3,B=2,A=1))
 
+    res <- SelectRows(tabWithN, NULL, NA, NA)
+    expect_equal(tabWithN, res)
+
     res <- SelectRows(tabWithN, "18 to 24, 25 to 29, 3")
     expect_equal(dim(res), c(3, 8, 3))
     expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34"))
@@ -123,6 +126,11 @@ test_that("Reverse rows and columns",
     res <- ReverseRows(array1d)
     expect_equal(rownames(res), rev(names(array1d)))
     expect_equal(attr(res, "statistic"), attr(array1d, "statistic"))
+
+    res <- ReverseColumns(tabWithN)
+    expect_equal(dim(res), dim(tabWithN))
+    expect_equal(colnames(res), rev(colnames(tabWithN)))
+    expect_equal(dimnames(res)[[3]], dimnames(tabWithN)[[3]])
 })
 
 
