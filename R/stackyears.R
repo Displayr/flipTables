@@ -48,7 +48,12 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
         {
             first <- date[year.index == 1][1]
             if (date.diff == 7 && calendar) # if weekly, make first date 1st Jan
+            {
                 first <- first - day(first) + 1
+                warning("In order to stack weekly observations consistently each year has been rebased to start",
+                        " from January 1st, which may differ from the actual first observation in each year.",
+                        "You may prefer to stack by period number instead.")
+            }
             seq(first, by = date.diff, length.out = n.periods)
         }
     rnm <- latest.year:(latest.year - n.years + 1)

@@ -7,7 +7,7 @@ adhd = c(30, 0, 10, 20, 13, 0, 0, 0, 9, 9, 0, 9, 9, 15, 0, 0, 9, 0, 0, 15, 9, 9,
 
 test_that("StackYears - diferent typesof data input",{
     # vectors
-    stacked = StackYears(adhd, dates)
+    stacked = suppressWarnings(StackYears(adhd, dates))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
@@ -15,42 +15,42 @@ test_that("StackYears - diferent typesof data input",{
     # vector
     x <- adhd
     names(x) = dates
-    stacked = StackYears(x)
+    stacked = suppressWarnings(StackYears(x))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # 1-D array
     x <- as.array(x)
-    stacked = StackYears(x)
+    stacked = suppressWarnings(StackYears(x))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # matrix
     dt = cbind(as.character(dates), adhd)
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # transposed matrix
     dt = cbind(as.character(dates), adhd)
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # list
     dt = list(dates, adhd)
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # data.frame - 2 columns
     dt = data.frame(dates, adhd)
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
@@ -58,21 +58,21 @@ test_that("StackYears - diferent typesof data input",{
     # data.frame - 1 columns
     dt = data.frame(adhd)
     rownames(dt) <- dates
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # table
     dt = as.table(cbind(as.character(dates), adhd))
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     # table
     dt = t(dt)
-    stacked = StackYears(dt)
+    stacked = suppressWarnings(StackYears(dt))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
@@ -82,13 +82,13 @@ test_that("StackYears - diferent typesof data input",{
 
 
 test_that("StackYears - arguments",{
-    stacked = StackYears(adhd, dates)
+    stacked = suppressWarnings(StackYears(adhd, dates))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 6)
     expect_equal(ncol(stacked), 52)
     expect_warning(StackYears(adhd, dates, n.years = 10))
-    stacked = StackYears(adhd, dates, n.years = 2)
+    stacked = suppressWarnings(StackYears(adhd, dates, n.years = 2))
     expect_equal(colnames(stacked)[1], "2017-01-01")
     expect_equal(stacked[1,1], 10)
     expect_equal(nrow(stacked), 2)
