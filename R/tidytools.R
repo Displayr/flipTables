@@ -129,6 +129,35 @@ indexSortedByValues <- function(x,
     return(c(ord.ind, ind.excl))
 }
 
+#' Automatically order the rows by correspondence analysis of the table
+#' @description Rows of the table are ordered according to the row-coordinates
+#'    given by correspondence analysis of the table (1st dimension)
+#' @param x Input matrix
+#' @importFrom ca ca
+#' @export
+AutoOrderRows <- function(x)
+{
+    if (!checkIsTable(x))
+        return(x)
+    tmp <- if (isTableWithStats(x)) ca(x[,,1]) else ca(x)
+    ord <- order(tmp$rowcoord[,1])
+    extractArray(x, row.index = ord)
+}
+
+#' Automatically order the columns by correspondence analysis of the table
+#' @description Columns of the table are ordered according to the column-coordinates
+#'    given by correspondence analysis of the table (1st dimension)
+#' @param x Input matrix
+#' @importFrom ca ca
+#' @export
+AutoOrderColumns <- function(x)
+{
+    if (!checkIsTable(x))
+        return(x)
+    tmp <- if (isTableWithStats(x)) ca(x[,,1]) else ca(x)
+    ord <- order(tmp$colcoord[,1])
+    extractArray(x, col.index = ord)
+}
 
 #' Sort rows of a table
 #' @description Sorts the rows of the table based on the values in the specified column
