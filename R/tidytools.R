@@ -328,7 +328,7 @@ checkIsTable <- function(x)
 #' @export
 HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 {
-    if (!isTableWithStats(x) && "Base n" %in% dimnames(x)[[3]])
+    if (!isTableWithStats(x) || "Base n" %in% dimnames(x)[[3]])
         stop("Table does not have 'Base n'")
 
     d.ind <- which(dimnames(x)[[3]] == "Base n")
@@ -348,7 +348,7 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 #' @export
 HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 {
-    if (!isTableWithStats(x) && ("Column n" %in% dimnames(x)[[3]] || "Base n" %in% dimnames(x)[[3]]))
+    if (!isTableWithStats(x) || ("Column n" %in% dimnames(x)[[3]] || "Base n" %in% dimnames(x)[[3]]))
         stop("Table does not have 'Column n' or 'Base n'")
 
     d.ind <- which(dimnames(x)[[3]] == "Column n")
