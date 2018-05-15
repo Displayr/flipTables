@@ -200,12 +200,14 @@ SortRows <- function(x,
         if (length(column) > 1)
             warning("Only column '", column[1], "' was used to sort the table.")
 
-    } else if (isTableWithStats(x) && "Column n" %in% dimnames(x)[[3]])
-    {
-        d.ind <- which(dimnames(x)[[3]] == "Column n")
-        col.ind <- which.max(x[1, ,d.ind])
-
-    } else
+    }
+    #else if (isTableWithStats(x) && "Column n" %in% dimnames(x)[[3]])
+    #{
+    #    d.ind <- which(dimnames(x)[[3]] == "Column n")
+    #    col.ind <- which.max(x[1, ,d.ind])
+    #
+    #}
+    else
     {
         col.ind <- ncol(x)
     }
@@ -249,12 +251,14 @@ SortColumns <- function(x,
         if (length(row) > 1)
             warning("Only row '", row[1], "' was used to sort the table.")
 
-    } else if (isTableWithStats(x) && "Row n" %in% dimnames(x)[[3]])
-    {
-        d.ind <- which(dimnames(x)[[3]] == "Row n")
-        row.ind <- which.max(x[,1,d.ind])
-
-    } else
+    }
+    #else if (isTableWithStats(x) && "Row n" %in% dimnames(x)[[3]])
+    #{
+    #    d.ind <- which(dimnames(x)[[3]] == "Row n")
+    #    row.ind <- which.max(x[,1,d.ind])
+    #
+    #}
+    else
     {
         row.ind <- nrow(x)
     }
