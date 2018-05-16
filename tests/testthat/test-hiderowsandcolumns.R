@@ -163,3 +163,16 @@ test_that("GetNonEmptyRowsAndColumns character matrix",
     x[1, 1] <- "1"
     expect_equal(HideEmptyRowsAndColumns(x), x[1L, 1L, drop = FALSE])
 })
+
+test_that("HideEmptyRows and HideEmptyColumns",
+{
+    x <- c(NA, NA, 1, 2, 3)
+    expect_equal(HideEmptyRowsAndColumns(x), c(1, 2, 3))
+    expect_equal(HideEmptyRows(x), HideEmptyRowsAndColumns(x))
+    expect_equal(HideEmptyColumns(x), x)
+
+    x <- structure(c(NA, NA, NA, 4, 5, 6, 7, 8, 9, 10, 11, 12), .Dim = 3:4)
+    expect_equal(dim(HideEmptyRowsAndColumns(x)), c(3, 3))
+    expect_equal(HideEmptyColumns(x), HideEmptyRowsAndColumns(x))
+    expect_equal(dim(HideEmptyRows(x)), c(3, 4))
+})

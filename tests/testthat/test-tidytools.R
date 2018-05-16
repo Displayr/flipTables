@@ -166,12 +166,12 @@ test_that("Checking for small sample sizes",
     expect_silent(HideOutputsWithSmallSampleSizes(displayr1d, 30))
     expect_error(HideOutputsWithSmallSampleSizes(displayr1d, 1000))
 
-    expect_silent(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 30))
-    expect_warning(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 100),
+    expect_silent(HideColumnsWithSmallSampleSizes(tabWithN, 30))
+    expect_warning(HideColumnsWithSmallSampleSizes(tabWithN, 100),
                    "Columns 1,2,5,6,8 have sample size less than 100 and have been removed")
 
-    expect_silent(HideRowsAndColumnsWithSmallSampleSizes(displayr2d, 30))
-    expect_warning(HideRowsAndColumnsWithSmallSampleSizes(displayr2d, 400),
+    expect_silent(HideColumnsWithSmallSampleSizes(displayr2d, 30))
+    expect_warning(HideColumnsWithSmallSampleSizes(displayr2d, 400),
                    "Columns 1 have sample size less than 400 and have been removed")
 
     expect_error(HideOutputsWithSmallSampleSizes(1:100, 30))

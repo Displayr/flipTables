@@ -22,10 +22,10 @@ convertToMatrix <- function(x)
 # Converts 1-d Q Table + statistics in to 3d array
 convertTo3dQTable <- function(x)
 {
-    if (!isQTable(x))   # ignore if not Q Table
+    if (!isQTable(x))           # ignore if not Q Table
        return(x)
     if (isTableWithStats(x))
-        return(x)       # no further conversion for 2d table
+        return(x)               # no further conversion for 2d table
 
     dims <- dim(x)
     n.dim <- length(dims)
@@ -363,15 +363,54 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
         return(x)
 }
 
-#' Removes rows and columns with small sample sizes
+#' Removes rows with small sample sizes
 #' @description Using the 'Column n' (preferred) or 'Column n' statistic
-#'   this funcion will remove any rows/column from \code{x}, where all
+#'   this funcion will remove any rows from \code{x}, where all
 #'   are smaller than \code{min.size}. If any rows/columns are removed
 #'   then warnings will be given.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
 #' @export
-HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
+HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
+{
+    x <- convertTo3dQTable(x)
+    size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
+    if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
+        stop("Table must have at least one of the following statistics: '",
+             paste(size.names, collapse = "', '", sep=""), "'.")
+
+    j <- 1
+    d.ind <- NULL
+    while (length(d.ind) == 0)
+    {
+        d.ind <- which(dimnames(x)[[3]] == size.names[j])
+        j <- j + 1
+    }
+
+    # Search rows
+    row.rm <- c()
+    for (i in 1:nrow(x))
+    {
+        if (all(x[i, ,d.ind] < min.size))
+            row.rm <- c(row.rm, i)
+    }
+    if (all(dim(x) > 0) && length(row.rm) > 0)
+    {
+        warning("Rows ", paste(row.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
+        x <- extractArray(x, row.index = -row.rm)
+    }
+    x
+}
+
+#' Removes columns with small sample sizes
+#' @description Using the 'Column n' (preferred) or 'Column n' statistic
+#'   this funcion will remove any rows from \code{x}, where all
+#'   are smaller than \code{min.size}. If any rows/columns are removed
+#'   then warnings will be given.
+#' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
+#' @param min.size Minimum sample size required.
+#' @export
+HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     x <- convertTo3dQTable(x)
     size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
@@ -389,27 +428,15 @@ HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 
     # Search rows and columns
     col.rm <- c()
-    row.rm <- c()
     for (i in 1:ncol(x))
     {
         if (all(x[,i,d.ind] < min.size))
             col.rm <- c(col.rm, i)
     }
-    for (i in 1:nrow(x))
-    {
-        if (all(x[i, ,d.ind] < min.size))
-            row.rm <- c(row.rm, i)
-    }
-
     if (length(col.rm) > 0)
     {
         warning("Columns ", paste(col.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
         x <- extractArray(x, col.index = -col.rm)
-    }
-    if (all(dim(x) > 0) && length(row.rm) > 0)
-    {
-        warning("Rows ", paste(row.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
-        x <- extractArray(x, row.index = -row.rm)
     }
     x
 }

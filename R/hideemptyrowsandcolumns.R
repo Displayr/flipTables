@@ -58,10 +58,71 @@ GetNonEmptyRowsAndColumns <- function(x, use.names = TRUE, is.percent = NULL)
         isNonEmptyVec <- function(x)
                                   !all(is.na(x) | (is.percent & x == 0))
         out <- list(which(apply(x, 1, isNonEmptyVec)),
-                          which(apply(x, 2, isNonEmptyVec)))
+                    which(apply(x, 2, isNonEmptyVec)))
     }
     if (use.names)
         return(list(names(out[[1L]]), names(out[[2L]])))
+    else
+        return(out)
+}
+
+#' Hide Empty Rows From a Table
+#'
+#' Searches for empty rows in a table and returns a copy
+#' with those entries removed
+#' @inherit HideEmptyRowsAndColumns
+#' @export
+HideEmptyRows <- function(x, is.percent = NULL)
+{
+    if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
+    {
+        idx <- GetNonEmptyElements(x, FALSE, is.percent)
+        if (!length(idx))
+            stop("Hiding empty elements gives empty input vector.")
+        return(CopyAttributes(x[idx, drop  = FALSE], x))
+    }
+    idx <- getNonEmptyIndices(x, 1, FALSE, is.percent = is.percent)
+    if (!length(idx))
+        stop ("Hiding empty rows gives empty input matrix.")
+    extractArray(x, row.index = idx)
+}
+
+#' Hide Empty Columns From a Table
+#'
+#' Searches for empty columns in a table and returns a copy
+#' with those entries removed
+#' @inherit HideEmptyRowsAndColumns
+#' @export
+HideEmptyColumns <- function(x, is.percent = NULL)
+{
+    if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
+    {
+        idx <- GetNonEmptyElements(x, FALSE, is.percent)
+        if (!length(idx))
+            stop("Hiding empty elements gives empty input vector.")
+        return(x)
+    }
+    idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = is.percent)
+    if (!length(idx))
+        stop ("Hiding empty columns gives empty input matrix.")
+    extractArray(x, col.index = idx)
+}
+
+# Similar to GetNonEmptyRowsAndColumns but only looks in 1 direction
+getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NULL)
+{
+    if (is.character(x))
+        out <- which(apply(x, margin, function(x) any(nzchar(x))))
+    else
+    {
+        if (is.null(is.percent))
+            is.percent <- !is.null(attr(x, "statistic")) && grepl("%", attr(x, "statistic"))
+        isNonEmptyVec <- function(x)
+                                  !all(is.na(x) | (is.percent & x == 0))
+        out <- which(apply(x, margin, isNonEmptyVec))
+    }
+    if (use.names)
+        return(names(out[[1L]]))
     else
         return(out)
 }
