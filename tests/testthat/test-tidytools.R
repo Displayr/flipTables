@@ -133,15 +133,48 @@ test_that("Reverse rows and columns",
     expect_equal(dimnames(res)[[3]], dimnames(tabWithN)[[3]])
 })
 
+displayr1d <- structure(c(12.375, 11.75, 10.375, 11.375, 11.625, 7.875, 11.875,
+15.75, 7, 100, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800
+), .Dim = c(10L, 2L), .Dimnames = list(c("18 to 24", "25 to 29",
+"30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 64",
+"65 or more", "NET"), c("%", "Sample Size")), name = "table.Age", questions = c("Age",
+"SUMMARY"))
+
+displayr2d <- structure(c(11.6455696202532, 11.6455696202532, 10.8860759493671,
+9.36708860759494, 12.9113924050633, 8.10126582278481, 10.379746835443,
+16.2025316455696, 8.86075949367089, 100, 13.0864197530864, 11.8518518518519,
+9.87654320987654, 13.3333333333333, 10.3703703703704, 7.65432098765432,
+13.3333333333333, 15.3086419753086, 5.18518518518519, 100, 12.375,
+11.75, 10.375, 11.375, 11.625, 7.875, 11.875, 15.75, 7, 100,
+395, 395, 395, 395, 395, 395, 395, 395, 395, 395, 405, 405, 405,
+405, 405, 405, 405, 405, 405, 405, 800, 800, 800, 800, 800, 800,
+800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+800, 800, 800, 800, 800, 800, 800, 800), .Dim = c(10L, 3L, 3L
+), .Dimnames = list(c("18 to 24", "25 to 29", "30 to 34", "35 to 39",
+"40 to 44", "45 to 49", "50 to 54", "55 to 64", "65 or more",
+"NET"), c("Male", "Female", "NET"), c("Column %", "Column Sample Size",
+"Sample Size")), name = "table.Age.by.Gender", questions = c("Age",
+"Gender"))
+
 
 test_that("Checking for small sample sizes",
 {
     expect_silent(HideOutputsWithSmallSampleSizes(tabWithN, 30))
     expect_error(HideOutputsWithSmallSampleSizes(tabWithN, 1000))
 
+    expect_silent(HideOutputsWithSmallSampleSizes(displayr1d, 30))
+    expect_error(HideOutputsWithSmallSampleSizes(displayr1d, 1000))
+
     expect_silent(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 30))
     expect_warning(HideRowsAndColumnsWithSmallSampleSizes(tabWithN, 100),
                    "Columns 1,2,5,6,8 have sample size less than 100 and have been removed")
+
+    expect_silent(HideRowsAndColumnsWithSmallSampleSizes(displayr2d, 30))
+    expect_warning(HideRowsAndColumnsWithSmallSampleSizes(displayr2d, 400),
+                   "Columns 1 have sample size less than 400 and have been removed")
+
+    expect_error(HideOutputsWithSmallSampleSizes(1:100, 30))
 })
 
 test_that("Automatic order rows/column by CA",

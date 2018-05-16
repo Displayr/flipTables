@@ -19,6 +19,30 @@ convertToMatrix <- function(x)
     return(CopyAttributes(res, x))
 }
 
+# Converts 1-d Q Table + statistics in to 3d array
+convertTo3dQTable <- function(x)
+{
+    if (!isQTable(x))   # ignore if not Q Table
+       return(x)
+    if (isTableWithStats(x))
+        return(x)       # no further conversion for 2d table
+
+    dims <- dim(x)
+    n.dim <- length(dims)
+    dim.names <- dimnames(x)
+    stat <- attr(x, "statistic")
+    has.only.one.stat <- !is.null(stat)
+
+    if (!has.only.one.stat && n.dim > 1)
+    {
+        res <- array(x, c(dims[1], 1, dims[2]))
+        dimnames(res) <- list(dim.names[[1]], NULL, dim.names[[2]])
+        return(CopyAttributes(res, x))
+    }
+    return(x)
+}
+
+
 #' Reverse rows of a table
 #' @description Reverse order of rows in matrix, dataframe or array
 #' @param x Input table which may be a matrix, dataframe or array.
@@ -328,11 +352,12 @@ checkIsTable <- function(x)
 #' @export
 HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 {
-    if (!isTableWithStats(x) || "Base n" %in% dimnames(x)[[3]])
-        stop("Table does not have 'Base n'")
+    x <- convertTo3dQTable(x)
+    if (!isTableWithStats(x) || !any(c("Base n", "Sample Size") %in% dimnames(x)[[3]]))
+        stop("Table does not have 'Sample Size' or 'Base n'")
 
-    d.ind <- which(dimnames(x)[[3]] == "Base n")
-    if (any(x[,,d.ind] < min.size, na.rm = TRUE))
+    d.ind <- which(dimnames(x)[[3]] %in% c("Base n", "Sample Size"))
+    if (any(x[,,d.ind[1]] < min.size, na.rm = TRUE))
         stop("Output not shown because it is based on less than ", min.size, " observations.")
     else
         return(x)
@@ -348,12 +373,19 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 #' @export
 HideRowsAndColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 {
-    if (!isTableWithStats(x) || ("Column n" %in% dimnames(x)[[3]] || "Base n" %in% dimnames(x)[[3]]))
-        stop("Table does not have 'Column n' or 'Base n'")
+    x <- convertTo3dQTable(x)
+    size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
+    if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
+        stop("Table must have at least one of the following statistics: '",
+             paste(size.names, collapse = "', '", sep=""), "'.")
 
-    d.ind <- which(dimnames(x)[[3]] == "Column n")
-    if (length(d.ind) == 0)
-        d.ind <- which(dimnames(x)[[3]] == "Base n")
+    j <- 1
+    d.ind <- NULL
+    while (length(d.ind) == 0)
+    {
+        d.ind <- which(dimnames(x)[[3]] == size.names[j])
+        j <- j + 1
+    }
 
     # Search rows and columns
     col.rm <- c()
