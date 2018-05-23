@@ -216,6 +216,7 @@ SortRows <- function(x,
         stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the column to sort on
+    col.ind <- NULL
     if (!is.null(column))
     {
         col.ind <- matchNameOrIndex(column[1], colnames(x, do.NULL = FALSE, prefix = ""))
@@ -225,16 +226,8 @@ SortRows <- function(x,
             warning("Only column '", column[1], "' was used to sort the table.")
 
     }
-    #else if (isTableWithStats(x) && "Column n" %in% dimnames(x)[[3]])
-    #{
-    #    d.ind <- which(dimnames(x)[[3]] == "Column n")
-    #    col.ind <- which.max(x[1, ,d.ind])
-    #
-    #}
-    else
-    {
+    if (length(col.ind) != 1 || !is.finite(col.ind))
         col.ind <- ncol(x)
-    }
     ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[,col.ind,1] else x[,col.ind],
                  decreasing, exclude, "row")
@@ -266,6 +259,7 @@ SortColumns <- function(x,
         stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the row to sort on
+    row.ind <- NULL
     if (!is.null(row))
     {
         row.ind <- matchNameOrIndex(row[1],
@@ -276,16 +270,8 @@ SortColumns <- function(x,
             warning("Only row '", row[1], "' was used to sort the table.")
 
     }
-    #else if (isTableWithStats(x) && "Row n" %in% dimnames(x)[[3]])
-    #{
-    #    d.ind <- which(dimnames(x)[[3]] == "Row n")
-    #    row.ind <- which.max(x[,1,d.ind])
-    #
-    #}
-    else
-    {
+    if (length(row.ind) != 1 || !is.finite(row.ind))
         row.ind <- nrow(x)
-    }
 
     ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[row.ind,,1] else x[row.ind,],

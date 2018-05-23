@@ -121,6 +121,30 @@ test_that("Sort Rows",
                        "30 to 34", "35 to 39", "45 to 49", "50 to 54", "NET")
 })
 
+test_that("Sort Columns",
+{
+    tb <- structure(c(0, 11.1111111111111, 7.40740740740741, 7.40740740740741,
+            3.7037037037037, 14.8148148148148, 11.1111111111111, 18.5185185185185,
+            18.5185185185185, 7.40740740740741, 100, 0, 13.0177514792899,
+            10.6508875739645, 7.69230769230769, 10.6508875739645, 8.87573964497041,
+            10.0591715976331, 11.8343195266272, 17.7514792899408, 9.46745562130178,
+            100, 0, 14.5038167938931, 14.5038167938931, 13.7404580152672,
+            12.9770992366412, 12.2137404580153, 5.34351145038168, 11.4503816793893,
+            12.2137404580153, 3.05343511450382, 100, 0, 13.4556574923547,
+            11.9266055045872, 10.0917431192661, 11.0091743119266, 10.7033639143731,
+            8.25688073394496, 12.2324159021407, 15.5963302752294, 6.72782874617737,
+            100), .Dim = c(11L, 4L), statistic = "Column %", .Dimnames = list(
+            c("Less than 18", "18 to 24", "25 to 29", "30 to 34", "35 to 39",
+            "40 to 44", "45 to 49", "50 to 54", "55 to 64", "65 or more",
+            "NET"), c("I am on a diet, so I tend to watch what I eat and drink",
+            "I tend watch what I eat and drink, but don’t consider myself",
+            "I typically eat and drink whatever I feel like", "NET")))
+    res <- SortColumns(tb[2:10, 1:3], row = "") # match RGui input
+    expect_equal(colnames(res), c("I typically eat and drink whatever I feel like",
+            "I am on a diet, so I tend to watch what I eat and drink",
+            "I tend watch what I eat and drink, but don’t consider myself"))
+})
+
 test_that("Reverse rows and columns",
 {
     res <- ReverseRows(array1d)
