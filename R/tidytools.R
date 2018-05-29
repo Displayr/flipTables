@@ -86,6 +86,8 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
     if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
         return(x)
+    if (length(dim(x)) < 2)
+        x <- convertToMatrix(x)
 
     ind <- indexSelected(x, "row", select, first.k, last.k)
     extractArray(x, row.index = ind)
@@ -105,6 +107,8 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
     if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+        return(x)
+    if (length(dim(x)) < 2)
         return(x)
 
     ind <- indexSelected(x, "column", select, first.k, last.k)
