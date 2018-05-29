@@ -153,7 +153,7 @@ indexSortedByValues <- function(x,
 
     ind.excl <- getMatchIndex(exclude, dim.names, dim, warn = FALSE)
     ind.incl <- setdiff(1:max.dim, ind.excl)
-    ord.ind <- order(values[ind.incl], decreasing = decreasing)
+    ord.ind <- ind.incl[order(values[ind.incl], decreasing = decreasing)]
     return(c(ord.ind, ind.excl))
 }
 
@@ -216,7 +216,7 @@ SortRows <- function(x,
         x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
-    if ((isTableWithStats(x) && !is.numeric(x[,,1])) || !is.numeric(x))
+    if ((isTableWithStats(x) && !is.numeric(as.matrix(x[,,1]))) || !is.numeric(as.matrix(x)))
         stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the column to sort on
@@ -259,7 +259,7 @@ SortColumns <- function(x,
         return(x)
     if (!checkIsTable(x))
         return(x)
-    if ((isTableWithStats(x) && !is.numeric(x[,,1])) || !is.numeric(x))
+    if ((isTableWithStats(x) && !is.numeric(as.matrix(x[,,1]))) || !is.numeric(as.matrix(x)))
         stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the row to sort on
