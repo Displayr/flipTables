@@ -216,8 +216,6 @@ SortRows <- function(x,
         x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
-    if ((isTableWithStats(x) && !is.numeric(as.matrix(x[,,1]))) || !is.numeric(as.matrix(x)))
-        stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the column to sort on
     col.ind <- NULL
@@ -259,8 +257,6 @@ SortColumns <- function(x,
         return(x)
     if (!checkIsTable(x))
         return(x)
-    if ((isTableWithStats(x) && !is.numeric(as.matrix(x[,,1]))) || !is.numeric(as.matrix(x)))
-        stop("Sorting cannot be applied to non-numeric tables.")
 
     # Finding the row to sort on
     row.ind <- NULL

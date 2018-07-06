@@ -336,6 +336,19 @@ test_that("Sorting NAs",
     expect_equal(rownames(res), c("2017-03-19", "2017-03-05", "2017-03-12", "2017-02-12", "2017-03-26"))
 })
 
+df <- structure(list(Name = c("Apple", "Dry fruit", "Carrot", "Berry"), Date = c("Nov 1",
+"April 1", "December 31", "June 31"), Score = c(4, 8, 3, 5)), .Names = c("Name",
+"Date", "Score"), row.names = c("A", "B", "C", "D"), class = "data.frame")
 
 
-
+test_that("Sorting non-numeric data",
+{
+    res1 <- SortRows(df)
+    expect_equal(rownames(res1), c("C", "A", "D", "B"))
+    res2 <- SortRows(df, column = 1)
+    expect_equal(rownames(res2), c("A", "D", "C", "B"))
+    res3 <- SortColumns(df)
+    expect_equal(colnames(res3), c("Score", "Name", "Date"))
+    res4 <- SortColumns(df, row = 2)
+    expect_equal(colnames(res4), c("Score", "Date", "Name"))
+})
