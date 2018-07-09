@@ -277,9 +277,16 @@ test_that("data frame", {
                               "c", "f", "c", "c", "c", "f", "f", "f", "c"), .Dim = c(16L, 3L))
     expect_silent(out <- TidyTabularData(raw.matrix, want.data.frame = TRUE,
                                           want.factors = TRUE))
-    expect_equal(class(out$num), "numeric")
-    expect_equal(class(out$date), "factor")
-    expect_equal(class(out$char), "factor")
+    expect_equal(out,
+                 structure(list(num = c(1, 2, NA, 4, 2, NA, 5, NA, 23, NA, 2, 3.14, 5, NA, 6),
+                                date = structure(c(1454284800, 1454371200, 1454457600,
+                                                   1454544000, 1454630400, 1454716800, 1454803200, 1454889600, 1454976000,
+                                                   1455062400, 1455148800, 1455235200, 1455321600, 1455408000, 1455494400),
+                                                 class = c("POSIXct", "POSIXt"), tzone = "UTC"),
+                                char = structure(c(1L, 2L, 2L, 1L, 4L, 4L, 3L, 4L, 3L, 3L, 3L, 4L, 4L, 4L, 3L),
+                                                 .Label = c("a","b", "c", "f"), class = "factor")),
+                           .Names = c("num", "date", "char"), row.names = as.character(1L:15L),
+                           class = "data.frame"))
 })
 
 test_that("data frame no factors", {
@@ -289,11 +296,14 @@ test_that("data frame no factors", {
                               "9-Feb-2016", "10-Feb-2016", "11-Feb-2016", "12-Feb-2016", "13-Feb-2016",
                               "14-Feb-2016", "15-Feb-2016", "char", "a", "b", "b", "a", "f", "f",
                               "c", "f", "c", "c", "c", "f", "f", "f", "c"), .Dim = c(16L, 3L))
-
-    out <- TidyTabularData(raw.matrix, want.data.frame = TRUE, want.factors = FALSE)
-    expect_equal(class(out$num), "numeric")
-    expect_equal(class(out$date), "character")
-    expect_equal(class(out$char), "character")
+    expect_equal(TidyTabularData(raw.matrix, want.data.frame = TRUE, want.factors = FALSE),
+                 structure(list(num = c(1, 2, NA, 4, 2, NA, 5, NA, 23, NA, 2, 3.14, 5, NA, 6),
+                                date = structure(c(1454284800, 1454371200, 1454457600,
+                                                1454544000, 1454630400, 1454716800, 1454803200, 1454889600, 1454976000,
+                                                1455062400, 1455148800, 1455235200, 1455321600, 1455408000, 1455494400),
+                                                class = c("POSIXct", "POSIXt"), tzone = "UTC"),
+                                char = c("a", "b", "b", "a", "f", "f", "c", "f", "c", "c", "c", "f", "f", "f", "c")),
+                           .Names = c("num", "date", "char"), row.names = as.character(1L:15L), class = "data.frame"))
 })
 
 test_that("data frame row names", {
@@ -304,13 +314,20 @@ test_that("data frame row names", {
                               "2-Feb-2016", "3-Feb-2016", "4-Feb-2016", "5-Feb-2016", "6-Feb-2016", "7-Feb-2016",
                               "8-Feb-2016", "9-Feb-2016", "10-Feb-2016", "11-Feb-2016", "12-Feb-2016",
                               "13-Feb-2016", "14-Feb-2016", "15-Feb-2016", "char", "a", "b", "b",
-                              "a", "f", "f", "c", "f", "c", "c", "c", "f", "f", "f", "c"),
-                               .Dim = c(16L, 4L))
-    out <- TidyTabularData(raw.matrix, want.data.frame = TRUE,
-                            want.row.names = TRUE, want.factors = TRUE)
-    expect_equal(class(out$num), "numeric")
-    expect_equal(class(out$date), "factor")
-    expect_equal(class(out$char), "factor")
+                              "a", "f", "f", "c", "f", "c", "c", "c", "f", "f", "f", "c"), .Dim = c(16L, 4L))
+    expect_equal(TidyTabularData(raw.matrix, want.data.frame = TRUE,
+                                 want.row.names = TRUE, want.factors = TRUE),
+                 structure(list(num = c(1, 2, NA, 4, 2, NA, 5, NA, 23, NA, 2, 3.14, 5, NA, 6),
+                                date = structure(c(1454284800, 1454371200, 1454457600,
+                                                1454544000, 1454630400, 1454716800, 1454803200, 1454889600, 1454976000,
+                                                1455062400, 1455148800, 1455235200, 1455321600, 1455408000, 1455494400),
+                                                class = c("POSIXct", "POSIXt"), tzone = "UTC"),
+                                char = structure(c(1L, 2L, 2L, 1L, 4L, 4L, 3L, 4L, 3L, 3L, 3L, 4L, 4L, 4L, 3L),
+                                                 .Label = c("a", "b", "c", "f"), class = "factor")),
+                           .Names = c("num", "date", "char"),
+                           row.names = c("row 1", "row 2", "row 3", "row 4", "row 5", "row 6", "row 7", "row 8",
+                                         "row 9", "row 10", "row 11", "row 12", "row 13", "row 14", "row 15"),
+                           class = "data.frame"))
 })
 
 test_that("data frame no names", {
@@ -322,9 +339,15 @@ test_that("data frame no names", {
                 "f", "c"), .Dim = c(15L, 3L))
     expect_silent(out <- TidyTabularData(raw.matrix, want.data.frame = TRUE,
                                            want.col.names = FALSE, want.factors = TRUE))
-    expect_equal(class(out$X1), "numeric")
-    expect_equal(class(out$X2), "factor")
-    expect_equal(class(out$X3), "factor")
+    expect_equal(out,
+                 structure(list(X1 = c(1, 2, NA, 4, 2, NA, 5, NA, 23, NA, 2, 3.14, 5, NA, 6),
+                                X2 = structure(c(1454284800, 1454371200, 1454457600,
+                                               1454544000, 1454630400, 1454716800, 1454803200, 1454889600, 1454976000,
+                                               1455062400, 1455148800, 1455235200, 1455321600, 1455408000, 1455494400
+                                       ), class = c("POSIXct", "POSIXt"), tzone = "UTC"),
+                                X3 = structure(c(1L, 2L, 2L, 1L, 4L, 4L, 3L, 4L, 3L, 3L, 3L, 4L, 4L, 4L, 3L),
+                                               .Label = c("a", "b", "c", "f"), class = "factor")),
+                           .Names = c("X1", "X2", "X3"), row.names = as.character(1L:15L), class = "data.frame"))
 })
 
 test_that("data frame blank names", {

@@ -336,10 +336,10 @@ test_that("Sorting NAs",
     expect_equal(rownames(res), c("2017-03-19", "2017-03-05", "2017-03-12", "2017-02-12", "2017-03-26"))
 })
 
-df <- structure(list(Name = c("Apple", "Dry fruit", "Carrot", "Berry"), Date = c("Nov 1",
-"April 1", "December 31", "June 31"), Score = c(4, 8, 3, 5)), .Names = c("Name",
-"Date", "Score"), row.names = c("A", "B", "C", "D"), class = "data.frame")
-
+df <- structure(list(Name = c("Apple", "Dried fruit", "Carrot", "Berry"
+), Date = structure(c(17471, 17622, 17896, 17712), class = "Date"),
+    Score = c(4, 8, 3, 5)), .Names = c("Name", "Date", "Score"
+), row.names = c("A", "B", "C", "D"), class = "data.frame")
 
 test_that("Sorting non-numeric data",
 {
@@ -347,8 +347,11 @@ test_that("Sorting non-numeric data",
     expect_equal(rownames(res1), c("C", "A", "D", "B"))
     res2 <- SortRows(df, column = 1)
     expect_equal(rownames(res2), c("A", "D", "C", "B"))
-    res3 <- SortColumns(df)
-    expect_equal(colnames(res3), c("Score", "Name", "Date"))
-    res4 <- SortColumns(df, row = 2)
-    expect_equal(colnames(res4), c("Score", "Date", "Name"))
+    res3 <- SortRows(df, column = 2)
+    expect_equal(rownames(res3), c("A", "B", "D", "C"))
+
+    res4 <- SortColumns(df)
+    expect_equal(colnames(res3), c("Date", "Score", "Name"))
+    res5 <- SortColumns(df, row = 2)
+    expect_equal(colnames(res4), c("Date", "Score", "Name"))
 })
