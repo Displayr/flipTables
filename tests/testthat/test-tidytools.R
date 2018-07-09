@@ -351,7 +351,7 @@ test_that("Sorting non-numeric data",
     expect_equal(rownames(res3), c("A", "B", "D", "C"))
 
     res4 <- SortColumns(df)
-    expect_equal(colnames(res3), c("Date", "Score", "Name"))
-    res5 <- SortColumns(df, row = 2)
     expect_equal(colnames(res4), c("Date", "Score", "Name"))
+    res5 <- SortColumns(df, row = 2)
+    expect_equal(colnames(res5), c("Date", "Score", "Name"))
 })
