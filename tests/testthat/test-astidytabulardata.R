@@ -52,7 +52,7 @@ test_that("AsTidyTabularData: works with QDates",
                                                                                                "factor"), name = "date",
                     label = "Interview Date", question = "Interview Date", questiontype = "Date")),
                .Names = c("foo", "bar"), row.names = c(NA, 2L), class = "data.frame")
-    expect_warning(out <- AsTidyTabularData(dat), "converted to being numeric")
+    expect_warning(out <- AsTidyTabularData(dat), "converted to numeric")
     expect_is(out, "matrix")
     expect_equal(dim(out), dim(dat))
 })
