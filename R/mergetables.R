@@ -37,9 +37,11 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     }
     else
     {
+        tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
         merged <- Merge2Tables(tables[[1]],
             Recall(tables[-1], direction = direction, nonmatching = nonmatching),
-            direction = direction, nonmatching = nonmatching)
+            direction = direction, nonmatching = nonmatching,
+            disambig.names = tmp.names[which(duplicated(tmp.names))])
     }
 
     merged
@@ -51,12 +53,30 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 #'   arrays. If the array has 3 dimensions, the first 'plane' of the third
 #'   dimension is kept, the others are dropped. It is an error to have more than
 #'   3 dimensions in the array.
+#' @param disambig.names Optional vector of column names that should be disambiguated
+#'   using the table name
 #' @export
 Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
-    nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"))
+    nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"),
+    disambig.names = NULL)
 {
     left.name <- deparse(substitute(left))
     right.name <- deparse(substitute(right))
+    right.table.name <- ""
+    if (!is.null(attr(left, "name")))
+        left.name <- attr(left, "name")
+    if (!is.null(attr(right, "name")))
+        right.table.name <- right.name <- attr(right, "name")
+
+
+    #cat("line 64\n")
+    #cat("left:", left.name, "; right:", right.name, "\n")
+    #print(colnames(right))
+    #cat("line 71\n")
+    #print(colnames(right))
+    #cat(right.table.name, "\n")
+    #print(str(right))
+    #cat("line 66\n")
 
     left <- to.matrix(left, direction)
     right <- to.matrix(right, direction)
@@ -153,6 +173,12 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         all.y <- TRUE
     }
 
+    indL <- which(colnames(left) %in% c(disambig.names, colnames(right)))
+    indR <- which(colnames(right) %in% c(disambig.names, colnames(left)))
+    if (length(indL) > 0)
+        colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
+    if (length(indR) > 0 && right.table.name != "")
+        colnames(right)[indR] <- paste0(right.name, " - ", colnames(right)[indR])
     merged <- merge(left, right, by = "row.names", all.x = all.x, all.y = all.y)
     rownames(merged) <- merged$Row.names
     merged[["Row.names"]] <- NULL

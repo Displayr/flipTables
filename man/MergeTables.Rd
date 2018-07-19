@@ -10,7 +10,7 @@ MergeTables(tables, direction = c("Side-by-side", "Up-and-down"),
 
 Merge2Tables(left, right, direction = c("Side-by-side", "Up-and-down"),
   nonmatching = c("Keep all", "Keep all from first table",
-  "Keep all from second table", "Matching only"))
+  "Keep all from second table", "Matching only"), disambig.names = NULL)
 }
 \arguments{
 \item{tables}{A list of tables to merge}
@@ -30,6 +30,9 @@ second table"} (like \code{all.y = TRUE}).}
 arrays. If the array has 3 dimensions, the first 'plane' of the third
 dimension is kept, the others are dropped. It is an error to have more than
 3 dimensions in the array.}
+
+\item{disambig.names}{Optional vector of column names that should be disambiguated
+using the table name}
 }
 \description{
 Merge two or more tables. Bind tables together either by rows (similar to \code{\link{rbind}}) or by
