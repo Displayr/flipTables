@@ -65,9 +65,10 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
 {
     left.name <- deparse(substitute(left))
     right.name <- deparse(substitute(right))
+    left.table.name <- ""
     right.table.name <- ""
     if (!is.null(attr(left, "name")))
-        left.name <- attr(left, "name")
+        left.table.name <- left.name <- attr(left, "name")
     if (!is.null(attr(right, "name")))
         right.table.name <- right.name <- attr(right, "name")
 
@@ -169,9 +170,16 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     indL <- which(colnames(left) %in% c(disambig.names, colnames(right)))
     indR <- which(colnames(right) %in% c(disambig.names, colnames(left)))
     if (length(indL) > 0)
+    {
+        if (nchar(left.table.name) == 0)
+            warning("Assign name to ", left.name, 
+                    " by setting 'attr(", left.name,  ", \"name\") <- name'")
         colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
+    }
+    # Disambiguation is only added if right.table.name defined
+    # Otherwise the recursion in MergeTables will peform this multiple times
     if (length(indR) > 0 && right.table.name != "")
-        colnames(right)[indR] <- paste0(right.name, " - ", colnames(right)[indR])
+        colnames(right)[indR] <- paste0(right.table.name, " - ", colnames(right)[indR])
     merged <- merge(left, right, by = "row.names", all.x = all.x, all.y = all.y)
     rownames(merged) <- merged$Row.names
     merged[["Row.names"]] <- NULL
