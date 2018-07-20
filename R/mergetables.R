@@ -37,7 +37,10 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     }
     else
     {
-        tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
+        if (direction == "Up-and-down")
+            tmp.names <- unlist(lapply(tables, function(x){rownames(x)}))
+        else
+            tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
         merged <- Merge2Tables(tables[[1]],
             Recall(tables[-1], direction = direction, nonmatching = nonmatching),
             direction = direction, nonmatching = nonmatching,
@@ -67,16 +70,6 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         left.name <- attr(left, "name")
     if (!is.null(attr(right, "name")))
         right.table.name <- right.name <- attr(right, "name")
-
-
-    #cat("line 64\n")
-    #cat("left:", left.name, "; right:", right.name, "\n")
-    #print(colnames(right))
-    #cat("line 71\n")
-    #print(colnames(right))
-    #cat(right.table.name, "\n")
-    #print(str(right))
-    #cat("line 66\n")
 
     left <- to.matrix(left, direction)
     right <- to.matrix(right, direction)
