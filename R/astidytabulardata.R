@@ -76,8 +76,7 @@ AsTidyTabularData <- function(x, ...)
     }
 
     #x <- setDimNames(x)  # set labels
-
-    if (length(old.attrs))
+    if (length(old.attrs) && length(attributes(x)))
         attributes(x) <- modifyList(old.attrs, attributes(x))
     if (is.null(dim(x)))
         x <- AsNumeric(x)
