@@ -39,11 +39,12 @@ AsTidyTabularData <- function(x, ...)
         if (is.null(dots$want.data.frame))
             dots$want.data.frame <- FALSE
         x <- do.call("ParseUserEnteredTable", dots)
+        x <- AsNumeric(x)
     }else if (is.data.frame(x))
     {
         ## convert data.frame default row names to tidy table default Row 1, Row 2, etc.
-        if (identical(attr(x, "row.names"), seq_len(nrow(x))))
-            row.names(x) <- paste0("Row ", seq_len(nrow(x)))
+        #if (identical(attr(x, "row.names"), seq_len(nrow(x))))
+        #    row.names(x) <- paste0("Row ", seq_len(nrow(x)))
         x <- ProcessQVariables(x)
         x <- as.matrix(AsNumeric(x, binary = FALSE, remove.first = FALSE))
     }else if (is.factor(x))
@@ -74,7 +75,7 @@ AsTidyTabularData <- function(x, ...)
                       sQuote(classes)))
     }
 
-    x <- setDimNames(x)  # set labels
+    #x <- setDimNames(x)  # set labels
 
     if (length(old.attrs))
         attributes(x) <- modifyList(old.attrs, attributes(x))

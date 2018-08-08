@@ -78,8 +78,12 @@ TidyTabularData <- function(
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
 
-    if (is.null(dim(x)) || length(dim(x)) == 1L)
+    if (is.null(dim(x)) || length(dim(x)) == 1L || NROW(x) == 1 || NCOL(x) == 1)
         class(x) <- "numeric"
+    else if (ncol(x))
+        x <- drop(x)
+    else if (nrow(x) == 1)
+        x <- drop(x)
     else if (!is.data.frame(x))
         class(x) <- "matrix"
     x
