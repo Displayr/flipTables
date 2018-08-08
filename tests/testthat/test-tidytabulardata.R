@@ -61,10 +61,10 @@ test_that("TidyTabularData: remove all but one row or column",
     rownames(x) <- letters[1:2]
     colnames(x) <- LETTERS[1:3]
     out <- TidyTabularData(x, row.names.to.remove = "a")
-    expect_equal(dim(out), dim(x)- c(1, 0))
+    expect_equal(length(out), ncol(x))
 
     out <- TidyTabularData(x, col.names.to.remove = c("A", "B"))
-    expect_equal(dim(out), dim(x)- c(0, 2))
+    expect_equal(length(out), nrow(x))
 })
 
 test_that("TidyTabularData: transpose arg works",
@@ -222,7 +222,7 @@ test_that("TidyTabularData rm entries from vector comma sep. names",
     expect_equal(names(out), as.character(x))
 })
 
-test_that("TIdyTabularData hide empty rows and columns",
+test_that("TidyTabularData hide empty rows and columns",
 {
     x <- matrix("", 3, 3)
     x[1, -1] <- letters[1:2]
@@ -234,6 +234,6 @@ test_that("TIdyTabularData hide empty rows and columns",
     expect_true(all(is.na(out[2, ])))
 
     out <- TidyTabularData(x, hide.empty.rows.and.columns = TRUE)
-    expect_equal(dim(out), dim(x) - c(2, 1))
+    expect_equal(length(out), 2)
     expect_false(any(is.na(out)))
 })
