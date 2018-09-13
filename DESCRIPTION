@@ -15,11 +15,12 @@ Imports:
     flipTransformations (>= 1.1.0),
     flipU (>= 1.0.0)
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
     Displayr/flipTransformations,
     Displayr/flipU
 NeedsCompilation: no
+Encoding: UTF-8
 Packaged: 2017-08-28 02:41:50 UTC; mathew

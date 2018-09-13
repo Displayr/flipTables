@@ -23,6 +23,13 @@ called "statistic" to check for percentages}
 Searches for empty columns in a table and returns a copy
 with those entries removed
 }
+\examples{
+x <- matrix(nrow = 2, ncol = 2)
+x[1, ] <- 1
+HideEmptyRowsAndColumns(x)
+x[2, ] <- 0
+HideEmptyRowsAndColumns(x, is.percent = TRUE)
+}
 \seealso{
 \code{GetNonEmptyRowsAndColumns}
 }

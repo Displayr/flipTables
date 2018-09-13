@@ -49,7 +49,10 @@ AsTidyTabularData <- function(x, ...)
         x <- as.matrix(AsNumeric(x, binary = FALSE, remove.first = FALSE))
     }else if (is.factor(x))
     {
-        x <- as.matrix(AsNumeric(data.frame(x, row.names = paste0("Row ", seq_along((x)))),
+        tmp.names <- names(x)
+        if (is.null(tmp.names))
+            tmp.names <- paste0("Row ", seq_along(x))
+        x <- as.matrix(AsNumeric(data.frame(x, row.names = tmp.names),
                        binary = FALSE, remove.first = FALSE))
     }else if (is.numeric(x))
     {  # make sure has dimnames and is <= 2D
