@@ -129,6 +129,7 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' always return a single numeric value. If multiple cells are selected,
 #' only the first is returned. If no entries are selected a
 #' value of zero is returned.
+#' @export
 SelectEntry <- function (x, row, column, return.single.value = FALSE)
 {
     indCol <- indexSelected(x, "column", column)
