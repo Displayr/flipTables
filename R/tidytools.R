@@ -115,6 +115,34 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
     extractArray(x, col.index = ind)
 }
 
+
+#' Select entries from a table
+#' @description Function to select entries from a table using
+#' either the row/column name or indices
+#' @param x Matrix or dataframe from which values will be extracted.
+#' @param row A string containing a comma seperated list of the
+#' name or indices of the rows to be selected
+#' @param column A string containing a comma seperated list of the
+#' name or indices of the column to be selected, If \code{x} is a vector
+#' or 1-dimensional array, \code{column} will be ignored.
+#' @param return.single.value Logical; If this true, the function will
+#' always return a single numeric value. If multiple cells are selected,
+#' only the first is returned. If no entries are selected a
+#' value of zero is returned.
+SelectEntry <- function (x, row, column, return.single.value = FALSE)
+{
+    indCol <- indexSelected(x, "column", column)
+    indRow <- indexSelected(x, "row", row)
+    if (length(dim(x)) < 2)
+        res <- x[indRow]
+    else
+        res <- x[indRow, indCol]
+    if (return.single.value)
+        return(sum(res[1], na.rm = TRUE))
+    return(res)
+}
+
+
 indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = NA)
 {
     if (length(dim(x)) < 2)
