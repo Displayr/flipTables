@@ -4,7 +4,7 @@
 \alias{SelectEntry}
 \title{Select entries from a table}
 \usage{
-SelectEntry(x, row, column, return.single.value = FALSE)
+SelectEntry(x, row, column = 1, return.single.value = FALSE)
 }
 \arguments{
 \item{x}{Matrix or dataframe from which values will be extracted.}
