@@ -118,6 +118,8 @@ test_that("SelectEntry",
     expect_equal(res, numeric(0))
     expect_error(res <- SelectEntry(dat, "NET", "1,35 to 39, 50 to 54"), NA)
     expect_equal(res, dat[10,c(1,4,7)])
+    expect_warning(res <- SelectEntry(dat, "NET", ""), "First column was returned as no column was specified")
+    expect_equal(res, dat[10,1])
 })
 
 test_that("Sort Rows",

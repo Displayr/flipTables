@@ -130,14 +130,22 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' only the first is returned. If no entries are selected a
 #' value of zero is returned.
 #' @export
-SelectEntry <- function (x, row, column = 1, return.single.value = FALSE)
+SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 {
     indCol <- indexSelected(x, "column", as.character(column))
     indRow <- indexSelected(x, "row", as.character(row))
+
     if (length(dim(x)) < 2)
         res <- x[indRow]
     else
+    {
+        if (sum(nchar(column), na.rm = TRUE) == 0)
+        {
+            warning("First column was returned as no column was specified")
+            indCol <- 1
+        }
         res <- x[indRow, indCol]
+    }
     if (return.single.value)
         return(sum(res[1], na.rm = TRUE))
     return(res)
