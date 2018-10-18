@@ -120,6 +120,14 @@ test_that("SelectEntry",
     expect_equal(res, dat[10,c(1,4,7)])
     expect_warning(res <- SelectEntry(dat, "NET", ""), "First column was returned as no column was specified")
     expect_equal(res, dat[10,1])
+    res <- SelectEntry(dat, 1:3, 1:2, return.single.value = FALSE)
+    expect_equal(res,
+                structure(c(1.13154172560113, 0.99009900990099, 0.282885431400283,
+                0, 0.99009900990099, 0.707213578500707), .Dim = 3:2, .Dimnames = list(
+                c("Less than $15,000", "$200,001 or more", "$150,001 to $200,000"),
+                c("18 to 24", "25 to 29"))))
+    res <- SelectEntry(dat, 1:3, 1:2, return.single.value = TRUE)
+    expect_equal(round(res,3), 4.102)
 })
 
 test_that("Sort Rows",

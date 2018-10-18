@@ -147,7 +147,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
         res <- x[indRow, indCol]
     }
     if (return.single.value)
-        return(sum(res[1], na.rm = TRUE))
+        return(sum(res, na.rm = TRUE))
     return(res)
 }
 
