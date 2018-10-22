@@ -70,18 +70,23 @@ GetNonEmptyRowsAndColumns <- function(x, use.names = TRUE, is.percent = NULL)
 #'
 #' Searches for empty rows in a table and returns a copy
 #' with those entries removed
-#' @inherit HideEmptyRowsAndColumns
+#' @param x matrix; vector; or list
+#' @param remove.zeros logical; indicating whether zeros are removed.
+#'     If \code{FALSE}, then only \code{NAs} are removed.
+#'     Specifying a value of \code{NULL}
+#'     means that the function will check for an attribute of \code{x}
+#'     called "statistic" to check for percentages
 #' @export
-HideEmptyRows <- function(x, is.percent = NULL)
+HideEmptyRows <- function(x, remove.zeros = TRUE)
 {
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
     {
-        idx <- GetNonEmptyElements(x, FALSE, is.percent)
+        idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
         if (!length(idx))
             stop("Hiding empty elements gives empty input vector.")
         return(CopyAttributes(x[idx, drop  = FALSE], x))
     }
-    idx <- getNonEmptyIndices(x, 1, FALSE, is.percent = is.percent)
+    idx <- getNonEmptyIndices(x, 1, FALSE, remove.zeros)
     if (!length(idx))
         stop ("Hiding empty rows gives empty input matrix.")
     extractArray(x, row.index = idx)
@@ -91,18 +96,18 @@ HideEmptyRows <- function(x, is.percent = NULL)
 #'
 #' Searches for empty columns in a table and returns a copy
 #' with those entries removed
-#' @inherit HideEmptyRowsAndColumns
+#' @inherit HideEmptyRows
 #' @export
-HideEmptyColumns <- function(x, is.percent = NULL)
+HideEmptyColumns <- function(x, remove.zeros = TRUE)
 {
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
     {
-        idx <- GetNonEmptyElements(x, FALSE, is.percent)
+        idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
         if (!length(idx))
             stop("Hiding empty elements gives empty input vector.")
         return(x)
     }
-    idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = is.percent)
+    idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = remove.zeros)
     if (!length(idx))
         stop ("Hiding empty columns gives empty input matrix.")
     extractArray(x, col.index = idx)

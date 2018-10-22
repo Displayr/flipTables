@@ -4,32 +4,18 @@
 \alias{HideEmptyRows}
 \title{Hide Empty Rows From a Table}
 \usage{
-HideEmptyRows(x, is.percent = NULL)
+HideEmptyRows(x, remove.zeros = TRUE)
 }
 \arguments{
 \item{x}{matrix; vector; or list}
 
-\item{is.percent}{logical; indicating whether the supplied data are
-percentages; specifying a value of \code{NULL} (the default)
+\item{remove.zeros}{logical; indicating whether zeros are removed.
+If \code{FALSE}, then only \code{NAs} are removed.
+Specifying a value of \code{NULL}
 means that the function will check for an attribute of \code{x}
 called "statistic" to check for percentages}
-}
-\value{
-\code{x} with any empty rows or columns removed; or in the
-    case \code{x} is vector, \code{x} with any empty entries
-    removed
 }
 \description{
 Searches for empty rows in a table and returns a copy
 with those entries removed
-}
-\examples{
-x <- matrix(nrow = 2, ncol = 2)
-x[1, ] <- 1
-HideEmptyRowsAndColumns(x)
-x[2, ] <- 0
-HideEmptyRowsAndColumns(x, is.percent = TRUE)
-}
-\seealso{
-\code{GetNonEmptyRowsAndColumns}
 }
