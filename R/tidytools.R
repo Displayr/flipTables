@@ -127,18 +127,22 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' or 1-dimensional array, \code{column} will be ignored.
 #' @param return.single.value Logical; If this true, the function will
 #' always return a single numeric value. If multiple cells are selected,
-#' only the first is returned. If no entries are selected a
+#' the entries are summed. If no entries are selected a
 #' value of zero is returned.
 #' @export
 SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 {
-    indCol <- indexSelected(x, "column", as.character(column))
     indRow <- indexSelected(x, "row", as.character(row))
 
     if (length(dim(x)) < 2)
+	{
+		if (length(column) > 0 && sum(nchar(column)) > 0)
+			warning("Column ", column, " ignored for 1-dimensional table")
         res <- x[indRow]
-    else
+    
+	} else
     {
+		indCol <- indexSelected(x, "column", as.character(column))
         if (sum(nchar(column), na.rm = TRUE) == 0)
         {
             warning("First column was returned as no column was specified")
@@ -334,16 +338,23 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #' @param x Vector of names
 #' @return list of indices mapping p.list to x.
 #'      Unmatched entries in p.list are set to NA
+#'		Ambiguous patterns are preferentially treated as indices
 #' @noRd
 matchNameOrIndex <- function(p.list, x)
 {
     # Looking for exact string-to-string match
-    ind <- match(p.list, x)
+    ind.as.name <- match(p.list, x)
 
-    # Try to convert unmatched entries to index numbers
-    ind.na <- which(is.na(ind))
-    if (length(ind.na))
-        ind[ind.na] <- suppressWarnings(as.numeric(p.list[ind.na]))
+	# Give warnings if pattern can be used as both an index or a name
+    ind <- suppressWarnings(as.numeric(p.list))
+	ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
+	for (ii in ambig.pos)
+		warning("'", p.list[ii], "' treated as an index. ",
+		"To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
+
+	# Patterns are treated as indices where possible	
+	pos.as.name <- which(is.na(ind))
+	ind[pos.as.name] <- ind.as.name[pos.as.name]
     ind[ind < 1 | ind > length(x)] <- NA
 
     return(ind)
