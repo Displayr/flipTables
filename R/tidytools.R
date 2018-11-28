@@ -139,7 +139,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 		if (length(column) > 0 && sum(nchar(column)) > 0)
 			warning("Column ", column, " ignored for 1-dimensional table")
         res <- x[indRow]
-    
+
 	} else
     {
 		indCol <- indexSelected(x, "column", as.character(column))
@@ -347,15 +347,15 @@ matchNameOrIndex <- function(p.list, x)
 
 	# Give warnings if pattern can be used as both an index or a name
     ind <- suppressWarnings(as.numeric(p.list))
+    ind[ind < 1 | ind > length(x)] <- NA
 	ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
 	for (ii in ambig.pos)
 		warning("'", p.list[ii], "' treated as an index. ",
 		"To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
 
-	# Patterns are treated as indices where possible	
+	# Patterns are treated as indices where possible
 	pos.as.name <- which(is.na(ind))
 	ind[pos.as.name] <- ind.as.name[pos.as.name]
-    ind[ind < 1 | ind > length(x)] <- NA
 
     return(ind)
 }
