@@ -18,7 +18,7 @@ or 1-dimensional array, \code{column} will be ignored.}
 
 \item{return.single.value}{Logical; If this true, the function will
 always return a single numeric value. If multiple cells are selected,
-only the first is returned. If no entries are selected a
+the entries are summed. If no entries are selected a
 value of zero is returned.}
 }
 \description{

@@ -134,6 +134,14 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 {
     indRow <- indexSelected(x, "row", as.character(row))
 
+    # If data is already percentages in Qtable then divide by 100
+    # Note that R outputs and pasted data will already be in decimals
+    stat <- attr(x, "statistic")
+    qst <- attr(x, "questions")
+    is.pct <- !is.null(stat) && !is.null(qst) && grepl("%$", stat)
+    if (is.pct)
+        x <- x / 100
+
     if (length(dim(x)) < 2)
 	{
 		if (length(column) > 0 && sum(nchar(column)) > 0 && as.numeric(column) != 1)
@@ -151,7 +159,9 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
         res <- x[indRow, indCol]
     }
     if (return.single.value && is.numeric(res))
-        return(sum(res, na.rm = TRUE))
+        res <- sum(res, na.rm = TRUE)
+    if (is.pct)
+        attr(res, "statistic") <- "%"
     return(res)
 }
 
@@ -325,7 +335,7 @@ SortColumns <- function(x,
 # It will also check for unmatched entries and give warnings
 getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
-    sel.vec <- TextAsVector(pattern)
+    sel.vec <- TextAsVector(as.character(pattern))
     sel.ind <- matchNameOrIndex(sel.vec, x)
     sel.na <- which(is.na(sel.ind))
     if (warn && length(sel.na) > 0)
