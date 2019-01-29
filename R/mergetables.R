@@ -26,6 +26,18 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
+    # Checking for column names
+    if (!is.null(names(tables)))
+    {
+        for (i in 1:length(tables))
+        {
+            if (length(dim(tables[[i]])) < 2)
+                tables[[i]] <- as.matrix(tables[[i]])
+            if (is.null(colnames(tables[[i]])) && ncol(tables[[i]]) == 1)
+                colnames(tables[[i]]) <- names(tables)[i]
+        }
+    }
+
     merged <- NULL
     if (length(tables) == 1)
     {
@@ -41,12 +53,13 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
             tmp.names <- unlist(lapply(tables, function(x){rownames(x)}))
         else
             tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
+
         merged <- Merge2Tables(tables[[1]],
             Recall(tables[-1], direction = direction, nonmatching = nonmatching),
             direction = direction, nonmatching = nonmatching,
             disambig.names = tmp.names[which(duplicated(tmp.names))])
     }
-
+    
     merged
 }
 
