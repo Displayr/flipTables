@@ -1,10 +1,15 @@
 # Function to extract rows/columns from array
 # It handles both 2d matrices and 3d arrays
 # Will always try to copy attributes
-extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x))
+extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.all.stats = TRUE)
 {
-    if (isTableWithStats(x))
+    if (isTableWithStats(x) && keep.all.stats)
         res <- x[row.index, col.index,, drop = FALSE]
+    else if (isTableWithStats(x) && !keep.all.stats)
+    {
+        warning("Only the first statistic '", dimnames(x)[[3]][1], "' used.")
+        res <- x[row.index, col.index, 1, drop = FALSE]
+    }
     else
         res <- x[row.index, col.index, drop = FALSE]
     return(CopyAttributes(res, x))
@@ -156,7 +161,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
             warning("First column was returned as no column was specified")
             indCol <- 1
         }
-        res <- x[indRow, indCol]
+        res <- extractArray(x, row.index = indRow, col.index = indCol, keep.all.stats = FALSE)
     }
     if (return.single.value && is.numeric(res))
         res <- sum(res, na.rm = TRUE)
