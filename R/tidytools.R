@@ -9,6 +9,7 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
     {
         warning("Only the first statistic '", dimnames(x)[[3]][1], "' used.")
         res <- x[row.index, col.index, 1, drop = FALSE]
+        attr(res, "statistic") <- dimnames(x)[[3]][1]
     }
     else
         res <- x[row.index, col.index, drop = FALSE]
