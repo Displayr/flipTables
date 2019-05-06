@@ -136,8 +136,11 @@ test_that("SelectEntry",
     expect_equal(round(res,3), structure(0.041, statistic = "%"))
     expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never"), "Only the first statistic 'Column %' used")
     expect_equal(res, structure(15.7894736842105, .Dim = c(1L, 1L, 1L),
-        .Dimnames = list("25 to 29", "Never", "Column %"), statistic = "Column %", name = "Age by Exercise frequency",
+        .Dimnames = list("25 to 29", "Never", "Column %"), statistic = "%", name = "Age by Exercise frequency",
         questions = c("Age", "Exercise frequency")))
+    expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never", return.single.value = TRUE),
+        "Only the first statistic 'Column %' used")
+    expect_equal(attr(res, "statistic"), "%")
 })
 
 test_that("Sort Rows",

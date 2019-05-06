@@ -163,6 +163,8 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
             indCol <- 1
         }
         res <- extractArray(x, row.index = indRow, col.index = indCol, keep.all.stats = FALSE)
+        if (!is.null(attr(res, "statistic")) && grepl("%$", attr(res, "statistic")))
+            is.pct <- TRUE
     }
     if (return.single.value && is.numeric(res))
         res <- sum(res, na.rm = TRUE)
