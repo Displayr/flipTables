@@ -144,7 +144,9 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
     # Note that R outputs and pasted data will already be in decimals
     stat <- attr(x, "statistic")
     qst <- attr(x, "questions")
-    is.pct <- !is.null(stat) && !is.null(qst) && grepl("%$", stat)
+    dnm <- dimnames(x)
+    is.pct <- (!is.null(stat) && !is.null(qst) && grepl("%$", stat)) ||
+              (length(dnm) > 2 && grepl("%$", dnm[[3]][1]))
     if (is.pct)
         x <- x / 100
 
