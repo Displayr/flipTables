@@ -345,7 +345,8 @@ SortColumns <- function(x,
 # It will also check for unmatched entries and give warnings
 getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
-    sel.vec <- TextAsVector(as.character(pattern))
+    pattern <- as.character(pattern)
+    sel.vec <- if (length(pattern) > 1) pattern else TextAsVector(pattern)
     sel.ind <- matchNameOrIndex(sel.vec, x)
     sel.na <- which(is.na(sel.ind))
     if (warn && length(sel.na) > 0)
