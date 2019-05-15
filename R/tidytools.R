@@ -152,7 +152,8 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 
     if (length(dim(x)) < 2)
 	{
-		if (length(column) > 0 && sum(nchar(column)) > 0 && as.numeric(column) != 1)
+        #cat("column:", column, "\n")
+		if (length(column) > 0 && sum(nchar(column)) > 0 && sum(as.numeric(column), na.rm = TRUE) != 1)
 			warning("Column ", column, " ignored for 1-dimensional table")
         res <- x[indRow]
 

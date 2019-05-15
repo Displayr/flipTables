@@ -157,6 +157,7 @@ test_that("SelectEntry",
     expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never", return.single.value = TRUE),
         "Only the first statistic 'Column %' used")
     expect_equal(attr(res, "statistic"), "%")
+    expect_warning(SelectEntry(dat[,1], "Pepsi", "Pepsi"), "Table does not contain row")
 })
 
 test_that("Sort Rows",
