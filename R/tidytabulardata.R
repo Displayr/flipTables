@@ -80,8 +80,6 @@ TidyTabularData <- function(
 
     if (is.null(dim(x)) || length(dim(x)) == 1L)
         class(x) <- "numeric"
-    else if (ncol(x) == 1 || nrow(x) == 1)
-        x <- drop(x)
     else if (!is.data.frame(x))
         class(x) <- "matrix"
     x
