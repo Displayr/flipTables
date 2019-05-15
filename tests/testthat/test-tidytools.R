@@ -63,7 +63,7 @@ tabWithN <- structure(c(12.2448979591837, 6.12244897959184, 4.08163265306122,
 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
 800, 800, 800, 800, 800), .Dim = c(10L, 8L, 3L), .Dimnames = list(
-    c("18 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44",
+    c("18 to 24 ", "25 to 29", "30 to 34", "35 to 39", "40 to 44",
     "45 to 49", "50 to 54", "55 to 64", "65 or more", "NET"),
     c("Every or nearly every day", "4 to 5 days a week", "2 to 3 days a week",
     "Once a week", "Once every 2 weeks", "Once a month", "Less than once a month",
@@ -90,11 +90,11 @@ test_that("Select Rows",
 
     res <- SelectRows(tabWithN, "18 to 24, 25 to 29, 3")
     expect_equal(dim(res), c(3, 8, 3))
-    expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34"))
+    expect_equal(rownames(res), c("18 to 24 ", "25 to 29", "30 to 34"))
 
     res <- SelectRows(tabWithN, first.k = 4, "65 or more, NET")
     expect_equal(dim(res), c(6, 8, 3))
-    expect_equal(rownames(res), c("18 to 24", "25 to 29", "30 to 34", "35 to 39", "65 or more", "NET"))
+    expect_equal(rownames(res), c("18 to 24 ", "25 to 29", "30 to 34", "35 to 39", "65 or more", "NET"))
 
     res <- SelectRows(tabWithN, last.k = 3)
     expect_equal(dim(res), c(3, 8, 3))

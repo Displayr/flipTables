@@ -360,11 +360,12 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #' @return list of indices mapping p.list to x.
 #'      Unmatched entries in p.list are set to NA
 #'		Ambiguous patterns are preferentially treated as indices
+#' @importFrom flipU TrimWhitespace
 #' @noRd
 matchNameOrIndex <- function(p.list, x)
 {
     # Looking for exact string-to-string match
-    ind.as.name <- match(p.list, x)
+    ind.as.name <- match(TrimWhitespace(p.list), TrimWhitespace(x))
 
 	# Give warnings if pattern can be used as both an index or a name
     ind <- suppressWarnings(as.numeric(p.list))
