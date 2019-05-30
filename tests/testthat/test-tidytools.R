@@ -118,7 +118,8 @@ test_that("Select Rows",
 
 test_that("Select Columns",
 {
-    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"), "Table does not contain columns")
+    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"), "Table does not contain column 'Twice'")
+    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never,Blah"), "Table does not contain columns 'Twice','Blah'")
     res <- SelectColumns(tabWithN, "1, 2, Never")
     expect_equal(dim(res), c(10, 3, 3))
     expect_equal(colnames(res), c("Every or nearly every day", "4 to 5 days a week", "Never"))
@@ -129,9 +130,9 @@ test_that("Select Columns",
 
 test_that("SelectEntry",
 {
-    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = TRUE), "Table does not contain rows '0'")
+    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = TRUE), "Table does not contain row '0'")
     expect_equal(res, structure(0, statistic = "%"))
-    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = FALSE), "Table does not contain rows '0'")
+    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = FALSE), "Table does not contain row '0'")
     expect_equal(res, structure(numeric(0), .Dim = 0:1, .Dimnames = list(NULL, "18 to 24"), statistic = "%",
         name = "Income by Age", questions = c("Income", "Age")))
     expect_error(res <- SelectEntry(dat, "NET", "1,35 to 39, 50 to 54"), NA)

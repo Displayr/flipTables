@@ -351,7 +351,7 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
     sel.ind <- matchNameOrIndex(sel.vec, x)
     sel.na <- which(is.na(sel.ind))
     if (warn && length(sel.na) > 0)
-        warning("Table does not contain ", dim, "s '",
+        warning("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
             paste(sel.vec[sel.na], collapse = "','"), "'.")
     return(sel.ind[which(!is.na(sel.ind))])
 }
