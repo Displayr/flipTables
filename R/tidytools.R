@@ -194,7 +194,7 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
         stop("Input table has less than ", min.dim, " ", dim, "s.")
 
     if (sum(nchar(select), na.rm = TRUE) > 0)
-        sel.ind <- getMatchIndex(select, dim.names)
+        sel.ind <- getMatchIndex(select, dim.names, dim = dim)
     if (sum(first.k, na.rm = TRUE) > 0)
         sel.ind <- c(1:first.k, sel.ind)
     if (sum(last.k, na.rm = TRUE) > 0)

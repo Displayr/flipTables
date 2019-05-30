@@ -118,6 +118,7 @@ test_that("Select Rows",
 
 test_that("Select Columns",
 {
+    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"), "Table does not contain columns")
     res <- SelectColumns(tabWithN, "1, 2, Never")
     expect_equal(dim(res), c(10, 3, 3))
     expect_equal(colnames(res), c("Every or nearly every day", "4 to 5 days a week", "Never"))
