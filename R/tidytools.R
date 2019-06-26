@@ -378,8 +378,12 @@ matchNameOrIndex <- function(p.list, x)
     ind[ind < 1 | ind > length(x)] <- NA
 	ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
 	for (ii in ambig.pos)
-		warning("'", p.list[ii], "' treated as an index. ",
-		"To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
+    {
+        # Check for an exact match
+        if (p.list[ii] %in% x)
+            warning("'", p.list[ii], "' treated as an index. ",
+            "To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
+    }
 
 	# Patterns are treated as indices where possible
 	pos.as.name <- which(is.na(ind))

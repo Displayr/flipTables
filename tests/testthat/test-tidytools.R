@@ -116,6 +116,24 @@ test_that("Select Rows",
     expect_equal(res, tb[1:2,], check.attributes = FALSE)
 })
 
+flavours <- structure(c(0.658707865168539, 0.417134831460674, 0.601123595505618,
+    0.398876404494382, 0.432584269662921, 0.390449438202247, 0.375,
+    0.314606741573034, 0.26685393258427, 0.165730337078652, 0.162921348314607
+    ), .Dim = c(11L, 1L), .Dimnames = list(c("Flavors: Classic Bubble Gum",
+    "Flavors: Super-Strong Bubble Gum", "Flavors: Grape", "Flavors: Orange",
+    "Flavors: Sour", "Flavors: Strawberry", "Flavors: Cola", "Flavors: Apple",
+    "Flavors: Chocolate", "Flavors: Peach", "Flavors: Watermelon"
+    ), NULL), statistic = "Average")
+
+test_that("Partial matches",
+{
+    expect_warning(SelectRows(flavours, c("Apple", "Sour", "Flavors: Classic", "Flavors")),
+        "Table does not contain row 'Flavors'")
+
+    rownames(flavours)[3] <- "9"
+    expect_warning(SelectRows(flavours, "9"), "'9' treated as an index")
+})
+
 test_that("Select Columns",
 {
     expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"), "Table does not contain column 'Twice'")
