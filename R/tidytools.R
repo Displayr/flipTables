@@ -365,8 +365,9 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #' @noRd
 matchNameOrIndex <- function(p.list, x)
 {
-    # Looking for exact string-to-string match
-    ind.as.name <- match(TrimWhitespace(p.list), TrimWhitespace(x))
+    # Looking for string-to-string match
+    ind.as.name <- pmatch(TrimWhitespace(p.list), TrimWhitespace(x),
+                          duplicates.ok = TRUE)
 
 	# Give warnings if pattern can be used as both an index or a name
     ind <- suppressWarnings(as.numeric(p.list))
