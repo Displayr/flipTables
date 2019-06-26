@@ -362,12 +362,16 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #'      Unmatched entries in p.list are set to NA
 #'		Ambiguous patterns are preferentially treated as indices
 #' @importFrom flipU TrimWhitespace
+#' @importFrom stringi stri_reverse
 #' @noRd
 matchNameOrIndex <- function(p.list, x)
 {
     # Looking for string-to-string match
-    ind.as.name <- pmatch(TrimWhitespace(p.list), TrimWhitespace(x),
-                          duplicates.ok = TRUE)
+    p.list <- TrimWhitespace(p.list)
+    x <- TrimWhitespace(x) 
+    ind.as.name <- pmatch(p.list, x)
+    retry <- which(!is.finite(ind.as.name))
+    ind.as.name[retry] <- pmatch(stri_reverse(p.list[retry]), stri_reverse(x))
 
 	# Give warnings if pattern can be used as both an index or a name
     ind <- suppressWarnings(as.numeric(p.list))
