@@ -348,11 +348,12 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
     pattern <- as.character(pattern)
     sel.vec <- if (length(pattern) > 1) pattern else TextAsVector(pattern)
-    sel.ind <- matchNameOrIndex(sel.vec, x)
+    sel.ind <- matchNameOrIndex(sel.vec, x, strip.zeros = FALSE)
     sel.na <- which(is.na(sel.ind))
     if (warn && length(sel.na) > 0)
         warning("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
             paste(sel.vec[sel.na], collapse = "','"), "'.")
+    sel.ind[sel.ind == 0] <- NA
     return(sel.ind[which(!is.na(sel.ind))])
 }
 
@@ -364,16 +365,16 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #' @importFrom flipU TrimWhitespace
 #' @importFrom stringi stri_reverse
 #' @noRd
-matchNameOrIndex <- function(p.list, x)
+matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
 {
     # Looking for string-to-string match
     p.list <- TrimWhitespace(p.list)
     x <- TrimWhitespace(x) 
-    ind.as.name <- pmatch(p.list, x)
+    ind.as.name <- charmatch(p.list, x)
     retry <- which(!is.finite(ind.as.name))
-    ind.as.name[retry] <- pmatch(stri_reverse(p.list[retry]), stri_reverse(x))
+    ind.as.name[retry] <- charmatch(stri_reverse(p.list[retry]), stri_reverse(x))
 
-	# Give warnings if pattern can be used as both an index or a name
+	# Give warnings if pattern can be used as both an index (numeric) or a name
     ind <- suppressWarnings(as.numeric(p.list))
     ind[ind < 1 | ind > length(x)] <- NA
 	ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
@@ -386,9 +387,22 @@ matchNameOrIndex <- function(p.list, x)
     }
 
 	# Patterns are treated as indices where possible
-	pos.as.name <- which(is.na(ind))
+	pos.as.name <- is.na(ind)
 	ind[pos.as.name] <- ind.as.name[pos.as.name]
 
+    # Give warnings from duplicate matches in charmatch if relevant
+    dup.match <- which(ind.as.name == 0 & pos.as.name & nchar(p.list) > 0)
+    if (length(dup.match) > 0)
+    {
+        for (ii in dup.match)
+        {
+            tmp.match <- grep(p.list[ii], x, value = TRUE, fixed = TRUE)
+            warning("'", p.list[ii], "' matched multiple values '",
+                paste(tmp.match, collapse = "', '"), "' ambiguously.")
+        }
+    }
+    if (strip.zeros)
+        ind[ind == 0] <- NA
     return(ind)
 }
 
