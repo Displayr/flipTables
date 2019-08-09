@@ -359,6 +359,10 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 
 #' @param p.list Vector of patterns to match
 #' @param x Vector of names
+#' @param strip.zeros If false, then zero-values in the return vector indicate that
+#'    some entries in \code{p.list} ambiguously match multiple names. This information
+#'    is useful for writing warning messages (e.g. in \code{getMatchIndex}.
+#'    If true, the zeros are converted to NAs.
 #' @return list of indices mapping p.list to x.
 #'      Unmatched entries in p.list are set to NA
 #'		Ambiguous patterns are preferentially treated as indices
@@ -369,21 +373,21 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
 {
     # Looking for string-to-string match
     p.list <- TrimWhitespace(p.list)
-    x <- TrimWhitespace(x) 
+    x <- TrimWhitespace(x)
     ind.as.name <- charmatch(p.list, x)
     retry <- which(!is.finite(ind.as.name))
     ind.as.name[retry] <- charmatch(stri_reverse(p.list[retry]), stri_reverse(x))
 
-	# Give warnings if pattern can be used as both an index (numeric) or a name
+    # Give warnings if pattern can be used as both an index (numeric) or a name
     ind <- suppressWarnings(as.numeric(p.list))
     ind[ind < 1 | ind > length(x)] <- NA
-	ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
-	for (ii in ambig.pos)
+    ambig.pos <- which(!is.na(ind) & !is.na(ind.as.name) & ind != ind.as.name)
+    for (ii in ambig.pos)
     {
         # Check for an exact match
         if (p.list[ii] %in% x)
             warning("'", p.list[ii], "' treated as an index. ",
-            "To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
+             "To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
     }
 
 	# Patterns are treated as indices where possible
