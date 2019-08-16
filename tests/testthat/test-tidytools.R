@@ -79,8 +79,7 @@ test_that("Select Rows",
     x2 <- SelectRows(xx, "A,A,C")
     expect_equal(x2[1,], x2[2,])
     expect_warning(SelectRows(xx, "A,B,D,E,F"), "Table does not contain rows 'D','E','F'.")
-    expect_warning(x3 <- SelectRows(xx, "D,E,F"), "Table does not contain rows 'D','E','F'.")
-    expect_equal(nrow(x3), 0)
+    expect_error(SelectRows(xx, "D,E,F"), "Table does not contain rows 'D','E','F'.")
     x4 <- SelectRows(xx, "A,B,C,3,2,1")
     expect_warning(x5 <- SelectRows(xx, "A,B,C,3,2,1,0,7"), "Table does not contain rows '0','7'.")
     expect_equal(x5[,1], c(A=1,B=2,C=3,C=3,B=2,A=1))
@@ -129,7 +128,8 @@ test_that("Partial matches",
 {
     expect_warning(SelectRows(flavours, c("Apple", "Sour", "Flavors: Classic", "Flavors")),
         "'Flavors' matched multiple values")
-
+    expect_error(SelectRows(flavours, "Bubble Gum"), "'Bubble Gum' matched multiple values")
+    expect_error(SelectRows(flavours, "Pineapple"), "Table does not contain row 'Pineapple'")
     rownames(flavours)[3] <- "9"
     expect_warning(SelectRows(flavours, "9"), "'9' treated as an index")
 })
@@ -148,11 +148,11 @@ test_that("Select Columns",
 
 test_that("SelectEntry",
 {
-    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = TRUE), "multiple values")
-    expect_equal(res, structure(0, statistic = "%"))
-    expect_warning(res <- SelectEntry(dat, 0, "18 to 24", return.single.value = FALSE), "multiple values")
-    expect_equal(res, structure(numeric(0), .Dim = 0:1, .Dimnames = list(NULL, "18 to 24"), statistic = "%",
-        name = "Income by Age", questions = c("Income", "Age")))
+    expect_error(SelectEntry(dat, 1, "19 to 25"), "Table does not contain column")
+    expect_error(res <- SelectEntry(dat, 1, "18 to 24", return.single.value = TRUE), NA)
+    expect_equal(res, structure(0.0113154172560113, statistic = "%"))
+    expect_error(res <- SelectEntry(dat, 1, "18 to 24", return.single.value = FALSE), NA)
+    expect_equal(res, structure(0.0113154172560113, .Dim = c(1L, 1L), .Dimnames = list("Less than $15,000", "18 to 24"),             statistic = "%", name = "Income by Age", questions = c("Income", "Age")))
     expect_error(res <- SelectEntry(dat, "NET", "1,35 to 39, 50 to 54"), NA)
     expect_equal(res, structure(c(0.123055162659123, 0.113154172560113, 0.121640735502122),
         .Dim = c(1L, 3L), .Dimnames = list("NET", c("18 to 24", "35 to 39",
@@ -177,7 +177,7 @@ test_that("SelectEntry",
     expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never", return.single.value = TRUE),
         "Only the first statistic 'Column %' used")
     expect_equal(attr(res, "statistic"), "%")
-    expect_warning(SelectEntry(dat[,1], "Pepsi", "Pepsi"), "Table does not contain row")
+    expect_error(SelectEntry(dat[,1], "Pepsi", "Pepsi"), "Table does not contain row")
 })
 
 test_that("Sort Rows",

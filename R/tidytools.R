@@ -344,17 +344,24 @@ SortColumns <- function(x,
 # This is a wrapper for matchNameOrIndex
 # It will break up the pattern from a commma-separated list to a vector
 # It will also check for unmatched entries and give warnings
+# warn = FALSE is used by indexSortedValues when no error/warning is required
 getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
     pattern <- as.character(pattern)
     sel.vec <- if (length(pattern) > 1) pattern else TextAsVector(pattern)
     sel.ind <- matchNameOrIndex(sel.vec, x, strip.zeros = FALSE)
     sel.na <- which(is.na(sel.ind))
-    if (warn && length(sel.na) > 0)
-        warning("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
+    warning.msg <- ""
+    if (length(sel.na) > 0)
+        warning.msg <- paste0("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
             paste(sel.vec[sel.na], collapse = "','"), "'.")
     sel.ind[sel.ind == 0] <- NA
-    return(sel.ind[which(!is.na(sel.ind))])
+    sel.ind <- sel.ind[which(!is.na(sel.ind))]
+    if (warn && nchar(warning.msg) > 0 && length(sel.ind) == 0)
+        stop(warning.msg)
+    else if (warn && nchar(warning.msg))
+        warning(warning.msg)
+    return(sel.ind)
 }
 
 #' @param p.list Vector of patterns to match
@@ -398,12 +405,17 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
     dup.match <- which(ind.as.name == 0 & pos.as.name & nchar(p.list) > 0)
     if (length(dup.match) > 0)
     {
+        warning.msg <- ""
         for (ii in dup.match)
         {
             tmp.match <- grep(p.list[ii], x, value = TRUE, fixed = TRUE)
-            warning("'", p.list[ii], "' matched multiple values '",
-                paste(tmp.match, collapse = "', '"), "' ambiguously.")
+            warning.msg <- paste0(warning.msg, "'", p.list[ii], "' matched multiple values ambiguously: '",
+                paste(tmp.match, collapse = "', '"), "'.\n")
         }
+        if (any(is.finite(ind) & ind > 0))
+            warning(warning.msg)
+        else
+            stop(warning.msg)
     }
     if (strip.zeros)
         ind[ind == 0] <- NA
