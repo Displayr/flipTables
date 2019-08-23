@@ -71,7 +71,12 @@ TidyTabularData <- function(
     ## transpose before removal of rows and columns
     ##   for flipDimensionReduction::CorrespondenceAnalysis !!
     if (transpose)
-        x <- t(x)
+    {
+        if (length(dim(x)) > 2)
+            x <- aperm(x, c(2,1,3))
+        else
+            x <- t(x)
+    }
 
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove,
                                 split)

@@ -48,6 +48,11 @@ RemoveRowsAndOrColumns <- function(x,
 
     out <- RemoveAt(x, list(row.names.to.remove, column.names.to.remove), 1:2, TRUE, split)
     if (length(out) == 0 || prod(dim(out)) == 0)
-        stop ("Removing rows/columns gives empty input matrix\n")
+    {
+        if (dim(out)[1] == 0)
+            stop("Removing row '", paste(rownames(x), collapse = "', '"), "' gives empty input matrix\n")
+        if (dim(out)[2] == 0)
+            stop("Removing column '", paste(colnames(x), collapse = "', '"), "' gives empty input matrix\n")
+    }
     CopyAttributes(out, x)
 }

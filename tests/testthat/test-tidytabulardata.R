@@ -52,7 +52,7 @@ test_that("TidyTabularData: remove all rows or columns",
 {
     df <- data.frame(x = 1, y= 2)
     expect_error(TidyTabularData(df, col.names.to.remove = c("x", "y")),
-                 "Removing rows/columns gives empty input matrix")
+                 "Removing column 'x', 'y' gives empty input matrix")
 })
 
 test_that("TidyTabularData: remove all but one row or column",

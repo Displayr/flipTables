@@ -4,7 +4,7 @@ test_that("Works with 3D array",
 {
     a <- array(1:24, dim = 2:4)
     dimnames(a) <- list(NULL, NULL, LETTERS[1:4])
-    a <- provideDimnames(a, base = list("D1", "D2", "D3"), sep = "_")
+    expect_error(a <- provideDimnames(a, base = list("D1", "D2", "D3"), sep = "_"), NA)
 })
 
 test_that("Works with 4D array",
