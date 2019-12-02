@@ -269,6 +269,15 @@ test_that("Checking for small sample sizes",
                    "Columns 1 have sample size less than 400 and have been removed")
 
     expect_error(HideOutputsWithSmallSampleSizes(1:100, 30))
+
+    expect_silent(res <- HideValuesWithSmallSampleSizes(displayr2d, 400))
+    expect_true(all(is.na(res[,1,1])))
+    expect_true(all(!is.na(res[,2,1])))
+
+    expect_silent(res <- HideValuesWithSmallSampleSizes(displayr1d, 30))
+    expect_true(all(!is.na(res[,,1])))
+    expect_silent(res <- HideValuesWithSmallSampleSizes(displayr1d, 900))
+    expect_true(all(is.na(res[,,1])))
 })
 
 test_that("Automatic order rows/column by CA",

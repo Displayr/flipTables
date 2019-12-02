@@ -460,7 +460,7 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 }
 
 #' Removes rows with small sample sizes
-#' @description Using the 'Column n' (preferred) or 'Column n' statistic
+#' @description Using the 'Column n' (preferred) or 'Base n' statistic
 #'   this funcion will remove any rows from \code{x}, where all
 #'   are smaller than \code{min.size}. If any rows/columns are removed
 #'   then warnings will be given.
@@ -499,7 +499,7 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
 }
 
 #' Removes columns with small sample sizes
-#' @description Using the 'Column n' (preferred) or 'Column n' statistic
+#' @description Using the 'Column n' (preferred) or 'Base n' statistic
 #'   this funcion will remove any rows from \code{x}, where all
 #'   are smaller than \code{min.size}. If any rows/columns are removed
 #'   then warnings will be given.
@@ -535,4 +535,35 @@ HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
         x <- extractArray(x, col.index = -col.rm)
     }
     x
+}
+
+#' Removes values with small sample sizes
+#' @description Using the 'Column n' (preferred) or 'Base n' statistic
+#'   this funcion will remove any values from \code{x}, where all
+#'   are smaller than \code{min.size}. They will be replaced with \code{NA}.
+#' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
+#' @param min.size Minimum sample size required.
+#' @export
+HideValuesWithSmallSampleSizes <- function(x, min.size = 30)
+{
+    x <- convertTo3dQTable(x)
+    size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
+    if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
+        stop("Table must have at least one of the following statistics: '",
+             paste(size.names, collapse = "', '", sep=""), "'.")
+
+    j <- 1
+    d.ind <- NULL
+    while (length(d.ind) == 0)
+    {
+        d.ind <- which(dimnames(x)[[3]] == size.names[j])
+        j <- j + 1
+    }
+    
+    ind <- which(x[,,d.ind] < min.size, arr.ind = TRUE)
+    if (length(ind) > 0 && length(dim(ind)) == 2)
+        x[ind[,1],ind[,2],1] <- NA
+    else if (length(ind) > 0)
+        x[ind,,1] <- NA
+    return(x)
 }

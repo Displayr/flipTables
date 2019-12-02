@@ -12,7 +12,7 @@ HideRowsWithSmallSampleSizes(x, min.size = 30)
 \item{min.size}{Minimum sample size required.}
 }
 \description{
-Using the 'Column n' (preferred) or 'Column n' statistic
+Using the 'Column n' (preferred) or 'Base n' statistic
   this funcion will remove any rows from \code{x}, where all
   are smaller than \code{min.size}. If any rows/columns are removed
   then warnings will be given.
