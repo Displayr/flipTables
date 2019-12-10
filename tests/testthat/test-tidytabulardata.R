@@ -237,3 +237,18 @@ test_that("TidyTabularData hide empty rows and columns",
     expect_equal(length(out), 2)
     expect_false(any(is.na(out)))
 })
+
+test_that("Data with stats",
+{
+    dat <- structure(c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "0",
+        "4.375", "7.5", "11.875", "11.875", "11.25", "9.375", "10.625",
+        "17.5", "15.625", "100", "-", "-", "-", "-", "-", "-", "-", "-",
+        "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
+        "-"), .Dim = c(11L, 2L, 2L), .Dimnames = list(c("Less than 18 years",
+        "18 to 24 years", "25 to 29 years", "30 to 34 years", "35 to 39 years",
+        "40 to 44 years", "45 to 49 years", "50 to 54 years", "55 to 64 years",
+        "65 years or more", "NET"), c("2", "1"), c("Column %", "Column Comparisons"
+        )), name = "table.Q2.Age.by.newvariable", questions = c("Q2. Age",
+        "newvariable"))
+    expect_error(TidyTabularData(dat), NA)
+})

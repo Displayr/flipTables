@@ -154,7 +154,7 @@ qTableToTidyTable <- function(x)
    ## convert to numeric
    if (is.character(out))
    {
-       if (all(out == "" | !is.na(suppressWarnings(as.numeric(out)))))
+       if (all(out == "" | is.na(out) | !is.na(suppressWarnings(as.numeric(out)))))
            storage.mode(out) <- "numeric"
        else
            warning("the supplied QTable contains character entries which could not be converted to numeric")
