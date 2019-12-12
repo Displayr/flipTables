@@ -250,5 +250,5 @@ test_that("Data with stats",
         "65 years or more", "NET"), c("2", "1"), c("Column %", "Column Comparisons"
         )), name = "table.Q2.Age.by.newvariable", questions = c("Q2. Age",
         "newvariable"))
-    expect_error(TidyTabularData(dat), NA)
+    expect_warning(TidyTabularData(dat), "Multiple statistics detected")
 })
