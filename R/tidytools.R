@@ -171,6 +171,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
     }
     if (return.single.value && is.numeric(res))
         res <- sum(res, na.rm = TRUE)
+    res <- unlist(res)
     if (is.pct)
         attr(res, "statistic") <- "%"
     return(res)
@@ -216,7 +217,7 @@ indexSortedByValues <- function(x,
     ind.excl <- getMatchIndex(exclude, dim.names, dim, warn = FALSE)
     ind.incl <- setdiff(1:max.dim, ind.excl)
     val.incl <- values[ind.incl]
-    if (is.character(val.incl) && 
+    if (is.character(val.incl) &&
         all(!is.na(suppressWarnings(as.numeric(val.incl[!is.na(val.incl)])))))
         val.incl <- as.numeric(val.incl)
     ord.ind <- ind.incl[order(val.incl, decreasing = decreasing)]
@@ -567,8 +568,8 @@ HideValuesWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
-   
-    sz.dat <- matrix(as.numeric(x[,,d.ind]), nrow(x), ncol(x)) 
+
+    sz.dat <- matrix(as.numeric(x[,,d.ind]), nrow(x), ncol(x))
     ind <- which(sz.dat < min.size, arr.ind = TRUE)
     if (length(ind) > 0 && length(dim(ind)) == 2)
         x[ind[,1],ind[,2],1] <- NA
