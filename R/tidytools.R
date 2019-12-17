@@ -215,7 +215,11 @@ indexSortedByValues <- function(x,
 
     ind.excl <- getMatchIndex(exclude, dim.names, dim, warn = FALSE)
     ind.incl <- setdiff(1:max.dim, ind.excl)
-    ord.ind <- ind.incl[order(values[ind.incl], decreasing = decreasing)]
+    val.incl <- values[ind.incl]
+    if (is.character(val.incl) && 
+        all(!is.na(suppressWarnings(as.numeric(val.incl[!is.na(val.incl)])))))
+        val.incl <- as.numeric(val.incl)
+    ord.ind <- ind.incl[order(val.incl, decreasing = decreasing)]
     return(c(ord.ind, ind.excl))
 }
 
@@ -229,7 +233,9 @@ AutoOrderRows <- function(x)
 {
     if (!checkIsTable(x))
         return(x)
-    tmp <- if (isTableWithStats(x)) ca(x[,,1]) else ca(x)
+    tmp.dat <- if (isTableWithStats(x)) x[,,1] else x
+    tmp.dat <- matrix(as.numeric(tmp.dat), NROW(x), NCOL(x))
+    tmp <- ca(tmp.dat)
     ord <- order(tmp$rowcoord[,1])
     extractArray(x, row.index = ord)
 }
@@ -244,7 +250,9 @@ AutoOrderColumns <- function(x)
 {
     if (!checkIsTable(x))
         return(x)
-    tmp <- if (isTableWithStats(x)) ca(x[,,1]) else ca(x)
+    tmp.dat <- if (isTableWithStats(x)) x[,,1] else x
+    tmp.dat <- matrix(as.numeric(tmp.dat), NROW(x), NCOL(x))
+    tmp <- ca(tmp.dat)
     ord <- order(tmp$colcoord[,1])
     extractArray(x, col.index = ord)
 }
@@ -453,7 +461,7 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
         stop("Table does not have 'Sample Size' or 'Base n'")
 
     d.ind <- which(dimnames(x)[[3]] %in% c("Base n", "Sample Size"))
-    if (any(x[,,d.ind[1]] < min.size, na.rm = TRUE))
+    if (any(as.numeric(x[,,d.ind[1]]) < min.size, na.rm = TRUE))
         stop("Output not shown because it is based on less than ", min.size, " observations.")
     else
         return(x)
@@ -487,7 +495,7 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
     row.rm <- c()
     for (i in 1:nrow(x))
     {
-        if (all(x[i, ,d.ind] < min.size))
+        if (all(as.numeric(x[i, ,d.ind]) < min.size))
             row.rm <- c(row.rm, i)
     }
     if (all(dim(x) > 0) && length(row.rm) > 0)
@@ -526,7 +534,7 @@ HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
     col.rm <- c()
     for (i in 1:ncol(x))
     {
-        if (all(x[,i,d.ind] < min.size))
+        if (all(as.numeric(x[,i,d.ind]) < min.size))
             col.rm <- c(col.rm, i)
     }
     if (length(col.rm) > 0)
@@ -559,8 +567,9 @@ HideValuesWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
-    
-    ind <- which(x[,,d.ind] < min.size, arr.ind = TRUE)
+   
+    sz.dat <- matrix(as.numeric(x[,,d.ind]), nrow(x), ncol(x)) 
+    ind <- which(sz.dat < min.size, arr.ind = TRUE)
     if (length(ind) > 0 && length(dim(ind)) == 2)
         x[ind[,1],ind[,2],1] <- NA
     else if (length(ind) > 0)
