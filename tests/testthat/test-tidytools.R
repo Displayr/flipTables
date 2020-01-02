@@ -345,6 +345,7 @@ test_that("Automatic order rows/column by CA",
         "I like them", "The best phones", "Meet all my communication needs",
         "High prices", "Leaders in mobile phone technology", "Reliable",
         "Conveniently located stores", "Good coverage"))
+    expect_error(AutoOrderColumns(LifeCycleSavings), NA)
 })
 
 datNA <- structure(list(V1 = c(11711, 93, NaN, 2762, NaN, NaN, NaN, NaN,

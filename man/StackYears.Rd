@@ -4,8 +4,14 @@
 \alias{StackYears}
 \title{StackYears}
 \usage{
-StackYears(x, date = NULL, n.years = NULL, calendar = TRUE,
-  period.number = FALSE, transpose = FALSE)
+StackYears(
+  x,
+  date = NULL,
+  n.years = NULL,
+  calendar = TRUE,
+  period.number = FALSE,
+  transpose = FALSE
+)
 }
 \arguments{
 \item{x}{A \code{\link{vector}}, \code{\link{list}},

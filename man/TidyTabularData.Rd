@@ -4,9 +4,16 @@
 \alias{TidyTabularData}
 \title{Create a Tidy Table or Vector}
 \usage{
-TidyTabularData(x, date = FALSE, row.names.to.remove = NULL,
-  col.names.to.remove = NULL, transpose = FALSE, split = "[;,]",
-  hide.empty.rows.and.columns = FALSE, ...)
+TidyTabularData(
+  x,
+  date = FALSE,
+  row.names.to.remove = NULL,
+  col.names.to.remove = NULL,
+  transpose = FALSE,
+  split = "[;,]",
+  hide.empty.rows.and.columns = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric matrix or vector; should be named, but if names

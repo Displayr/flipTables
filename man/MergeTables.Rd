@@ -5,12 +5,20 @@
 \alias{Merge2Tables}
 \title{MergeTables}
 \usage{
-MergeTables(tables, direction = c("Side-by-side", "Up-and-down"),
-  nonmatching = c("Keep all", "Matching only"))
+MergeTables(
+  tables,
+  direction = c("Side-by-side", "Up-and-down"),
+  nonmatching = c("Keep all", "Matching only")
+)
 
-Merge2Tables(left, right, direction = c("Side-by-side", "Up-and-down"),
-  nonmatching = c("Keep all", "Keep all from first table",
-  "Keep all from second table", "Matching only"), disambig.names = NULL)
+Merge2Tables(
+  left,
+  right,
+  direction = c("Side-by-side", "Up-and-down"),
+  nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table",
+    "Matching only"),
+  disambig.names = NULL
+)
 }
 \arguments{
 \item{tables}{A list of tables to merge}

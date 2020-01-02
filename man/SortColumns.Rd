@@ -4,8 +4,7 @@
 \alias{SortColumns}
 \title{Sort columns of a table}
 \usage{
-SortColumns(x, decreasing = FALSE, row = NULL,
-  exclude = "NET, SUM, Total")
+SortColumns(x, decreasing = FALSE, row = NULL, exclude = "NET, SUM, Total")
 }
 \arguments{
 \item{x}{Input matrix or dataframe which is being sorted. Values must be numeric.

@@ -4,8 +4,13 @@
 \alias{Reorder}
 \title{Reorder}
 \usage{
-Reorder(x, rows = "Descending", columns = "Descending", FUN = mean,
-  fudge = 1e-06)
+Reorder(
+  x,
+  rows = "Descending",
+  columns = "Descending",
+  FUN = mean,
+  fudge = 1e-06
+)
 }
 \arguments{
 \item{x}{A \code{\link{matrix}} or \code{\link{data.frame}} A list of tables to merge}

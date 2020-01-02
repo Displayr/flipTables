@@ -4,8 +4,7 @@
 \alias{SortRows}
 \title{Sort rows of a table}
 \usage{
-SortRows(x, decreasing = FALSE, column = NULL,
-  exclude = "NET, SUM, Total")
+SortRows(x, decreasing = FALSE, column = NULL, exclude = "NET, SUM, Total")
 }
 \arguments{
 \item{x}{Input matrix or dataframe which is being sorted. Values must be numeric.

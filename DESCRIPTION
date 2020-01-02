@@ -16,7 +16,7 @@ Imports:
     flipTransformations (>= 1.1.0),
     flipU (>= 1.0.0)
 LazyData: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
