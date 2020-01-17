@@ -64,7 +64,6 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 }
 
 #' @describeIn MergeTables Merge two tables.
-#' @inheritParams MergeTables
 #' @param left,right The tables to merge. These should be vectors, matrices or
 #'   arrays. If the array has 3 dimensions, the first 'plane' of the third
 #'   dimension is kept, the others are dropped. It is an error to have more than
@@ -159,16 +158,22 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         }
         stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
     }
+    if (any(is.na(rownames(left))))
+        stop("Row ", which(is.na(rownames(left))), " in ", left.name, " have missing names.")
+    if (any(is.na(rownames(right))))
+        stop("Row ", which(is.na(rownames(right))), " in ", right.name, " have missing names.")
+    
+    dup.left <- rownames(right)[(duplicated(rownames(left)))]
+    if (length(dup.left) > 0)
+        stop("Duplicated rownames ('", paste(dup.left, collapse = "','"), 
+            "') at rows ", paste(which(rownames(left) %in% dup.left), collapse = ", "),
+            " in '", left.name, ".")
 
-    if (any(is.na(rownames(left))) || any(is.na(rownames(right))))
-    {
-        stop("Objects to be merged must both have a unique set of names without NAs, however NAs have been found.")
-    }
-
-    if (length(unique(rownames(left))) != nrow(left) || length(unique(rownames(right))) != nrow(right))
-    {
-        stop("Objects to be merged must both have a unique set of names without NAs, however duplicate names have been found.")
-    }
+    dup.right <- rownames(right)[(duplicated(rownames(right)))]
+    if (length(dup.right) > 0)
+        stop("Duplicated rownames ('", paste(dup.right, collapse = "','"), 
+            "') at rows ", paste(which(rownames(right) %in% dup.right), collapse = ", "),
+            " in '", right.name, ".")
 
     all.x <- all.y <- FALSE
     if (nonmatching %in% c("Keep all from first table", "Keep all"))

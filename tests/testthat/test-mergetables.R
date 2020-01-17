@@ -118,3 +118,15 @@ test_that("Merge side-by-side inappropriately",
     expect_error(Merge2Tables(left, right, "Side-by-side", "Matching only"),
         "Can not find any matching rows.")
 })
+
+test_that("Duplicate rownames",
+{
+    tb1 <- structure(c(A = 0.01, B = 0.02, C = 0.03, D = 0.04, E = 0.05,
+                   F = 0.06, G = 0.07, H = 0.08, I = 0.09, J = 0.1), statistic = "%")
+    tb2 <- matrix(rnorm(26*5), 26, 5, dimnames = list(LETTERS, paste0("Q", 1:5)))
+    rownames(tb2)[5] <- "D "
+    expect_error(Merge2Tables(left = tb1, right = tb2, direction = "Side-by-side", nonmatching = "Keep all from first table"),
+                "Duplicated rownames")
+
+})
+
