@@ -64,7 +64,6 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 }
 
 #' @describeIn MergeTables Merge two tables.
-#' @inheritParams MergeTables
 #' @param left,right The tables to merge. These should be vectors, matrices or
 #'   arrays. If the array has 3 dimensions, the first 'plane' of the third
 #'   dimension is kept, the others are dropped. It is an error to have more than
@@ -159,16 +158,33 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         }
         stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
     }
-
-    if (any(is.na(rownames(left))) || any(is.na(rownames(right))))
+    left.NAs <- which(is.na(rownames(left)))
+    if (length(left.NAs) > 0)
+        stop(ngettext(length(left.NAs), "Row", "Rows"), " ", paste(left.NAs, collapse = ", "),
+             " in ", left.name, "' ",
+             ngettext(length(left.NAs), "has missing name. ", "have missing names. "),
+             "Please give the affected rows a unique name before rerunning Merge Tables.")
+    right.NAs <- which(is.na(rownames(right)))
+    if (length(right.NAs) > 0)
+        stop(ngettext(length(right.NAs), "Row", "Rows"), " ", paste(right.NAs, collapse = ", "),
+             " in '", right.name, "' ",
+             ngettext(length(right.NAs), "has missing name. ", "have missing names. "),
+             "Please give the affected rows a unique name before rerunning Merge Tables.")
+ 
+    .checkDupNames <- function(row.names, tb.name)
     {
-        stop("Objects to be merged must both have a unique set of names without NAs, however NAs have been found.")
+        dup.names <- unique(row.names[which(duplicated(row.names))])
+        if (length(dup.names) == 0)
+            return (0)
+        dup.pos <- rep("", length(dup.names))
+        for (i in 1:length(dup.names))
+            dup.pos[i] <- paste(which(row.names == dup.names[i]), collapse = ", ")
+        stop("Duplicated rownames (", 
+            paste(sprintf("'%s' in rows %s", dup.names, dup.pos), collapse = ";"), ") in '", tb.name,
+            "'. Merge duplicated rows or remove duplicated rows before rerunning Merge Tables.")
     }
-
-    if (length(unique(rownames(left))) != nrow(left) || length(unique(rownames(right))) != nrow(right))
-    {
-        stop("Objects to be merged must both have a unique set of names without NAs, however duplicate names have been found.")
-    }
+    .checkDupNames(rownames(left), left.name)
+    .checkDupNames(rownames(right), right.name)
 
     all.x <- all.y <- FALSE
     if (nonmatching %in% c("Keep all from first table", "Keep all"))

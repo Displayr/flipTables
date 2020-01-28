@@ -233,7 +233,7 @@ flatten3DQTable <- function(a)
 #' @param a a four dimensional array with all dimensions named.
 #' @return a matrix with rownames and column names of dimension
 #' \eqn{d1*d3 \times d2*d4} where \code{a} is \eqn{d1\times d2\times d3\times d4}
-#' @example
+#' @examples
 #'    ta <- array(1:120, dim = 2:5)
 #'    dimnames(ta) <- list(c("one", "two"), letters[1:3], LETTERS[1:4], paste0("d", 1:5))
 #'    out <- flipTables:::flatten4DQTable(ta)
