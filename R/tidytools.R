@@ -87,6 +87,7 @@ ReverseColumns <- function(x)
 #'   The last \code{last.k} rows will also be selected
 #' @importFrom flipTransformations TextAsVector
 #' @importFrom flipU CopyAttributes
+#' @importFrom utils head tail
 #' @export
 SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
@@ -196,10 +197,20 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
 
     if (sum(nchar(select), na.rm = TRUE) > 0)
         sel.ind <- getMatchIndex(select, dim.names, dim = dim)
+    else
+        sel.ind <- 1:max.dim
+
+    # Do the union of the first and last k row/columns
+    # e.g. if user wants to select first and last rows to create summary table
+    if (sum(first.k, na.rm = TRUE) > 0 && sum(last.k, na.rm = TRUE) > 0)
+        return(unique(c(head(sel.ind, first.k), tail(sel.ind, last.k))))
+
+    # Otherwise use the intersection to restrict number of values
+    # e.g. DS-2552
     if (sum(first.k, na.rm = TRUE) > 0)
-        sel.ind <- c(1:first.k, sel.ind)
+        sel.ind <- head(sel.ind, first.k)
     if (sum(last.k, na.rm = TRUE) > 0)
-        sel.ind <- c(sel.ind, max.dim -((last.k:1)-1))
+        sel.ind <- tail(sel.ind, last.k)
     return(sel.ind)
 }
 
