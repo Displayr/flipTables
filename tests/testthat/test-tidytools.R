@@ -92,8 +92,8 @@ test_that("Select Rows",
     expect_equal(rownames(res), c("18 to 24 ", "25 to 29", "30 to 34"))
 
     res <- SelectRows(tabWithN, first.k = 4, "65 or more, NET")
-    expect_equal(dim(res), c(6, 8, 3))
-    expect_equal(rownames(res), c("18 to 24 ", "25 to 29", "30 to 34", "35 to 39", "65 or more", "NET"))
+    expect_equal(dim(res), c(2, 8, 3))
+    expect_equal(rownames(res), c("65 or more", "NET"))
 
     res <- SelectRows(tabWithN, last.k = 3)
     expect_equal(dim(res), c(3, 8, 3))
@@ -113,6 +113,13 @@ test_that("Select Rows",
 "Gender"))
     res <- SelectRows(tb, select = c("Less than $15,000", "$15,001 to $30,000"))
     expect_equal(res, tb[1:2,], check.attributes = FALSE)
+
+    res <- SelectRows(tb, first.k = 1, last.k = 2)
+    expect_equal(rownames(res), c("Less than $15,000", "$200,001 or more", "NET"))
+
+    res <- SelectRows(tb, c("$15,001 to $30,000", "$30,001 to $45,000",
+                "45,001 to $60,000"), first.k = 2)
+    expect_equal(rownames(res), c("$15,001 to $30,000", "$30,001 to $45,000"))
 })
 
 flavours <- structure(c(0.658707865168539, 0.417134831460674, 0.601123595505618,
