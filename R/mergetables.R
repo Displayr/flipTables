@@ -59,7 +59,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
             direction = direction, nonmatching = nonmatching,
             disambig.names = tmp.names[which(duplicated(tmp.names))])
     }
-    
+
     merged
 }
 
@@ -161,7 +161,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     left.NAs <- which(is.na(rownames(left)))
     if (length(left.NAs) > 0)
         stop(ngettext(length(left.NAs), "Row", "Rows"), " ", paste(left.NAs, collapse = ", "),
-             " in ", left.name, "' ",
+             " in '", left.name, "' ",
              ngettext(length(left.NAs), "has missing name. ", "have missing names. "),
              "Please give the affected rows a unique name before rerunning Merge Tables.")
     right.NAs <- which(is.na(rownames(right)))
@@ -170,7 +170,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
              " in '", right.name, "' ",
              ngettext(length(right.NAs), "has missing name. ", "have missing names. "),
              "Please give the affected rows a unique name before rerunning Merge Tables.")
- 
+
     .checkDupNames <- function(row.names, tb.name)
     {
         dup.names <- unique(row.names[which(duplicated(row.names))])
@@ -179,7 +179,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         dup.pos <- rep("", length(dup.names))
         for (i in 1:length(dup.names))
             dup.pos[i] <- paste(which(row.names == dup.names[i]), collapse = ", ")
-        stop("Duplicated rownames (", 
+        stop("Duplicated rownames (",
             paste(sprintf("'%s' in rows %s", dup.names, dup.pos), collapse = ";"), ") in '", tb.name,
             "'. Merge duplicated rows or remove duplicated rows before rerunning Merge Tables.")
     }
@@ -201,7 +201,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     if (length(indL) > 0)
     {
         if (nchar(left.table.name) == 0)
-            warning("Assign name to ", left.name, 
+            warning("Assign name to ", left.name,
                     " by setting 'attr(", left.name,  ", \"name\") <- name'")
         colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
     }

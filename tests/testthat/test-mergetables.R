@@ -126,7 +126,11 @@ test_that("Duplicate rownames",
     tb2 <- matrix(rnorm(26*5), 26, 5, dimnames = list(LETTERS, paste0("Q", 1:5)))
     rownames(tb2)[5] <- "D "
     expect_error(Merge2Tables(left = tb1, right = tb2, direction = "Side-by-side", nonmatching = "Keep all from first table"),
-                "Duplicated rownames")
+                "Duplicated rownames ('D' in rows 4, 5)", fixed = TRUE)
+
+    rownames(tb2)[5] <- NA
+    expect_error(Merge2Tables(left = tb2, right = tb1, direction = "Side-by-side", nonmatching = "Keep all from first table"),
+                 "Row 5 in 'tb2' has missing name")
 
 })
 
