@@ -4,7 +4,7 @@
 \alias{HideEmptyColumns}
 \title{Hide Empty Columns From a Table}
 \usage{
-HideEmptyColumns(x, remove.zeros = TRUE)
+HideEmptyColumns(x, remove.zeros = TRUE, first.stat.only = TRUE)
 }
 \arguments{
 \item{x}{matrix; vector; or list}
@@ -14,6 +14,9 @@ If \code{FALSE}, then only \code{NAs} are removed.
 Specifying a value of \code{NULL}
 means that the function will check for an attribute of \code{x}
 called "statistic" to check for percentages}
+
+\item{first.stat.only}{Only examines the first statistic when
+determining whether the row/column is empty.}
 }
 \description{
 Searches for empty columns in a table and returns a copy

@@ -76,8 +76,10 @@ GetNonEmptyRowsAndColumns <- function(x, use.names = TRUE, is.percent = NULL)
 #'     Specifying a value of \code{NULL}
 #'     means that the function will check for an attribute of \code{x}
 #'     called "statistic" to check for percentages
+#' @param first.stat.only Only examines the first statistic when
+#'     determining whether the row/column is empty.
 #' @export
-HideEmptyRows <- function(x, remove.zeros = TRUE)
+HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 {
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
     {
@@ -86,7 +88,7 @@ HideEmptyRows <- function(x, remove.zeros = TRUE)
             stop("Hiding empty elements gives empty input vector.")
         return(CopyAttributes(x[idx, drop  = FALSE], x))
     }
-    idx <- getNonEmptyIndices(x, 1, FALSE, remove.zeros)
+    idx <- getNonEmptyIndices(x, 1, FALSE, remove.zeros, first.stat.only)
     if (!length(idx))
         stop ("Hiding empty rows gives empty input matrix.")
     extractArray(x, row.index = idx)
@@ -98,7 +100,7 @@ HideEmptyRows <- function(x, remove.zeros = TRUE)
 #' with those entries removed
 #' @inherit HideEmptyRows
 #' @export
-HideEmptyColumns <- function(x, remove.zeros = TRUE)
+HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 {
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
     {
@@ -107,15 +109,17 @@ HideEmptyColumns <- function(x, remove.zeros = TRUE)
             stop("Hiding empty elements gives empty input vector.")
         return(x)
     }
-    idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = remove.zeros)
+    idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = remove.zeros, first.stat.only)
     if (!length(idx))
         stop ("Hiding empty columns gives empty input matrix.")
     extractArray(x, col.index = idx)
 }
 
 # Similar to GetNonEmptyRowsAndColumns but only looks in 1 direction
-getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NULL)
+getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NULL, first.stat.only = TRUE)
 {
+    if (first.stat.only && isQTable(x) && length(dim(x)) > 1)
+       x <- GetFirstStat(x)
     if (is.character(x))
         out <- which(apply(x, margin, function(x) any(nzchar(x))))
     else
