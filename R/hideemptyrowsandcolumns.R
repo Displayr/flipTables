@@ -128,7 +128,8 @@ getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NUL
             is.percent <- !is.null(attr(x, "statistic")) && grepl("%", attr(x, "statistic"))
         isNonEmptyVec <- function(x)
                                   !all(is.na(x) | (is.percent & x == 0))
-        out <- which(apply(x, margin, isNonEmptyVec))
+        out <- if (length(dim(x)) == 0)   which(apply(as.matrix(x), margin, isNonEmptyVec))
+               else                       which(apply(x, margin, isNonEmptyVec))
     }
     if (use.names)
         return(names(out[[1L]]))

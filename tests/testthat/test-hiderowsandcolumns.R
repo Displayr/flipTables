@@ -270,6 +270,29 @@ tb <- structure(c(51.6908212560386, 42.512077294686, 44.4444444444444,
       name = "table.D2.D3.Grid.Main.Universities.2", questions = c("D2/D3 Grid - Main Universities",
       "SUMMARY"), filter.names = "bLSHHJ", filter.labels = "2018")
 
+tb2 <- structure(c(0, 13.75, 11.25, 9.375, 10, 11.875, 8.125, 11.25,
+       16.875, 7.5, 100, 0, 13.1736526946108, 12.5748502994012, 10.7784431137725,
+       11.9760479041916, 9.58083832335329, 8.38323353293413, 13.1736526946108,
+       14.3712574850299, 5.98802395209581, 100, 0, 13.4556574923547,
+       11.9266055045872, 10.0917431192661, 11.0091743119266, 10.7033639143731,
+       8.25688073394496, 12.2324159021407, 15.5963302752294, 6.72782874617737,
+       100), .Dim = c(11L, 3L), statistic = "Column %", .Dimnames = list(
+         c("Less than 18", "18 to 24", "25 to 29", "30 to 34", "35 to 39",
+           "40 to 44", "45 to 49", "50 to 54", "55 to 64", "65 or more",
+           "NET"), c("Male", "Female", "NET")), name = "Q3. Age by Q2. Gender",
+       questions = c("Q3. Age","Q2. Gender"))
+
+tab1d <- structure(c(0.0, 11.75, 10.375, 11.375, 11.625, 7.875, 11.875,
+       15.75, 7, 100, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+       1.1375, 0.575, -0.6625, 0.237500000000001, 0.462500000000001,
+       -2.9125, 0.6875, 4.175, -3.7, 80, 0.255329324592568, 0.565291296994401,
+       0.507650834828445, 0.812268919201514, 0.643722802327307, 0.00358548200450471,
+       0.491767700760523, 2.97986053738875e-05, 0.000215599466954778,
+       0), .Dim = c(10L, 4L), .Dimnames = list(c("18 to 24", "25 to 29",
+       "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 64",
+       "65 or more", "NET"), c("%", "Base n", "z-Statistic", "p")),
+       name = "Age", questions = c("Age", "SUMMARY"))
+
 test_that("Remove empty columns in table with multiple statistics",
 {
     expect_equal(colnames(HideEmptyColumns(tb)),
@@ -278,6 +301,12 @@ test_that("Remove empty columns in table with multiple statistics",
                    "The University of New South Wales", "The University of Queensland",
                    "University of Technology Sydney"))
     expect_equal(dim(HideEmptyRows(tb)), c(25, 9, 2))
+    expect_equal(dim(HideEmptyColumns(tb2)), c(11,3))
+    expect_equal(dim(HideEmptyRows(tb2)), c(10,3))
+    expect_equal(dim(HideEmptyColumns(tab1d)), c(10,4))
+    expect_equal(dim(HideEmptyRows(tab1d)), c(9,4))
+
+
 
 })
 

@@ -3,7 +3,9 @@
 # Will always try to copy attributes
 extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.all.stats = TRUE)
 {
-    if (isTableWithStats(x) && keep.all.stats)
+    if (isQTable(x) && is.null(attr(x, "statistic")) && length(dim(x)) == 2 && keep.all.stats)
+        res <- x[row.index,, drop = FALSE]
+    else if(isTableWithStats(x) && keep.all.stats)
         res <- x[row.index, col.index,, drop = FALSE]
     else if (isTableWithStats(x) && !keep.all.stats)
     {

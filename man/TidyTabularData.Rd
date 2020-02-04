@@ -67,7 +67,7 @@ If \code{x} is not a numeric vector or matrix, an attempt
 
 If a named vector is created from \code{x}, then
 \code{row.names.to.remove} and \code{col.names.to.remove} will be
-combined (using \code{\link[base]{union}}) to determine entries to remove.
+combined (using \code{\link[base:sets]{base:union}}) to determine entries to remove.
 }
 \note{
 If \code{transpose == TRUE}, then the table is transposed

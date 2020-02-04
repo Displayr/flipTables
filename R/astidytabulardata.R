@@ -178,6 +178,9 @@ qTableToTidyTable <- function(x)
 #' @keywords internal
 GetFirstStat <- function(x)
 {
+    # QTables with this attribute always have only 1 statistic
+    if (!is.null(attr(x, "statistic")))
+        return(x)
     text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
     eval(parse(text = text))
 }
