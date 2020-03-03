@@ -144,7 +144,8 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         return(merged)
     }
 
-    if (length(intersect(rownames(left), rownames(right))) == 0)
+    if (nonmatching == "Matching only" &&
+        length(intersect(rownames(left), rownames(right))) == 0)
     {
         if (direction == "Side-by-side")
         {
@@ -257,6 +258,11 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
 mergeNames <- function(left, right)
 {
     matches <- match(right, left)
+
+    # If no names match, just combine left and right
+    if (all(is.na(matches)))
+        return(c(left, right))
+
     min.match <- min(matches, na.rm = TRUE)
     max.match <- max(matches, length(left), na.rm = TRUE)
 
