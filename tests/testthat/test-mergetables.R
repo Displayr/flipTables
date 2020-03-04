@@ -119,6 +119,68 @@ test_that("Merge side-by-side inappropriately",
         "Can not find any matching rows.")
 })
 
+test_that("Merge without matching rows (side-by-side)",
+{
+    # Keep all
+    tbl <- structure(c(1L, 2L, 3L, NA, NA, NA, 4L, 5L, 6L, NA, NA, NA, 7L,
+                       8L, 9L, NA, NA, NA, 10L, 11L, 12L, NA, NA, NA, NA, NA, NA, 21L,
+                       22L, 23L, NA, NA, NA, 24L, 25L, 26L, NA, NA, NA, 27L, 28L, 29L
+                        ), .Dim = 6:7, .Dimnames = list(c("a", "b", "c", "d", "e", "f"
+                        ), c("left - A", "left - B", "C", "D", "A", "B", "E")))
+    expect_equal(suppressWarnings(Merge2Tables(left, right,
+                                               "Side-by-side", "Keep all")), tbl)
+
+    # Keep all from first table
+    tbl <- structure(c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L,
+                       NA, NA, NA, NA, NA, NA, NA, NA, NA), .Dim = c(3L, 7L),
+                     .Dimnames = list(c("a", "b", "c"),
+                                      c("left - A", "left - B", "C", "D", "A",
+                                               "B", "E")))
+    expect_equal(suppressWarnings(Merge2Tables(left, right, "Side-by-side",
+                                               "Keep all from first table")), tbl)
+
+    # Keep all from second table
+    tbl <- structure(c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 21L,
+                       22L, 23L, 24L, 25L, 26L, 27L, 28L, 29L), .Dim = c(3L, 7L),
+                     .Dimnames = list(c("d", "e", "f"),
+                                      c("left - A", "left - B", "C", "D", "A",
+                                               "B", "E")))
+    expect_equal(suppressWarnings(Merge2Tables(left, right, "Side-by-side",
+                                               "Keep all from second table")), tbl)
+})
+
+test_that("Merge without matching rows (up-and-down)",
+{
+    left2 <- t(left)
+    right2 <- t(right)
+
+    # Keep all
+    tbl <- structure(c(1L, 4L, 7L, 10L, NA, NA, NA, 2L, 5L, 8L, 11L, NA,
+                       NA, NA, 3L, 6L, 9L, 12L, NA, NA, NA, NA, NA, NA, NA, 21L, 24L,
+                       27L, NA, NA, NA, NA, 22L, 25L, 28L, NA, NA, NA, NA, 23L, 26L,
+                       29L), .Dim = 7:6,
+                     .Dimnames = list(c("left2 - A", "left2 - B", "C", "D", "A", "B", "E"),
+                                      c("a", "b", "c", "d", "e", "f")))
+    expect_equal(suppressWarnings(Merge2Tables(left2, right2,
+                                             "Up-and-down", "Keep all")), tbl)
+
+    # Keep all from first table
+    tbl <- structure(c(1L, 4L, 7L, 10L, NA, NA, NA, 2L, 5L, 8L, 11L, NA,
+                       NA, NA, 3L, 6L, 9L, 12L, NA, NA, NA), .Dim = c(7L, 3L),
+                     .Dimnames = list(c("left2 - A", "left2 - B", "C", "D", "A", "B", "E"),
+                                      c("a", "b", "c")))
+    expect_equal(suppressWarnings(Merge2Tables(left2, right2, "Up-and-down",
+                                             "Keep all from first table")), tbl)
+
+    # Keep all from second table
+    tbl <- structure(c(NA, NA, NA, NA, 21L, 24L, 27L, NA, NA, NA, NA, 22L,
+                       25L, 28L, NA, NA, NA, NA, 23L, 26L, 29L), .Dim = c(7L, 3L),
+                     .Dimnames = list(c("left2 - A", "left2 - B", "C", "D", "A", "B", "E"),
+                                      c("d", "e", "f")))
+    expect_equal(suppressWarnings(Merge2Tables(left2, right2, "Up-and-down",
+                                         "Keep all from second table")), tbl)
+})
+
 test_that("Duplicate rownames",
 {
     tb1 <- structure(c(A = 0.01, B = 0.02, C = 0.03, D = 0.04, E = 0.05,
