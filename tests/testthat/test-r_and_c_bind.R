@@ -50,7 +50,8 @@ for (i in 1:nrow(perms)) {
     test_that(paste("Rbind", i),
           {
             if (i %in% c(5, 6, 12, 13, 36, 37, 43, 44))
-                expect_error(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), "Can not find any matching.")
+                expect_error(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]], keep.all = FALSE),
+                             "Can not find any matching.")
             else if (i %in% c(1, 8, 41, 48))
                 expect_error(Rbind(all.items[[perms[i, 1]]], all.items[[perms[i, 2]]]), NA)
             else
