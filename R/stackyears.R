@@ -28,7 +28,7 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
     year.index <- if (calendar)
         latest.year - year(date) + 1
     else
-        floor(interval(date, max(date)) / duration(1, "years")) + 1
+        sapply(date, durationInYears, max(date)) + 1
     number.years <- max(year.index)
     if (is.null(n.years))
         n.years <- number.years
@@ -72,3 +72,18 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
     result
 }
 
+# Duration in years where we round down
+#' @importFrom lubridate year month day
+durationInYears <- function(start.date, end.date)
+{
+    if (start.date > end.date)
+        stop("Start date cannot be after end date")
+
+    result <- year(end.date) - year(start.date)
+    if (month(end.date) < month(start.date) ||
+        (month(end.date) == month(start.date) && day(end.date) < day(start.date)))
+    {
+        result <- result - 1
+    }
+    result
+}
