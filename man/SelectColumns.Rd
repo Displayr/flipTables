@@ -10,13 +10,14 @@ SelectColumns(x, select = NULL, first.k = NA, last.k = NA)
 \item{x}{Matrix or dataframe from which columns will be extracted}
 
 \item{select}{A string containing a comma seperated list of the
-names or indices of the columns to be selected.}
+names or indices of the columns to be selected. If an empty list is
+supplied, then the whole of \code{x} will be selected.}
 
 \item{first.k}{If a number greater than zero is supplied,
-The first \code{first.k} columns will also be selected}
+The first (or up to) \code{first.k} columns of \code{x[,select]} will be returned.}
 
 \item{last.k}{If a number greater than zero is supplied,
-The last \code{last.k} columns will also be selected}
+The last (or up to) \code{last.k} columns of \code{x[,select]} will be returned.}
 }
 \description{
 Function to select column from a table, either by colnames

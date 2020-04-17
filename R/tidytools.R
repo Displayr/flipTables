@@ -82,11 +82,12 @@ ReverseColumns <- function(x)
 #'   or as range from the top or bottom.
 #' @param x Matrix or dataframe from which rows will be extracted
 #' @param select A string containing a comma seperated list of the
-#'  names or indices of the rows to be selected.
+#'  names or indices of the rows to be selected. If an empty list is
+#'  supplied, then the whole of \code{x} will be returned.
 #' @param first.k If a number greater than zero is supplied,
-#'   The first \code{first.k} rows will also be selected
+#'   The first (or up to) \code{first.k} rows from \code{x[select,]} is returned.
 #' @param last.k If a number greater than zero is supplied,
-#'   The last \code{last.k} rows will also be selected
+#'   The last (or up to) \code{last.k} rows from \code{x[select,]} is returned.
 #' @importFrom flipTransformations TextAsVector
 #' @importFrom flipU CopyAttributes
 #' @importFrom utils head tail
@@ -107,11 +108,12 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 #'   or as range from the top or bottom.
 #' @param x Matrix or dataframe from which columns will be extracted
 #' @param select A string containing a comma seperated list of the
-#'  names or indices of the columns to be selected.
+#'  names or indices of the columns to be selected. If an empty list is
+#'  supplied, then the whole of \code{x} will be selected.
 #' @param first.k If a number greater than zero is supplied,
-#'   The first \code{first.k} columns will also be selected
+#'   The first (or up to) \code{first.k} columns of \code{x[,select]} will be returned.
 #' @param last.k If a number greater than zero is supplied,
-#'   The last \code{last.k} columns will also be selected
+#'   The last (or up to) \code{last.k} columns of \code{x[,select]} will be returned.
 #' @export
 SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
@@ -195,7 +197,7 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
                else                 nrow(x)
     min.dim <- max(0, first.k, last.k, na.rm = TRUE)
     if (max.dim < min.dim)
-        stop("Input table has less than ", min.dim, " ", dim, "s.")
+        warning("Input table has less than ", min.dim, " ", dim, "s.")
 
     if (sum(nchar(select), na.rm = TRUE) > 0)
         sel.ind <- getMatchIndex(select, dim.names, dim = dim)

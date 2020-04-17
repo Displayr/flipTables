@@ -15,8 +15,8 @@ Merge2Tables(
   left,
   right,
   direction = c("Side-by-side", "Up-and-down"),
-  nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table",
-    "Matching only"),
+  nonmatching = c("Keep all", "Keep all from first table",
+    "Keep all from second table", "Matching only"),
   disambig.names = NULL
 )
 }

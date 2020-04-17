@@ -10,13 +10,14 @@ SelectRows(x, select = NULL, first.k = NA, last.k = NA)
 \item{x}{Matrix or dataframe from which rows will be extracted}
 
 \item{select}{A string containing a comma seperated list of the
-names or indices of the rows to be selected.}
+names or indices of the rows to be selected. If an empty list is
+supplied, then the whole of \code{x} will be returned.}
 
 \item{first.k}{If a number greater than zero is supplied,
-The first \code{first.k} rows will also be selected}
+The first (or up to) \code{first.k} rows from \code{x[select,]} is returned.}
 
 \item{last.k}{If a number greater than zero is supplied,
-The last \code{last.k} rows will also be selected}
+The last (or up to) \code{last.k} rows from \code{x[select,]} is returned.}
 }
 \description{
 Function to select row from a table, either by rownames
