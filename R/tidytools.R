@@ -448,7 +448,7 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
 
 isTableWithStats <- function(x)
 {
-    if (class(x) == "array" && length(dim(x)) == 3)
+    if (inherits(x, "array") && length(dim(x)) == 3)
         return(TRUE)
     return(FALSE)
 }
