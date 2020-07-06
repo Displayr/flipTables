@@ -150,8 +150,8 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
     stat <- attr(x, "statistic")
     qst <- attr(x, "questions")
     dnm <- dimnames(x)
-    is.pct <- (!is.null(stat) && !is.null(qst) && grepl("%$", stat)) ||
-              (length(dnm) > 2 && grepl("%$", dnm[[3]][1]))
+    is.pct <- (!is.null(stat) && !is.null(qst) && grepl("%)?$", stat)) ||
+              (length(dnm) > 2 && grepl("%)?$", dnm[[3]][1]))
     if (is.pct)
         x <- x / 100
 
@@ -171,7 +171,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
             indCol <- 1
         }
         res <- extractArray(x, row.index = indRow, col.index = indCol, keep.all.stats = FALSE)
-        if (!is.null(attr(res, "statistic")) && grepl("%$", attr(res, "statistic")))
+        if (!is.null(attr(res, "statistic")) && grepl("%)?$", attr(res, "statistic")))
             is.pct <- TRUE
     }
     if (return.single.value && is.numeric(res))
