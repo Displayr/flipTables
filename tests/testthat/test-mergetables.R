@@ -59,8 +59,7 @@ test_that("Merging different type",
     expect_equal(res, structure(list(A = c(1L, 2L, 3L, NA), B = structure(c(15280,
         15281, 15282, NA), class = "Date"), C = structure(c(1L, 2L, 3L,
         NA), .Label = c("a", "b", "c"), class = "factor"), D = c("a",
-        "b", "c", NA), V1 = structure(c(a = 2L, b = 4L, c = 3L, d = 1L
-        ), .Label = c("Etc", "One", "Three", "Two"), class = "factor")), row.names = c("a",
+        "b", "c", NA), V1 = c("One", "Two", "Three", "Etc")), row.names = c("a",
         "b", "c", "d"), class = "data.frame"))
 })
 

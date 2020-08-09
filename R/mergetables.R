@@ -211,7 +211,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     # Otherwise the recursion in MergeTables will peform this multiple times
     if (length(indR) > 0 && right.table.name != "")
         colnames(right)[indR] <- paste0(right.table.name, " - ", colnames(right)[indR])
-    merged <- merge(left, right, by = "row.names", all.x = all.x, all.y = all.y)
+    merged <- merge(as.data.frame(left, stringsAsFactors = FALSE), 
+                    as.data.frame(right, stringsAsFactors = FALSE), 
+                    by = "row.names", all.x = all.x, all.y = all.y)
     rownames(merged) <- merged$Row.names
     merged[["Row.names"]] <- NULL
 
