@@ -31,6 +31,39 @@ test_that("Merge side-by-side",
     expect_equal(MergeTables(list(left, right), direction, "Keep all"), keep.all)
 })
 
+x.char <- letters[1:3]
+x.factor <- factor(x.char)
+x.date <- as.Date("2011-11-01") + 1:3
+df <- data.frame(A = 1:3, B = x.date, C = x.factor, D = x.char, stringsAsFactors = FALSE)
+df.named <- df
+rownames(df.named) <- x.char
+
+test_that("Merging different type",
+{
+    expect_warning(res <- Merge2Tables(1:4, x.date, direction = "Side-by-side"),
+        "There are no matching row names")
+    expect_equal(res, structure(list(left = 1:4, right = structure(c(15280, 15281,
+        15282, NA), class = "Date")), class = "data.frame", row.names = c(NA,
+        -4L)))
+
+    expect_warning(res <- Merge2Tables(df.named, 1:4, direction = "Side-by-side"),
+        "There are no matching row names")
+    expect_equal(res, structure(list(A = c(1L, 2L, 3L, NA), B = structure(c(15280,
+        15281, 15282, NA), class = "Date"), C = structure(c(1L, 2L, 3L,
+        NA), .Label = c("a", "b", "c"), class = "factor"), D = c("a",
+        "b", "c", NA), right = 1:4), class = "data.frame", row.names = c("a",
+        "b", "c", "4")))
+
+    res <- Merge2Tables(df.named, c(b="Two", a="One", c="Three", d="Etc"),
+        direction = "Side-by-side", nonmatching = "Keep all")
+    expect_equal(res, structure(list(A = c(1L, 2L, 3L, NA), B = structure(c(15280,
+        15281, 15282, NA), class = "Date"), C = structure(c(1L, 2L, 3L,
+        NA), .Label = c("a", "b", "c"), class = "factor"), D = c("a",
+        "b", "c", NA), V1 = structure(c(a = 2L, b = 4L, c = 3L, d = 1L
+        ), .Label = c("Etc", "One", "Three", "Two"), class = "factor")), row.names = c("a",
+        "b", "c", "d"), class = "data.frame"))
+})
+
 test_that("Merge side-by-side, multiple statistics",
 {
     expect_warning(Merge2Tables(left.multistat, right, direction, "Matching only"),
