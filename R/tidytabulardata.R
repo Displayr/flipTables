@@ -143,59 +143,51 @@ setDimNames <- function(x)
 #' @noRd
 processDates <- function(x, date = NULL)
 {
-    if(is.null(date))
+    if (is.null(date))
     {
-        if(is.list(x))
+        if (is.list(x))
         {
-            if (length(x) == 1)
+            if (length(x) == 1 && is.data.frame(x))
             {
                 date <- rownames(x)
                 x <- x[[1]]
-            } else
+            }
+            else
             {
                 date <- x[[1]]
                 x <- x[[2]]
             }
         }
-        else if (is.vector(x))
-        {
+        else if (is.atomic(x) && length(dim(x)) <= 1) # vectors and 1D arrays
             date <- names(x)
-        }
-        else if (is.array(x) & length(dim(x)) == 1)
+        else if ((is.table(x) | is.matrix(x) | is.array(x)) &&
+                 length(dim(x)) == 2)
         {
-            date <- names(x)
-        }
-        else
-        {
-            if(is.table(x) | is.matrix(x) | is.array(x))
+            if(nrow(x) > ncol(x))
+                x <- t(x)
+            if (nrow(x) == 1)
             {
-                if (length(dim(x)) == 2)
-                {
-                    if(nrow(x) > ncol(x))
-                        x <- t(x)
-                    if (nrow(x) == 1)
-                    {
-                        date <- colnames(x)
-                        x <- as.vector(x)
-                    }
-                    else
-                    {
-                        date <- x[1, ]
-                        x <- x[2, ]
-                    }
-                }
+                date <- colnames(x)
+                x <- as.vector(x)
             }
             else
             {
-                stop("Input data is in the wrong format.")
+                date <- x[1, ]
+                x <- x[2, ]
             }
         }
+        else
+            stop("Input data is not a list, vector, table, matrix or ",
+                 "1D/2D array. It should be one of these data formats.")
     }
     if (anyDuplicated(date))
         stop("Duplicate dates. Dates should be unique.")
-   x <- as.numeric(x)
-   names(x) <- date
-   x
+    x <- as.numeric(x)
+    if (length(date) != length(x))
+        stop("The input dates and values have different lengths. ",
+             "They should have the same length.")
+    names(x) <- date
+    x
 }
 
 
