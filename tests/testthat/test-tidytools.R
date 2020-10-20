@@ -287,6 +287,20 @@ tb2 <- structure(c(51.9472021093372, NA, 35.5308609996093, 45.6738258412044,
     Missing = 4118L, EffectiveSampleSize = 4295L, EffectiveSampleSizeProportion = 104,
     FilteredProportion = 92.5136800770811), questiontypes = c("PickAny","PickOne"))
 
+tb1d.with.N <- structure(c(19.1402714932127, 21.3457446808511, 13.1246105919003,
+14.8669871794872, 69.3826247689464, 663, 564, 642, 624, 541), .Dim = c(5L,
+2L), .Dimnames = list(c("Optus network fails", "Orange network fails",
+"Telstra network fails", "Vodafone network fails", "SUM"), c("Average",
+"Sample Size")), basedescriptiontext = "sample size = from 541 to 663; total sample size = 725; 184 missing", basedescription = list(
+    Minimum = 541L, Maximum = 663L, Range = TRUE, Total = 725L,
+    Missing = 184L, EffectiveSampleSize = 663L, EffectiveSampleSizeProportion = 100,
+    FilteredProportion = 0), questiontypes = "NumberMulti", span = list(
+    rows = structure(list(c("Optus network fails", "Orange network fails",
+    "Telstra network fails", "Vodafone network fails", "SUM")), class = "data.frame", .Names = "", row.names = c(NA,
+    5L))), name = "table.Percieved.proportion.of.time.the", questions = c("Percieved proportion of time the",
+"SUMMARY"))
+
+
 test_that("Checking for small sample sizes",
 {
     expect_silent(HideOutputsWithSmallSampleSizes(tabWithN, 30))
@@ -335,6 +349,11 @@ test_that("Checking for small sample sizes",
         "L", "M", "N", "O", "P", "Q", "R"), c("May", "June", "July",
         "October"))))
     expect_equal(res[,,2], tb2[,,2])
+
+    res <- HideValuesWithSmallSampleSizes(tb1d.with.N, min.size = 600)
+    expect_equal(res[,,1], c(`Optus network fails` = 19.1402714932127,
+        `Orange network fails` = NA, `Telstra network fails` = 13.1246105919003,
+        `Vodafone network fails` = 14.8669871794872, SUM = NA))
 })
 
 test_that("Automatic order rows/column by CA",
