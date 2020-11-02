@@ -119,8 +119,21 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         right <- t(right)
     }
 
-    rownames(left)  <- stringr::str_trim(rownames(left))
-    rownames(right) <- stringr::str_trim(rownames(right))
+    ## DS-3147 weird newline/space chars from copy/paste errors
+    .fixWhitespaceInTableNames <- function(table)
+    {
+        out <- table
+        dn <- dimnames(out)
+        dn <- lapply(dn, function(dimname){
+            dimname <- stringr::str_trim(dimname)
+            dimname <- gsub("\\s+", " ", dimname)
+            dimname
+        })
+        dimnames(out) <- dn
+        out
+    }
+    left <- .fixWhitespaceInTableNames(left)
+    right <- .fixWhitespaceInTableNames(right)
 
     # If either left or right does not have rownames then rows are merged in index order.
     if (is.null(rownames(left)) || is.null(rownames(right))) {

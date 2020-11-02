@@ -196,3 +196,45 @@ test_that("Duplicate rownames",
 
 })
 
+test_that("DS-3147: table rownames have newline char. instead of single whitespace",
+{
+    table.weird <- structure(c(62, 2, 0, 22, 2, 12), .Dim = c(6L, 1L), .Dimnames = list(
+    c("Other", "Burger Shack", "Nuovo\n  Burger", "Arnold's",
+      "Ma's\n  burgers", "Burger\n  Chef"), "Apr-Jun\n  15"))
+    table2 <- structure(c(63, 2, 1, 22, 2, 11, 63, 3, 0, 21, 2, 11,
+                          66, 2, 1, 20, 2, 9, 64, 2, 1, 22, 2, 9, 64,
+                          2, 2, 20, 2, 10, 63, 3, 2, 19, 2, 11, 62, 2,
+                          2, 19, 2, 12, 63, 3, 2, 18, 3, 11, 62, 4, 1,
+                          20, 2, 11, 66, 3, 1, 19, 2, 9), statistic = "% Column Share",
+                        .Dim = c(6L, 10L), .Dimnames = list(c("Other", "Burger Shack",
+                                                              "Nuovo Burger", "Arnold's", "Ma's burgers",
+                                                              "Burger Chef"),
+                                                            c("Jul-Sep 15", "Oct-Dec 15", "Jan-Mar 16", "Apr-Jun 16", "Jul-Sep 16", "Oct-Dec 16", "Jan-Mar 17", "Apr-Jun 17", "Jul-Sep 17", "Oct-Dec 17")), basedescriptiontext = "sample size = 4853",
+                        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE,
+                                               Total = 4853L, Missing = 0L, EffectiveSampleSize = 4853L,
+                                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+                        questiontypes = c("NumberMulti", "Date"),
+                        span = list(rows = structure(list(c("Other", "Burger Shack", "Nuovo Burger",
+                                                            "Arnold's", "Ma's burgers", "Burger Chef")),
+                                                     class = "data.frame",
+                                                     .Names = "", row.names = c(NA, 6L)),
+                                    columns = structure(list(c("Jul-Sep 15", "Oct-Dec 15",
+                                                               "Jan-Mar 16", "Apr-Jun 16", "Jul-Sep 16",
+                                                               "Oct-Dec 16", "Jan-Mar 17", "Apr-Jun 17",
+                                                               "Jul-Sep 17", "Oct-Dec 17")),
+                                                        class = "data.frame",
+                                                        .Names = "", row.names = c(NA, 10L))),
+                        name = "Q5 Number of times ordered in last month: Brand by Quarter",
+                        questions = c("Q5 Number of times ordered in last month: Brand",
+                                      "Quarter"))
+    out <- Merge2Tables(table.weird, table2)
+    expect_equal(nrow(out), nrow(table2))
+    rownames.expect <- rownames(table.weird)
+    rownames.expect <- gsub("\\s+", " ", rownames.expect)
+    rownames.expect <- union(rownames.expect, rownames(table2))
+    colnames.expect <- colnames(table.weird)
+    colnames.expect <- gsub("\\s+", " ", colnames.expect)
+    colnames.expect <- union(colnames.expect, colnames(table2))
+    expect_equal(rownames(out), rownames.expect)
+    expect_equal(colnames(out), colnames.expect)
+})
