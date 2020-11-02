@@ -37,31 +37,36 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
         n.years <- number.years
         warning("Specified number of years exceeds the number in the data")
     }
-    if (number.years <= 2)
-        warning("This function require at least one whole year of data.")
     year.table <- table(year.index)
-    #year.table <- year.table[length(year.table):1]
+    if (!containsWholeYear(date, year.index, year.table, calendar))
+        stop("At least one whole year of data is required.")
     n.periods <- max(year.table)
-    date.diff = date[2] - date[1]
     colnm <- if(period.number)
         1:n.periods
-    else
+    else if (all(day(date) == 1)) # monthly or multiple of months
+    {
+        first <- date[year.index == 1][1]
+        seq.by <- if (n.periods == 12) "month" else paste(12 / n.periods, "months")
+        format(seq(first, by = seq.by, length.out = n.periods), "%Y-%m")
+    }
+    else # period is fixed number of days, e.g., week or fortnight
+    {
+        date.diff <- date[2] - date[1]
+        first <- date[year.index == 1][1]
+        if (date.diff == 7 && calendar) # if weekly, make first date 1st Jan
         {
-            first <- date[year.index == 1][1]
-            if (date.diff == 7 && calendar) # if weekly, make first date 1st Jan
-            {
-                first <- first - day(first) + 1
-                warning("In order to stack weekly observations consistently ",
-                        "each year has been rebased to start  from January 1st, which ",
-                        "may differ from the actual first observation in each year. ",
-                        "You may prefer to stack by period number instead.")
-            }
-            seq(first, by = date.diff, length.out = n.periods)
+            first <- first - day(first) + 1
+            warning("In order to stack weekly observations consistently ",
+                    "each year has been rebased to start from January 1st, which ",
+                    "may differ from the actual first observation in each year. ",
+                    "You may prefer to stack by period number instead.")
         }
+        as.character(seq(first, by = date.diff, length.out = n.periods))
+    }
     rnm <- latest.year:(latest.year - n.years + 1)
     result <- matrix(NA, nrow = n.years, ncol = n.periods,
-        dimnames = list(Year = rnm, Date = as.character(colnm)))
-    for (i in 1:(n.years - 1))
+        dimnames = list(Year = rnm, Date = colnm))
+    for (i in seq_len(n.years - 1))
         result[i, 1:year.table[i]] <- x[year.index == i]
     if (year.table[n.years] + 1 >= n.periods) # Checking to see if last year is incomplete.
         result[n.years, 1:year.table[n.years]] <- x[year.index == n.years]
@@ -86,4 +91,30 @@ durationInYears <- function(start.date, end.date)
         result <- result - 1
     }
     result
+}
+
+# Check that the data contains at least one whole year
+containsWholeYear <- function(date, year.index, year.table, calendar)
+{
+    if (length(unique(year.index)) > 2)
+        return(TRUE)
+
+    ind <- which(year.index == which.max(year.table))
+
+    if (all(day(date) == 1)) # monthly or multiple of months
+        return(length(ind) == 12 / (month(date[ind[2]]) - month(date[ind[1]])))
+    else # period is fixed number of days, e.g., week or fortnight
+    {
+        period.duration = date[2] - date[1]
+        start.date <- date[ind[1]]
+        end.date <- date[ind[length(ind)]]
+        if (calendar)
+        {
+            yr <- year(start.date)
+            return(yr > year(start.date - period.duration) &&
+                   yr < year(end.date + period.duration))
+        }
+        else
+            return(durationInYears(start.date, end.date + period.duration) > 0)
+    }
 }

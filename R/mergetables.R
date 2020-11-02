@@ -102,16 +102,16 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     }
 
     .makeMatrix <- function(x, statistic) {
-        x <- as.matrix(x)
-        colnames(x) <- statistic
-        x
+        if ((is.null(dim(x)) || length(dim(x)) == 1) &&
+            (is.numeric(x) || is.character(x)))
+        {
+            x <- as.matrix(x)
+            colnames(x) <- statistic
+        }
+        return(x)
     }
-    if (is.null(dim(left)) || length(dim(left)) == 1) {
-        left <- .makeMatrix(left, attr(left, "statistic"))
-    }
-    if (is.null(dim(right)) || length(dim(right)) == 1) {
-        right <- .makeMatrix(right, attr(right, "statistic"))
-    }
+    left <- .makeMatrix(left, attr(left, "statistic"))
+    right <- .makeMatrix(right, attr(right, "statistic"))
 
     if (direction == "Up-and-down")
     {
@@ -138,20 +138,20 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     # If either left or right does not have rownames then rows are merged in index order.
     if (is.null(rownames(left)) || is.null(rownames(right))) {
 
-        x <- if (direction == "Up-and-down") "column" else "row"
+        dir <- if (direction == "Up-and-down") "column" else "row"
 
-        warning(paste("There are no matching", x, "names. Merging is based on",
-            x, "index order."))
-        max.rows <- max(nrow(left), nrow(right))
+        warning(paste("There are no matching", dir, "names. Merging is based on",
+            dir, "index order."))
+        max.rows <- max(NROW(left), NROW(right))
+        left <- pad.rows(left, max.rows)
+        right <- pad.rows(right, max.rows)
 
-        # pad left or right or neither with rows of NAs at bottom
-        left.padding <- matrix(nrow = max.rows - nrow(left), ncol = ncol(left))
-        right.padding <- matrix(nrow = max.rows - nrow(right), ncol = ncol(right))
-        left <- rbind(left, left.padding)
-        right <- rbind(right, right.padding)
+        bind.as.matrix <- is.bindable(left, right)
+        if (direction == "Up-and-down" || bind.as.matrix)
+            merged <- cbind(left, right)
+        else
+            merged <- data.frame(left, right, stringsAsFactors = FALSE)
 
-        merged <- cbind(left, right)
-        rownames(merged) <- c(rownames(left), rownames(right))[seq(max.rows)]
         if (direction == "Up-and-down")
             merged <- t(merged)
         return(merged)
@@ -223,7 +223,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     # Otherwise the recursion in MergeTables will peform this multiple times
     if (length(indR) > 0 && right.table.name != "")
         colnames(right)[indR] <- paste0(right.table.name, " - ", colnames(right)[indR])
-    merged <- merge(left, right, by = "row.names", all.x = all.x, all.y = all.y)
+    merged <- merge(as.data.frame(left, stringsAsFactors = FALSE),
+                    as.data.frame(right, stringsAsFactors = FALSE),
+                    by = "row.names", all.x = all.x, all.y = all.y)
     rownames(merged) <- merged$Row.names
     merged[["Row.names"]] <- NULL
 
@@ -263,8 +265,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     {
         merged <- t(merged)
     }
-
-    as.matrix(merged)
+    if (direction == "Up-and-down" || is.bindable(left, right))
+        merged <- as.matrix(merged)
+    return(merged)
 }
 
 
@@ -361,8 +364,9 @@ mergeNames <- function(left, right)
     new.order$name[order(new.order$order)]
 }
 
-
-to.matrix <- function(x, direction) # Converts a vector to a matrix, if required.
+# Converts a vector to a matrix, if required.
+# Note that factor and dates are returned unaltered
+to.matrix <- function(x, direction)
 {
     if (!is.vector(x))
         return(x)
@@ -370,4 +374,28 @@ to.matrix <- function(x, direction) # Converts a vector to a matrix, if required
     if (direction == "Up-and-down")
         return(t(x))
     x
+}
+
+# Returns a logical indicating whether x and y
+# can be merged together as a matrix
+is.bindable <- function(x, y)
+{
+    if (is.numeric(x) && is.numeric(y))
+        return(TRUE)
+    if (is.character(x) && is.character(y))
+        return(TRUE)
+    else
+        return(FALSE)
+}
+
+# Pad with empty rows in preparation for cbind of data.frame
+# padNAs is used to ensure that factors and dates retain
+# their class
+pad.rows <- function(x, n)
+{
+    if (NROW(x) >= n)
+        return(x)
+
+    add.n <- n - NROW(x)
+    return(padNAs(x, add.n = add.n))
 }

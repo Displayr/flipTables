@@ -258,6 +258,48 @@ displayr2d <- structure(c(11.6455696202532, 11.6455696202532, 10.8860759493671,
 "Sample Size")), name = "table.Age.by.Gender", questions = c("Age",
 "Gender"))
 
+tb2 <- structure(c(51.9472021093372, NA, 35.5308609996093, 45.6738258412044,
+    58.4905809953716, 49.6455398756096, 50.2632940710299, NA, NA,
+    NA, NA, NA, NA, NA, NA, NA, NA, NA, 49.5650983155624, 47.843121822468,
+    37.4419352342298, NA, NA, 49.7070348252363, 52.5664287913937,
+    46.9122328370734, 47.4781018184579, 58.5332573349286, 75.9701034675582,
+    76.1366780842766, 73.6532474371167, 49.3122031689706, 60.8751983368752,
+    51.0820316717213, 34.7633413573599, NA, 44.5224347195836, 53.5852974197742,
+    30.6667081176553, NA, NA, 53.8358070952296, 52.0786814187607,
+    34.2033866453389, 49.3459942633275, 60.1021357034282, 77.2176106035434,
+    76.2831307305653, 73.5481747803698, 48.240508741376, 61.8350270978055,
+    53.9426371666606, 38.0600345420049, NA, 47.6939625925842, 52.2611605052822,
+    36.7888493925003, NA, NA, 53.2248117691342, 52.8740811358816,
+    41.3616321711294, 51.8001631362509, 63.5878465004998, 77.0496074348522,
+    75.9816278787044, 72.5165550574067, 48.7459638243879, 62.798402301744,
+    54.1707117249785, 37.8565225376816, NA, 1055, 0, 1055, 1055,
+    1055, 1055, 1055, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1004, 1004,
+    1004, 0, 0, 1004, 1004, 1004, 1004, 1004, 1004, 1004, 1004, 1004,
+    1004, 1004, 1004, 0, 1033, 1033, 1033, 0, 0, 1033, 1033, 1033,
+    1033, 1033, 1033, 1033, 1033, 1033, 1033, 1033, 1033, 0, 1026,
+    1026, 1026, 0, 0, 1026, 1026, 1026, 1026, 1026, 1026, 1026, 1026,
+    1026, 1026, 1026, 1026, 0), .Dim = c(18L, 4L, 2L),
+    .Dimnames = list(c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+    "L", "M", "N", "O", "P", "Q", "R"), c("May", "June", "July",
+    "October"), c("Column %", "Column n")),
+    basedescriptiontext = "base n = from 0 to 4118; total n = 4118; 4118 missing; effective sample size = 4295 (104%); 93% filtered out",
+    basedescription = list(Minimum = 0L, Maximum = 4118L, Range = TRUE, Total = 4118L,
+    Missing = 4118L, EffectiveSampleSize = 4295L, EffectiveSampleSizeProportion = 104,
+    FilteredProportion = 92.5136800770811), questiontypes = c("PickAny","PickOne"))
+
+tb1d.with.N <- structure(c(19.1402714932127, 21.3457446808511, 13.1246105919003,
+14.8669871794872, 69.3826247689464, 663, 564, 642, 624, 541), .Dim = c(5L,
+2L), .Dimnames = list(c("Optus network fails", "Orange network fails",
+"Telstra network fails", "Vodafone network fails", "SUM"), c("Average",
+"Sample Size")), basedescriptiontext = "sample size = from 541 to 663; total sample size = 725; 184 missing", basedescription = list(
+    Minimum = 541L, Maximum = 663L, Range = TRUE, Total = 725L,
+    Missing = 184L, EffectiveSampleSize = 663L, EffectiveSampleSizeProportion = 100,
+    FilteredProportion = 0), questiontypes = "NumberMulti", span = list(
+    rows = structure(list(c("Optus network fails", "Orange network fails",
+    "Telstra network fails", "Vodafone network fails", "SUM")), class = "data.frame", .Names = "", row.names = c(NA,
+    5L))), name = "table.Percieved.proportion.of.time.the", questions = c("Percieved proportion of time the",
+"SUMMARY"))
+
 
 test_that("Checking for small sample sizes",
 {
@@ -285,6 +327,33 @@ test_that("Checking for small sample sizes",
     expect_true(all(!is.na(res[,,1])))
     expect_silent(res <- HideValuesWithSmallSampleSizes(displayr1d, 900))
     expect_true(all(is.na(res[,,1])))
+
+    res <- HideValuesWithSmallSampleSizes(tb2, 30)
+    expect_equal(res[,,1],
+        structure(c(51.9472021093372, NA, 35.5308609996093, 45.6738258412044,
+        58.4905809953716, 49.6455398756096, 50.2632940710299, NA, NA,
+        NA, NA, NA, NA, NA, NA, NA, NA, NA, 49.5650983155624, 47.843121822468,
+        37.4419352342298, NA, NA, 49.7070348252363, 52.5664287913937,
+        46.9122328370734, 47.4781018184579, 58.5332573349286, 75.9701034675582,
+        76.1366780842766, 73.6532474371167, 49.3122031689706, 60.8751983368752,
+        51.0820316717213, 34.7633413573599, NA, 44.5224347195836, 53.5852974197742,
+        30.6667081176553, NA, NA, 53.8358070952296, 52.0786814187607,
+        34.2033866453389, 49.3459942633275, 60.1021357034282, 77.2176106035434,
+        76.2831307305653, 73.5481747803698, 48.240508741376, 61.8350270978055,
+        53.9426371666606, 38.0600345420049, NA, 47.6939625925842, 52.2611605052822,
+        36.7888493925003, NA, NA, 53.2248117691342, 52.8740811358816,
+        41.3616321711294, 51.8001631362509, 63.5878465004998, 77.0496074348522,
+        75.9816278787044, 72.5165550574067, 48.7459638243879, 62.798402301744,
+        54.1707117249785, 37.8565225376816, NA), .Dim = c(18L, 4L), .Dimnames = list(
+        c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+        "L", "M", "N", "O", "P", "Q", "R"), c("May", "June", "July",
+        "October"))))
+    expect_equal(res[,,2], tb2[,,2])
+
+    res <- HideValuesWithSmallSampleSizes(tb1d.with.N, min.size = 600)
+    expect_equal(res[,,1], c(`Optus network fails` = 19.1402714932127,
+        `Orange network fails` = NA, `Telstra network fails` = 13.1246105919003,
+        `Vodafone network fails` = 14.8669871794872, SUM = NA))
 })
 
 test_that("Automatic order rows/column by CA",

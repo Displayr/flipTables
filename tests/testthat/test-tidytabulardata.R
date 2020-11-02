@@ -326,3 +326,59 @@ test_that("Tidy tables that have been converted to character",
 
 
 })
+
+test_that("processDates", {
+    dt <- c("2020-01-01", "2020-09-08", "2020-12-31")
+    expected.output <- c(`2020-01-01` = 1, `2020-09-08` = 2, `2020-12-31` = 3)
+
+    # Data frame with one column
+    df <- data.frame(a = 1:3)
+    rownames(df) <- dt
+    expect_equal(processDates(df), expected.output)
+
+    # Data frame with two columns, with first column containing dates
+    df <- data.frame(dt = dt, a = 1:3)
+    expect_equal(processDates(df), expected.output)
+
+    # Vector which contains attributes (DS-3090)
+    x <- 1:3
+    names(x) <- dt
+    attr(x, "some attribute") <- "attribute value"
+    expect_equal(processDates(x), expected.output)
+
+    # 1D array
+    x <- array(1:3)
+    names(x) <- dt
+    expect_equal(processDates(x), expected.output)
+
+    # Matrix where nrow > ncol
+    m <- matrix(1:3, nrow = 3)
+    rownames(m) <- dt
+    expect_equal(processDates(m), expected.output)
+
+    # Matrix where nrow == 1
+    m <- matrix(1:3, nrow = 1)
+    colnames(m) <- dt
+    expect_equal(processDates(m), expected.output)
+
+    # Matrix where nrow == 2
+    m <- matrix(c(dt, 1:3), nrow = 2, byrow = TRUE)
+    expect_equal(processDates(m), expected.output)
+
+    # date parameter supplied
+    expect_equal(processDates(1:3, date = dt), expected.output)
+
+    # Invalid format error
+    expect_error(processDates(formula(y ~ x)),
+                 paste0("Input data is not a list, vector, table, matrix or ",
+                        "1D/2D array. It should be one of these data formats."))
+
+    # Different lengths for dates and values
+    expect_error(processDates(1:4, dt),
+                 paste0("The input dates and values have different lengths. ",
+                        "They should have the same length."))
+
+    # Duplicate dates error
+    expect_error(processDates(1:3, c(dt[1], dt[1], dt[2])),
+                 "Duplicate dates. Dates should be unique.")
+})
