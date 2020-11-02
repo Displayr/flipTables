@@ -124,11 +124,20 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     {
         out <- table
         dn <- dimnames(out)
-        dn <- lapply(dn, function(dimname){
+        .fixWSinVecNames <- function(dimname){
             dimname <- stringr::str_trim(dimname)
             dimname <- gsub("\\s+", " ", dimname)
             dimname
-        })
+        }
+        if (!length(dn))
+        {
+            if (!is.null(names(out)))
+                return(setNames(out, .fixWSinVecNames(out)))
+            else
+                return(out)
+        }
+
+        dn <- lapply(dn, .fixWSinVecNames)
         dimnames(out) <- dn
         out
     }
