@@ -90,7 +90,6 @@ ReverseColumns <- function(x)
 #'   The last (or up to) \code{last.k} rows from \code{x[select,]} is returned.
 #' @importFrom flipTransformations TextAsVector
 #' @importFrom flipU CopyAttributes
-#' @importFrom utils head tail
 #' @export
 SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
@@ -182,7 +181,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
     return(res)
 }
 
-
+#' @importFrom verbs First Last
 indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = NA)
 {
     if (length(dim(x)) < 2)
@@ -207,14 +206,14 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
     # Do the union of the first and last k row/columns
     # e.g. if user wants to select first and last rows to create summary table
     if (sum(first.k, na.rm = TRUE) > 0 && sum(last.k, na.rm = TRUE) > 0)
-        return(unique(c(head(sel.ind, first.k), tail(sel.ind, last.k))))
+        return(unique(c(First(sel.ind, first.k), Last(sel.ind, last.k))))
 
     # Otherwise use the intersection to restrict number of values
     # e.g. DS-2552
     if (sum(first.k, na.rm = TRUE) > 0)
-        sel.ind <- head(sel.ind, first.k)
+        sel.ind <- First(sel.ind, first.k)
     if (sum(last.k, na.rm = TRUE) > 0)
-        sel.ind <- tail(sel.ind, last.k)
+        sel.ind <- Last(sel.ind, last.k)
     return(sel.ind)
 }
 
