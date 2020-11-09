@@ -22,7 +22,7 @@ Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
     Displayr/flipTransformations,
-    Displayr/flipU
+    Displayr/flipU,
     Displayr/verbs
 NeedsCompilation: no
 Encoding: UTF-8
