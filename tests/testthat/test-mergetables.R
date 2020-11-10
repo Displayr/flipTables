@@ -270,3 +270,41 @@ test_that("DS-3147: table rownames have newline char. instead of single whitespa
     expect_equal(rownames(out), rownames.expect)
     expect_equal(colnames(out), colnames.expect)
 })
+
+test_that("MergeTables uses table names in warning messages",
+{
+    ## Relevant for R Outputs in Displayr, so that warnings and merged
+    ## column names contain output name instead of referring to
+    ## e.g. "tables[[1]]"
+    right <- matrix(21:29, nrow = 3, ncol = 3,
+                    dimnames = list(letters[c(1, 2, 4)], LETTERS[5:7]))
+    left.multistat <- array(1:24, dim = c(3, 4, 2),
+                            dimnames = list(letters[1:3], LETTERS[1:4],
+                                            paste("Statistic", 1:2)))
+    colnames(right)[1] <- "B"
+
+    expect_warning(out <- MergeTables(list(lms = left.multistat,
+                                    rss = right),
+                               "Side-by-side",
+                               "Matching only"),
+                   "'lms' contains multiple statistics.")
+
+    expect_equal(grep("^lms -", colnames(out)),
+                 grep("^B$", colnames(left.multistat)))
+    expect_equal(grep("^rss -", colnames(out)),
+                 ncol(left.multistat) + grep("^B$", colnames(right)))
+
+    ## three tables (tables 2 and 3 have identical column names)
+    expect_warning(out <- MergeTables(list(lms = left.multistat,
+                                    rss = right, rss2 = right),
+                               "Side-by-side",
+                               "Matching only"),
+        "'lms' contains multiple statistics.")
+
+    idx.expect <- ncol(left.multistat) + seq_len(ncol(right))
+    expect_equal(grep("^rss -", colnames(out)),
+                 idx.expect)
+    idx.expect <- ncol(left.multistat) + ncol(right) + seq_len(ncol(right))
+    expect_equal(grep("^rss2 -", colnames(out)),
+                 idx.expect)
+})

@@ -1,7 +1,7 @@
 Package: flipTables
 Type: Package
 Title: Package for handling tables and related objects
-Version: 2.5.24
+Version: 2.5.25
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Package for handling tables and related objects.	
@@ -26,4 +26,4 @@ Remotes:
     Displayr/verbs
 NeedsCompilation: no
 Encoding: UTF-8
-Packaged: 2017-08-28 02:41:50 UTC; mathew
+
