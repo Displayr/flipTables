@@ -27,18 +27,16 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     nonmatching <- match.arg(nonmatching)
 
     # Checking for column names
-    ## if (!is.null(names(tables)))
-    ## {
-    ##     for (i in 1:length(tables))
-    ##     {
-    ##         if (length(dim(tables[[i]])) < 2)
-    ##             tables[[i]] <- as.matrix(tables[[i]])
-    ##         if (is.null(colnames(tables[[i]])) && ncol(tables[[i]]) == 1)
-    ##             colnames(tables[[i]]) <- names(tables)[i]
-    ##     }
-    ## }
-
-    tables <- addNameAttribute(tables)
+    if (!is.null(names(tables)))
+    {
+        for (i in 1:length(tables))
+        {
+            if (length(dim(tables[[i]])) < 2)
+                tables[[i]] <- as.matrix(tables[[i]])
+            if (is.null(colnames(tables[[i]])) && ncol(tables[[i]]) == 1)
+                colnames(tables[[i]]) <- names(tables)[i]
+        }
+    }
 
     merged <- NULL
     if (length(tables) == 1)
@@ -47,33 +45,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     }
     else if (length(tables) == 2)
     {
-        ## call <- match.call()
-        ## call[[1]] <- as.name("Merge2Tables")
-        ## call$tables <- NULL
-        ## if (!is.null(names(tables)))
-        ## {
-        ##     local(
-        ##     {
-        ##         if (nzchar(names(tables)[1])){
-        ##             assign(names(tables)[1], tables[[1]])
-        ##             call$left <- as.name(names(tables)[1])
-        ##         }else
-        ##             call$left <- tables[[1]]
-
-        ##         if (nzchar(names(tables)[2])){
-        ##             assign(names(tables)[2], tables[[2]])
-        ##             call$right <- as.name(names(tables)[2])
-        ##         }else
-        ##             call$right <- tables[[2]]
-        ##         merged <- eval(call)
-        ##     })
-        ## }else
-        {
-            merged <- Merge2Tables(tables[[1]], tables[[2]],
-                                   direction = direction,
-                                   nonmatching = nonmatching)
-
-        }
+        merged <- Merge2Tables(tables[[1]], tables[[2]], direction = direction, nonmatching = nonmatching)
     }
     else
     {
@@ -82,28 +54,10 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
         else
             tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
 
-        ## if (nzchar(names(tables)[1]))
-        ## {
-        ##     call <- match.call()
-        ##     call$tables <- tables[-1]
-        ##     right.merged <- eval(call)
-        ##     local({
-        ##             call[[1]] <- as.name("Merge2Tables")
-        ##             call$tables <- NULL
-        ##             idx <- which(duplicated(tmp.names))
-        ##             call$disambig.names <- tmp.names[idx]
-        ##             assign(names(tables)[1], tables[[1]])
-        ##             call$left <- as.name(names(tables)[1])
-        ##             call$right <- right.merged
-        ##             merged <- eval(call)
-        ##         })
-        ## }else
         merged <- Merge2Tables(tables[[1]],
-                               Recall(tables[-1], direction = direction,
-                                      nonmatching = nonmatching),
-                               direction = direction,
-                               nonmatching = nonmatching,
-                               disambig.names = tmp.names[which(duplicated(tmp.names))])
+            Recall(tables[-1], direction = direction, nonmatching = nonmatching),
+            direction = direction, nonmatching = nonmatching,
+            disambig.names = tmp.names[which(duplicated(tmp.names))])
     }
 
     merged
@@ -117,12 +71,9 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 #' @param disambig.names Optional vector of column names that should be disambiguated
 #'   using the table name
 #' @export
-Merge2Tables <- function(left, right,
-                         direction = c("Side-by-side", "Up-and-down"),
-                         nonmatching = c("Keep all", "Keep all from first table",
-                                         "Keep all from second table",
-                                         "Matching only"),
-                         disambig.names = NULL)
+Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
+    nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"),
+    disambig.names = NULL)
 {
     left.name <- deparse(substitute(left))
     right.name <- deparse(substitute(right))
@@ -139,17 +90,14 @@ Merge2Tables <- function(left, right,
     nonmatching <- match.arg(nonmatching)
 
     if (length(dim(left)) > 3 || length(dim(right)) > 3)
-        stop("One of the input tables has more than 3 dimensions.",
-             call. = FALSE)
+        stop("One of the input tables has more than 3 dimensions.")
 
     if (length(dim(left)) == 3) {
-        warning(sQuote(left.name), " contains multiple statistics. ",
-                "Only using the first statistic.", call. = FALSE)
+        warning("'", left.name, "' contains multiple statistics. Only using the first statistic.")
         left <- left[, , 1]
     }
     if (length(dim(right)) == 3) {
-        warning(sQuote(right.name), " contains multiple statistics. ",
-                "Only using the first statistic.", call. = FALSE)
+        warning("'", right.name, "' contains multiple statistics. Only using the first statistic.")
         right <- right[, , 1]
     }
 
@@ -201,8 +149,8 @@ Merge2Tables <- function(left, right,
 
         dir <- if (direction == "Up-and-down") "column" else "row"
 
-        warning("There are no matching ", dir, " names. Merging is based on ",
-                dir, " index order.", call. = FALSE)
+        warning(paste("There are no matching", dir, "names. Merging is based on",
+            dir, "index order."))
         max.rows <- max(NROW(left), NROW(right))
         left <- pad.rows(left, max.rows)
         right <- pad.rows(right, max.rows)
@@ -231,8 +179,7 @@ Merge2Tables <- function(left, right,
             type <- "columns"
             other.direction <- "side-by-side"
         }
-        stop("Can not find any matching ", type, ". Perhaps you meant to join ",
-             other.direction, "?")
+        stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
     }
     left.NAs <- which(is.na(rownames(left)))
     if (length(left.NAs) > 0)
@@ -278,8 +225,7 @@ Merge2Tables <- function(left, right,
     {
         if (nchar(left.table.name) == 0)
             warning("Assign name to ", left.name,
-                    " by setting 'attr(", left.name,  ", \"name\") <- name'",
-                    call. = FALSE)
+                    " by setting 'attr(", left.name,  ", \"name\") <- name'")
         colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
     }
     # Disambiguation is only added if right.table.name defined
@@ -461,26 +407,4 @@ pad.rows <- function(x, n)
 
     add.n <- n - NROW(x)
     return(padNAs(x, add.n = add.n))
-}
-
-#' Helper function for MergeTables
-#'
-#' If the input is a named list, the corresponding name will be added
-#' as an attribute \code{'name'} to each element of the list if it
-#' doesn't already exist. The attributes are used by Merge2Tables
-#' to disambiguate row/column names and in warning and error messages.
-#' @param table.vec Same as \code{tables} in \code{MergeTables}
-#' @return \code{table.vec}, possibly with a name attribute added to
-#'     each element
-#' @noRd
-addNameAttribute <- function(table.vec)
-{
-    out <- table.vec
-    if (!is.null(names(out)))
-    {
-        for (i in seq_along(out))
-            if (nzchar(names(out)[i]) && is.null(attr(out[[i]], "name")))
-                attr(out[[i]], "name") <- names(out)[i]
-    }
-    return(out)
 }
