@@ -5,6 +5,7 @@
 #' @param x A Q table which is expected to have the attributes
 #' typically associated with tables, e.g. "questions", "name"
 #' and "statistic" (if there is only one statistic).
+#' @export
 ConvertQTableToArray <- function(x)
 {
     # This is possibly valid output
