@@ -144,19 +144,14 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
 {
     indRow <- indexSelected(x, "row", as.character(row))
 
-    # If data is already percentages in Qtable then divide by 100
-    # Note that R outputs and pasted data will already be in decimals
     stat <- attr(x, "statistic")
     qst <- attr(x, "questions")
     dnm <- dimnames(x)
     is.pct <- (!is.null(stat) && !is.null(qst) && grepl("%)?$", stat)) ||
               (length(dnm) > 2 && grepl("%)?$", dnm[[3]][1]))
-    if (is.pct)
-        x <- x / 100
 
     if (length(dim(x)) < 2)
 	{
-        #cat("column:", column, "\n")
 		if (length(column) > 0 && sum(nchar(column)) > 0 && sum(as.numeric(column), na.rm = TRUE) != 1)
 			warning("Column ", column, " ignored for 1-dimensional table")
         res <- x[indRow]
