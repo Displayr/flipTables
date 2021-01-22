@@ -157,28 +157,28 @@ test_that("SelectEntry",
 {
     expect_error(SelectEntry(dat, 1, "19 to 25"), "Table does not contain column")
     expect_error(res <- SelectEntry(dat, 1, "18 to 24", return.single.value = TRUE), NA)
-    expect_equal(res, structure(0.0113154172560113, statistic = "%"))
+    expect_equal(res, structure(1.13154172560113, statistic = "%"))
     expect_error(res <- SelectEntry(dat, 1, "18 to 24", return.single.value = FALSE), NA)
-    expect_equal(res, structure(0.0113154172560113, .Dim = c(1L, 1L), .Dimnames = list("Less than $15,000", "18 to 24"),             statistic = "%", name = "Income by Age", questions = c("Income", "Age")))
+    expect_equal(res, structure(1.13154172560113, .Dim = c(1L, 1L), .Dimnames = list("Less than $15,000", "18 to 24"),             statistic = "%", name = "Income by Age", questions = c("Income", "Age")))
     expect_error(res <- SelectEntry(dat, "NET", "1,35 to 39, 50 to 54"), NA)
-    expect_equal(res, structure(c(0.123055162659123, 0.113154172560113, 0.121640735502122),
+    expect_equal(res, structure(c(0.123055162659123, 0.113154172560113, 0.121640735502122) * 100,
         .Dim = c(1L, 3L), .Dimnames = list("NET", c("18 to 24", "35 to 39",
         "50 to 54")), statistic = "%", name = "Income by Age", questions = c("Income",
         "Age")))
     expect_warning(res <- SelectEntry(dat, "NET", ""), "First column was returned as no column was specified")
-    expect_equal(res, structure(0.123055162659123, .Dim = c(1L, 1L), .Dimnames = list("NET", "18 to 24"), statistic = "%",
+    expect_equal(res, structure(12.3055162659123, .Dim = c(1L, 1L), .Dimnames = list("NET", "18 to 24"), statistic = "%",
         name = "Income by Age", questions = c("Income", "Age")))
     res <- SelectEntry(dat, 1:3, 1:2, return.single.value = FALSE)
     expect_equal(res,
-        structure(c(0.0113154172560113, 0.0099009900990099, 0.00282885431400283,
+        structure(100 * c(0.0113154172560113, 0.0099009900990099, 0.00282885431400283,
         0, 0.0099009900990099, 0.00707213578500707), .Dim = 3:2, .Dimnames = list(
         c("Less than $15,000", "$200,001 or more", "$150,001 to $200,000"),
         c("18 to 24", "25 to 29")), statistic = "%", name = "Income by Age",
         questions = c("Income", "Age")))
     res <- SelectEntry(dat, 1:3, 1:2, return.single.value = TRUE)
-    expect_equal(round(res,3), structure(0.041, statistic = "%"))
+    expect_equal(round(res,1), structure(4.1, statistic = "%"))
     expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never"), "Only the first statistic 'Column %' used")
-    expect_equal(res, structure(0.157894736842105, .Dim = c(1L, 1L, 1L),
+    expect_equal(res, structure(15.7894736842105, .Dim = c(1L, 1L, 1L),
         .Dimnames = list("25 to 29", "Never", "Column %"), statistic = "%", name = "Age by Exercise frequency",
         questions = c("Age", "Exercise frequency")))
     expect_warning(res <- SelectEntry(tabWithN, "25 to 29  ", "  Never", return.single.value = TRUE),
