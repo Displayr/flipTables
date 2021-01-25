@@ -4,7 +4,13 @@
 \alias{SelectEntry}
 \title{Select entries from a table}
 \usage{
-SelectEntry(x, row, column = NULL, return.single.value = FALSE)
+SelectEntry(
+  x,
+  row,
+  column = NULL,
+  return.single.value = FALSE,
+  use.statistic.attribute = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix or dataframe from which values will be extracted.}
@@ -19,7 +25,11 @@ or 1-dimensional array, \code{column} will be ignored.}
 \item{return.single.value}{Logical; If this true, the function will
 always return a single numeric value. If multiple cells are selected,
 the entries are summed. If no entries are selected a
-value of zero is returned.}
+value of zero is returned.for}
+
+\item{use.statistic.attribute}{Logical; indicates whether the statistic
+attribute is used to represent a percentage. For legacy reasons it is off by
+default (i.e. 5\% is returned as 0.05)}
 }
 \description{
 Function to select entries from a table using

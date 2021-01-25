@@ -1,7 +1,7 @@
 Package: flipTables
 Type: Package
 Title: Package for handling tables and related objects
-Version: 2.7.0
+Version: 2.7.1
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Package for handling tables and related objects.	
@@ -21,7 +21,7 @@ RoxygenNote: 7.1.1
 Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
-    Displayr/flipTransformations@DS-3202,
+    Displayr/flipTransformations,
     Displayr/flipU,
     Displayr/verbs
 NeedsCompilation: no

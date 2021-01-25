@@ -138,9 +138,13 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @param return.single.value Logical; If this true, the function will
 #' always return a single numeric value. If multiple cells are selected,
 #' the entries are summed. If no entries are selected a
-#' value of zero is returned.
+#' value of zero is returned.for
+#' @param use.statistic.attribute Logical; indicates whether the statistic
+#' attribute is used to represent a percentage. For legacy reasons it is off by
+#' default (i.e. 5\% is returned as 0.05)
 #' @export
-SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
+SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
+                         use.statistic.attribute = FALSE)
 {
     indRow <- indexSelected(x, "row", as.character(row))
 
@@ -172,7 +176,16 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE)
         res <- sum(res, na.rm = TRUE)
     res <- unlist(res)
     if (is.pct)
-        attr(res, "statistic") <- "%"
+    {
+        if (use.statistic.attribute)
+            attr(res, "statistic") <- "%"
+        else
+        {
+            res <- res/100
+            attr(res, "statistic") <- NULL # set to null to indicate already converted to decimal
+            attr(res, "format") <- "%"
+        }
+    }
     return(res)
 }
 
