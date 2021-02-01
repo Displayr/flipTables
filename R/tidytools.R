@@ -93,7 +93,7 @@ ReverseColumns <- function(x)
 #' @export
 SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
-    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+    if (!any(c(nzchar(select), as.integer(first.k), as.integer(last.k)), na.rm = TRUE))
         return(x)
     if (length(dim(x)) < 2)
         x <- convertToMatrix(x)
@@ -116,7 +116,7 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @export
 SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 {
-    if (sum(c(nchar(select), first.k, last.k), na.rm = TRUE) == 0)
+    if (!any(c(nzchar(select), as.integer(first.k), as.integer(last.k)), na.rm = TRUE))
         return(x)
     if (length(dim(x)) < 2)
         return(x)
@@ -142,6 +142,7 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @param use.statistic.attribute Logical; indicates whether the statistic
 #' attribute is used to represent a percentage. For legacy reasons it is off by
 #' default (i.e. 5\% is returned as 0.05)
+#' @importFrom verbs Sum
 #' @export
 SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
                          use.statistic.attribute = FALSE)
@@ -156,14 +157,14 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
 
     if (length(dim(x)) < 2)
 	{
-		if (length(column) > 0 && sum(nchar(column)) > 0 && sum(as.numeric(column), na.rm = TRUE) != 1)
+		if (length(column) > 0 && any(nzchar(column)) && Sum(as.numeric(column)) != 1)
 			warning("Column ", column, " ignored for 1-dimensional table")
         res <- x[indRow]
 
 	} else
     {
 		indCol <- indexSelected(x, "column", as.character(column))
-        if (sum(nchar(column), na.rm = TRUE) == 0)
+        if (!any(nzchar(column), na.rm = TRUE))
         {
             warning("First column was returned as no column was specified")
             indCol <- 1
@@ -173,7 +174,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
             is.pct <- TRUE
     }
     if (return.single.value && is.numeric(res))
-        res <- sum(res, na.rm = TRUE)
+        res <- Sum(res)
     res <- unlist(res)
     if (is.pct)
     {
@@ -206,21 +207,21 @@ indexSelected <- function(x, dim = "row", select = NULL, first.k = NA, last.k = 
     if (max.dim < min.dim)
         warning("Input table has less than ", min.dim, " ", dim, "s.")
 
-    if (sum(nchar(select), na.rm = TRUE) > 0)
+    if (any(nzchar(select), na.rm = TRUE))
         sel.ind <- getMatchIndex(select, dim.names, dim = dim)
     else
         sel.ind <- 1:max.dim
 
     # Do the union of the first and last k row/columns
     # e.g. if user wants to select first and last rows to create summary table
-    if (sum(first.k, na.rm = TRUE) > 0 && sum(last.k, na.rm = TRUE) > 0)
+    if (any(as.integer(first.k), na.rm = TRUE) && any(as.integer(last.k), na.rm = TRUE))
         return(unique(c(First(sel.ind, first.k), Last(sel.ind, last.k))))
 
     # Otherwise use the intersection to restrict number of values
     # e.g. DS-2552
-    if (sum(first.k, na.rm = TRUE) > 0)
+    if (any(as.integer(first.k), na.rm = TRUE))
         sel.ind <- First(sel.ind, first.k)
-    if (sum(last.k, na.rm = TRUE) > 0)
+    if (any(as.integer(last.k), na.rm = TRUE))
         sel.ind <- Last(sel.ind, last.k)
     return(sel.ind)
 }
