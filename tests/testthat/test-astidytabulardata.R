@@ -128,3 +128,31 @@ test_that("AsTidyTabularData: factor input",
     expect_equal(colnames(out), paste0("x"))
     #expect_true(all(out == 0 | out == 1))
 })
+
+test_that("DS-3240: CorrelationMatrix input returns corr. matrix",
+{
+    cm <- structure(list(cor = structure(c(1, 0, 0.15, -0.08, -0.12, 0,
+    1, 0.19, 0.2, 0.1, 0.15, 0.19, 1, 0.09, 0.18, -0.08, 0.2, 0.09,
+    1, 0.07, -0.12, 0.1, 0.18, 0.07, 1), .Dim = c(5L, 5L), .Dimnames = list(
+    c("x", "y", "z", "u", "v"), c("x", "y", "z", "u", "v"))),
+    t = structure(c(Inf, 0.02, 0.86, -0.58, -1.03, 0.02, Inf,
+    1.31, 1.46, 0.7, 0.86, 1.31, Inf, 0.61, 1.53, -0.58, 1.46,
+    0.61, Inf, 0.43, -1.03, 0.7, 1.53, 0.43, Inf), .Dim = c(5L,
+    5L), .Dimnames = list(c("x", "y", "z", "u", "v"), c("x",
+    "y", "z", "u", "v"))), p = structure(c(0, 0.99, 0.4, 0.57,
+    0.31, 0.99, 0, 0.2, 0.15, 0.49, 0.4, 0.2, 0, 0.54, 0.13,
+    0.57, 0.15, 0.54, 0, 0.67, 0.31, 0.49, 0.13, 0.67, 0), .Dim = c(5L,
+    5L), .Dimnames = list(c("x", "y", "z", "u", "v"), c("x",
+    "y", "z", "u", "v"))), standard.errors = structure(c(0, 0.11,
+    0.17, 0.13, 0.12, 0.11, 0, 0.14, 0.14, 0.14, 0.17, 0.14,
+    0, 0.15, 0.12, 0.13, 0.14, 0.15, 0, 0.17, 0.12, 0.14, 0.12,
+    0.17, 0), .Dim = c(5L, 5L), .Dimnames = list(c("x", "y",
+    "z", "u", "v"), c("x", "y", "z", "u", "v"))), colors.min.value = -1,
+    colors.max.value = 1, show.cell.values = "Automatic", row.labels = "Yes",
+    column.labels = "Yes", colors = "RdBu"), class = "CorrelationMatrix",
+    ChartData = structure(c(1, 0, 0.15, -0.08, -0.12, 0, 1, 0.19, 0.2, 0.1, 0.15,
+    0.19, 1, 0.09, 0.18, -0.08, 0.2, 0.09, 1, 0.07, -0.12, 0.1, 0.18, 0.07, 1),
+    .Dim = c(5L, 5L), .Dimnames = list(c("x", "y", "z", "u", "v"),
+    c("x", "y", "z", "u", "v")), assigned.rownames = TRUE))
+    expect_equal(AsTidyTabularData(cm), cm$cor)
+})

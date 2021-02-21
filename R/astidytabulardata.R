@@ -71,7 +71,9 @@ AsTidyTabularData <- function(x, ...)
             x <- do.call(paste0("flatten", n.dim, "DQTable"), list(x))
         }else if (n.dim == 1L)  # convert 1D array to named vector
             x <- setNames(as.numeric(x), dimnames(x)[[1L]])
-    }else
+    }else if (inherits(x, "CorrelationMatrix"))
+        return(x$cor)
+    else
     {
         classes <- paste(class(x), collapse = ", ")
         stop(gettextf("Cannot coerce object of type (%s) to a  tidy table.",
