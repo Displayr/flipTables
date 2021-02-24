@@ -72,8 +72,11 @@ AsTidyTabularData <- function(x, ...)
         }else if (n.dim == 1L)  # convert 1D array to named vector
             x <- setNames(as.numeric(x), dimnames(x)[[1L]])
     }else if (inherits(x, "CorrelationMatrix"))
+    {
+        corr.mat <- x$cor
+        attr(corr.mat, "statistic") <- "Correlation"
         return(x$cor)
-    else
+    }else
     {
         classes <- paste(class(x), collapse = ", ")
         stop(gettextf("Cannot coerce object of type (%s) to a  tidy table.",
