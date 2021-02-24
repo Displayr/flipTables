@@ -75,7 +75,7 @@ AsTidyTabularData <- function(x, ...)
     {
         corr.mat <- x$cor
         attr(corr.mat, "statistic") <- "Correlation"
-        return(x$cor)
+        return(corr.mat)
     }else
     {
         classes <- paste(class(x), collapse = ", ")
