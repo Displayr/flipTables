@@ -154,6 +154,6 @@ test_that("DS-3240: CorrelationMatrix input returns corr. matrix",
     0.19, 1, 0.09, 0.18, -0.08, 0.2, 0.09, 1, 0.07, -0.12, 0.1, 0.18, 0.07, 1),
     .Dim = c(5L, 5L), .Dimnames = list(c("x", "y", "z", "u", "v"),
     c("x", "y", "z", "u", "v")), assigned.rownames = TRUE))
-    expect_equivalent(out <- AsTidyTabularData(cm), cm$cor)
+    expect_equal(out <- AsTidyTabularData(cm), cm$cor, check.attributes = FALSE)
     expect_equal(attr(out, "statistic"), "Correlation")
 })
