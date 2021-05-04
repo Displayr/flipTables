@@ -545,3 +545,11 @@ test_that("Sorting non-numeric data",
     res5 <- SortColumns(df, row = 2)
     expect_equal(colnames(res5), c("Date", "Score", "Name"))
 })
+
+test_that("Check for matches that contain commas",
+{
+    xx <- structure(4:1, .Names = c("E", "D", "C", "A,B"))
+    expect_equal(SelectRows(xx, "A,B,D"),
+           structure(c(1L, 3L), .Dim = 2:1, .Dimnames = list(c("A,B", "D"), NULL)))
+
+})

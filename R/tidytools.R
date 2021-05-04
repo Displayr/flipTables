@@ -387,6 +387,19 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
     if (length(sel.na) > 0)
         warning.msg <- paste0("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
             paste(sel.vec[sel.na], collapse = "','"), "'.")
+
+    # Check for consecutive matches - these are probably incorrectly split up patterns
+    runs <- rle(sel.ind)
+    r.ind <- which(runs$length > 1)
+    if (any(runs$length))
+        for (rri in r.ind)
+        {
+            r.pos <- (sum(runs$lengths[1:rri]) - runs$lengths[rri]) + (1:runs$lengths[rri])
+            merged.patt <- paste(sel.vec[r.pos], collapse = ",")
+            if (any(grepl(gsub(" ", "", merged.patt), gsub(" ", "", x))))
+                sel.ind[r.pos[-1]] <- NA
+        }
+
     sel.ind[sel.ind == 0] <- NA
     sel.ind <- sel.ind[which(!is.na(sel.ind))]
     if (warn && nchar(warning.msg) > 0 && length(sel.ind) == 0)
