@@ -8,7 +8,9 @@
 MergeTables(
   tables,
   direction = c("Side-by-side", "Up-and-down"),
-  nonmatching = c("Keep all", "Matching only")
+  nonmatching = c("Keep all", "Matching only"),
+  override.row.names = "",
+  override.column.names = ""
 )
 
 Merge2Tables(
@@ -23,16 +25,29 @@ Merge2Tables(
 \arguments{
 \item{tables}{A list of tables to merge}
 
-\item{direction}{\code{"Side-by-side"} is similar to \code{\link{cbind}}.
-\code{"Up-and-down"} is similar to \code{\link{rbind}}.}
+\item{direction}{\code{"Side-by-side"} is similar to
+\code{\link{cbind}}.  \code{"Up-and-down"} is similar to
+\code{\link{rbind}}.}
 
-\item{nonmatching}{How to handle non-matching row or column names. These are
-similar to the \code{all.*} arguments in \code{\link{merge}}.
-\code{MergeTables} supports 2 options: \code{"Keep all"} (like \code{all =
-TRUE}) and \code{"Matching only"} (like \code{all = FALSE}).
-\code{Merge2Tables} supports these and a further 2 options: \code{"Keep all
-from first table"} (like \code{all.x = TRUE}) and \code{"Keep all from
-second table"} (like \code{all.y = TRUE}).}
+\item{nonmatching}{How to handle non-matching row or column
+names. These are similar to the \code{all.*} arguments in
+\code{\link{merge}}.  \code{MergeTables} supports 2 options:
+\code{"Keep all"} (like \code{all = TRUE}) and
+\code{"Matching only"} (like \code{all = FALSE}).
+\code{Merge2Tables} supports these and a further 2 options:
+\code{"Keep all from first table"} (like \code{all.x = TRUE})
+and \code{"Keep all from second table"} (like \code{all.y =
+TRUE}).}
+
+\item{override.row.names}{Either a character vector or a single
+string to be parsed by
+\code{\link{ConvertCommaSeparatedStringToVector}}, which will
+override/replace the default row names of the output table.}
+
+\item{override.column.names}{Either a character vector or a single
+string to be parsed by
+\code{\link{ConvertCommaSeparatedStringToVector}}, which will
+override/replace the default column names of the output table.}
 
 \item{left, right}{The tables to merge. These should be vectors, matrices or
 arrays. If the array has 3 dimensions, the first 'plane' of the third
@@ -49,10 +64,11 @@ attempt to match cases based on the row or column names (similar to
 \code{\link{merge}}).
 }
 \details{
-If any table has no names for matching, matching is performed based on the index
-  order with the output retaining the names from any table that does have them.
-  In this case the number of columns of the output (for \code{"Up-and-down"}) is the maximum
-  of the numbers of columns of the inputs.
+If any table has no names for matching, matching is
+    performed based on the index order with the output retaining
+    the names from any table that does have them.  In this case the
+    number of columns of the output (for \code{"Up-and-down"}) is
+    the maximum of the numbers of columns of the inputs.
 }
 \section{Functions}{
 \itemize{

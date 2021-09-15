@@ -270,3 +270,20 @@ test_that("DS-3147: table rownames have newline char. instead of single whitespa
     expect_equal(rownames(out), rownames.expect)
     expect_equal(colnames(out), colnames.expect)
 })
+
+test_that("DS-3521: User can override row and column names of merged table",
+{
+    mat1 <- matrix(1:4, 2, 2, dimnames = list(letters[1:2], LETTERS[1:2]))
+    mat2 <- matrix(0, 2, 2, dimnames = list(c("a", "c"), LETTERS[1:2]))
+    cnames <- "t1-a,t1-b,t2-a,t2-b"
+    merged <- suppressWarnings(MergeTables(list(mat1, mat2), direction = "Side-by-side",
+                          nonmatching = "Keep all", override.column.names = cnames))
+    expect_equal(colnames(merged), flipU::ConvertCommaSeparatedStringToVector(cnames))
+
+    merged <- suppressWarnings(MergeTables(list(mat1, mat2, mat1),
+                          direction = "Up-and-down", override.row.names = 1:6))
+    expect_equal(rownames(merged), as.character(1:6))
+    expect_error(suppressWarnings(MergeTables(list(mat1, mat2, mat1),
+                             direction = "Up-and-down", override.row.names = "1,2,3,4,5")),
+                 "matching the number of rows in the output table (6).", fixed = TRUE)
+})

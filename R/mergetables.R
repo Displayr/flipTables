@@ -6,22 +6,36 @@
 #' \code{\link{merge}}).
 #'
 #' @param tables A list of tables to merge
-#' @param direction \code{"Side-by-side"} is similar to \code{\link{cbind}}.
-#'   \code{"Up-and-down"} is similar to \code{\link{rbind}}.
-#' @param nonmatching How to handle non-matching row or column names. These are
-#'   similar to the \code{all.*} arguments in \code{\link{merge}}.
-#'   \code{MergeTables} supports 2 options: \code{"Keep all"} (like \code{all =
-#'   TRUE}) and \code{"Matching only"} (like \code{all = FALSE}).
-#'   \code{Merge2Tables} supports these and a further 2 options: \code{"Keep all
-#'   from first table"} (like \code{all.x = TRUE}) and \code{"Keep all from
-#'   second table"} (like \code{all.y = TRUE}).
-#' @details If any table has no names for matching, matching is performed based on the index
-#'   order with the output retaining the names from any table that does have them.
-#'   In this case the number of columns of the output (for \code{"Up-and-down"}) is the maximum
-#'   of the numbers of columns of the inputs.
+#' @param direction \code{"Side-by-side"} is similar to
+#'     \code{\link{cbind}}.  \code{"Up-and-down"} is similar to
+#'     \code{\link{rbind}}.
+#' @param nonmatching How to handle non-matching row or column
+#'     names. These are similar to the \code{all.*} arguments in
+#'     \code{\link{merge}}.  \code{MergeTables} supports 2 options:
+#'     \code{"Keep all"} (like \code{all = TRUE}) and
+#'     \code{"Matching only"} (like \code{all = FALSE}).
+#'     \code{Merge2Tables} supports these and a further 2 options:
+#'     \code{"Keep all from first table"} (like \code{all.x = TRUE})
+#'     and \code{"Keep all from second table"} (like \code{all.y =
+#'     TRUE}).
+#' @param override.row.names Either a character vector or a single
+#'     string to be parsed by
+#'     \code{\link{ConvertCommaSeparatedStringToVector}}, which will
+#'     override/replace the default row names of the output table.
+#' @param override.column.names Either a character vector or a single
+#'     string to be parsed by
+#'     \code{\link{ConvertCommaSeparatedStringToVector}}, which will
+#'     override/replace the default column names of the output table.
+#' @details If any table has no names for matching, matching is
+#'     performed based on the index order with the output retaining
+#'     the names from any table that does have them.  In this case the
+#'     number of columns of the output (for \code{"Up-and-down"}) is
+#'     the maximum of the numbers of columns of the inputs.
 #' @export
 MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
-    nonmatching = c("Keep all", "Matching only"))
+                        nonmatching = c("Keep all", "Matching only"),
+                        override.row.names = "",
+                        override.column.names = "")
 {
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
@@ -45,7 +59,8 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     }
     else if (length(tables) == 2)
     {
-        merged <- Merge2Tables(tables[[1]], tables[[2]], direction = direction, nonmatching = nonmatching)
+        merged <- Merge2Tables(tables[[1]], tables[[2]], direction = direction,
+                               nonmatching = nonmatching)
     }
     else
     {
@@ -60,7 +75,13 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
             disambig.names = tmp.names[which(duplicated(tmp.names))])
     }
 
-    merged
+    if (length(override.row.names) > 1 || nzchar(override.row.names))
+        merged <- replaceDimNames(merged, override.row.names, "Row")
+
+    if (length(override.column.names) > 1 || nzchar(override.column.names))
+        merged <- replaceDimNames(merged, override.column.names, "Column")
+
+    return(merged)
 }
 
 #' @describeIn MergeTables Merge two tables.
@@ -70,6 +91,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 #'   3 dimensions in the array.
 #' @param disambig.names Optional vector of column names that should be disambiguated
 #'   using the table name
+#' @importFrom flipU IsRServer
 #' @export
 Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"),
@@ -223,7 +245,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     indR <- which(colnames(right) %in% c(disambig.names, colnames(left)))
     if (length(indL) > 0)
     {
-        if (nchar(left.table.name) == 0)
+        ## Don't warn in Q/Displayr since user can now override row/column names
+        ## using GUI controls in Combine Tables
+        if (nchar(left.table.name) == 0 && !IsRServer())
             warning("Assign name to ", left.name,
                     " by setting 'attr(", left.name,  ", \"name\") <- name'")
         colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
@@ -407,4 +431,24 @@ pad.rows <- function(x, n)
 
     add.n <- n - NROW(x)
     return(padNAs(x, add.n = add.n))
+}
+
+#' @importFrom flipU ConvertCommaSeparatedStringToVector IsRServer
+#' @noRd
+replaceDimNames <- function(tbl, tbl.names, dim.name)
+{
+    idx <- ifelse(dim.name == "Row", 1, 2)
+    dim.length <- dim(tbl)[idx]
+    if (length(tbl.names) == 1L)
+        tbl.names <- ConvertCommaSeparatedStringToVector(tbl.names)
+    if (length(tbl.names) != dim.length)
+    {
+        param.name <- ifelse(IsRServer(), paste0(dim.name, " names"),
+                             paste0("override.", tolower(dim.name), ".names"))
+        stop(sQuote(param.name), " should be a comma-separated list with length ",
+             "matching the number of ", tolower(dim.name), "s in the output table (",
+             dim.length, ").")
+    }
+    dimnames(tbl)[[idx]] <- tbl.names
+    return(tbl)
 }
