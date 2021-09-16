@@ -283,7 +283,10 @@ test_that("DS-3521: User can override row and column names of merged table",
     merged <- suppressWarnings(MergeTables(list(mat1, mat2, mat1),
                           direction = "Up-and-down", override.row.names = 1:6))
     expect_equal(rownames(merged), as.character(1:6))
-    expect_error(suppressWarnings(MergeTables(list(mat1, mat2, mat1),
-                             direction = "Up-and-down", override.row.names = "1,2,3,4,5")),
-                 "matching the number of rows in the output table (6).", fixed = TRUE)
+    merged <- suppressWarnings(MergeTables(list(mat1, mat2, mat1),
+                          direction = "Up-and-down", override.row.names = 1:8))
+    expect_equal(rownames(merged), as.character(1:6))
+    merged <- suppressWarnings(MergeTables(list(mat1, mat2, mat1),
+                          direction = "Up-and-down", override.row.names = 1:4))
+    expect_equal(rownames(merged), c(as.character(1:4), rownames(mat1)))
 })

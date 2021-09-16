@@ -433,21 +433,29 @@ pad.rows <- function(x, n)
     return(padNAs(x, add.n = add.n))
 }
 
+#' Updates the row or column names of a table using a comma-separated list
+#' of names.
+#' @details tbl.names can have length less than the number of rows/columns in
+#' the table to only replace the first 1, 2, ..., length(tbl.names) row/column labels. This
+#' matches the behaviour of the formatting options for autofit tables in Displayr
 #' @importFrom flipU ConvertCommaSeparatedStringToVector IsRServer
 #' @noRd
 replaceDimNames <- function(tbl, tbl.names, dim.name)
 {
     idx <- ifelse(dim.name == "Row", 1, 2)
     dim.length <- dim(tbl)[idx]
-    if (length(tbl.names) == 1L)
+    if (length(tbl.names) == 1L && dim.length != 1L)
         tbl.names <- ConvertCommaSeparatedStringToVector(tbl.names)
-    if (length(tbl.names) != dim.length)
+
+    names.length <- length(tbl.names)
+    if (names.length < dim.length)
     {
-        param.name <- ifelse(IsRServer(), paste0(dim.name, " names"),
-                             paste0("override.", tolower(dim.name), ".names"))
-        stop(sQuote(param.name), " should be a comma-separated list with length ",
-             "matching the number of ", tolower(dim.name), "s in the output table (",
-             dim.length, ").")
+        tnames <- dimnames(tbl)[[idx]]
+        tnames[seq_len(names.length)] <- tbl.names
+        tbl.names <- tnames
+    }else if(names.length > dim.length)
+    {
+        tbl.names <- tbl.names[seq_len(dim.length)]
     }
     dimnames(tbl)[[idx]] <- tbl.names
     return(tbl)
