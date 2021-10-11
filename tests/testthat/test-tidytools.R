@@ -219,6 +219,13 @@ test_that("SelectEntry",
         use.statistic.attribute = TRUE), "Only the first statistic 'Column %' used")
     expect_equal(attr(res, "statistic"), "%")
     expect_error(SelectEntry(dat[,1], "Pepsi", "Pepsi"), "Table does not contain row")
+    arr.test <- setNames(1:10, letters[1:10])
+    expect_warning(SelectEntry(arr.test, 1:5, column = "2"),
+                   "Column 2 ignored for a 1-dimensional table")
+    expect_warning(SelectEntry(arr.test, 1:5, column = "B"),
+                   "Column B ignored for a 1-dimensional table")
+    expect_setequal(capture_warnings(SelectEntry(arr.test, 1:5, column = c("B", NA))),
+                    c("NAs introduced by coercion", "Columns B, NA ignored for a 1-dimensional table"))
 })
 
 test_that("Sort Rows",

@@ -156,14 +156,17 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
               (length(dnm) > 2 && grepl("%)?$", dnm[[3]][1]))
 
     if (length(dim(x)) < 2)
-	{
-		if (length(column) > 0 && any(nzchar(column)) && Sum(as.numeric(column)) != 1)
-			warning("Column ", column, " ignored for 1-dimensional table")
+    {
+        col.requested <- length(column) > 0 && any(nzchar(column))
+        if (col.requested && all(as.numeric(column) != 1L, na.rm = TRUE))
+            warning("Column", ngettext(length(column), paste0(" ", column, collapse = ""),
+                                       paste("s", paste0(column, collapse = ", "))),
+                    " ignored for a 1-dimensional table")
         res <- x[indRow]
 
-	} else
+    } else
     {
-		indCol <- indexSelected(x, "column", as.character(column))
+        indCol <- indexSelected(x, "column", as.character(column))
         if (!any(nzchar(column), na.rm = TRUE))
         {
             warning("First column was returned as no column was specified")
