@@ -560,3 +560,11 @@ test_that("Check for matches that contain commas",
            structure(c(1L, 3L), .Dim = 2:1, .Dimnames = list(c("A,B", "D"), NULL)))
 
 })
+
+test_that("Check that partial matches are only used for unmatched rownames",
+{
+    xx <- structure(4:1, .Names = c("Blue", "Dark Red", "Green Blue", "Yellow"))
+    res <- expect_warning(SelectRows(xx, "Red,Dark Red,Blue"),
+                "Table does not contain row 'Red'", fixed = TRUE)
+    expect_equal(res, structure(3:4, .Dim = 2:1, .Dimnames = list(c("Dark Red", "Blue"), NULL)))
+})

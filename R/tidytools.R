@@ -429,9 +429,21 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
     # Looking for string-to-string match
     p.list <- TrimWhitespace(p.list)
     x <- TrimWhitespace(x)
-    ind.as.name <- charmatch(p.list, x)
+    ind.as.name <- match(p.list, x)
+    exact.matches <- unique(ind.as.name[!is.na(ind.as.name)])
+
+    # Check for partial matches in unmatched rownames
+    .partialmatches <- function(p, x, exact.ind)
+    {
+        m <- charmatch(p, x)
+        m[which(m %in% exact.ind)] <- NA
+        return(m)
+    }
     retry <- which(!is.finite(ind.as.name))
-    ind.as.name[retry] <- charmatch(stri_reverse(p.list[retry]), stri_reverse(x))
+    ind.as.name[retry] <- .partialmatches(p.list[retry], x, exact.matches)
+    retry <- which(!is.finite(ind.as.name))
+    ind.as.name[retry] <- .partialmatches(stri_reverse(p.list[retry]),
+            stri_reverse(x), exact.matches)
 
     # Give warnings if pattern can be used as both an index (numeric) or a name
     ind <- suppressWarnings(as.numeric(p.list))
