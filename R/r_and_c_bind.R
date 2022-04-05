@@ -20,9 +20,11 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     bind <- if (rows) rbind else cbind
     # reset names of vectors which have been lost and are used as rownames.
     object.names <- as.character(substitute(list(...)))[-1L]
-    named.objects <- sapply(object.names, exists)
-    names(tables)[named.objects] <- object.names[named.objects]
-    bind.tables <- suppressWarnings(do.call(bind, tables))
+    ## Can error with 'variable names limited to 10000 bytes'
+    ##  in some cases when Rbind/Cbind called via do.call
+    named.objects <- try(sapply(object.names, exists), TRUE)
+    if (!inherits(named.objects, "try-error"))
+        names(tables)[named.objects] <- object.names[named.objects]
 
     tables <- list(...)   # reset to full size matrices
     tables <- lapply(tables, oneDimensionalArrayToVector)
