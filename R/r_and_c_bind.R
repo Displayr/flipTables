@@ -25,6 +25,7 @@ rbindAndCbindWithLabels <- function(..., rows, keep.all)
     named.objects <- try(sapply(object.names, exists), TRUE)
     if (!inherits(named.objects, "try-error"))
         names(tables)[named.objects] <- object.names[named.objects]
+    bind.tables <- suppressWarnings(do.call(bind, tables))
 
     tables <- list(...)   # reset to full size matrices
     tables <- lapply(tables, oneDimensionalArrayToVector)
