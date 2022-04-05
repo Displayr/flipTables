@@ -40,15 +40,27 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
-    # Checking for column names
+    ## Checking for column names
     if (!is.null(names(tables)))
     {
-        for (i in 1:length(tables))
+        dims <- lapply(tables, dim)
+        ## DS-3041: fix rbind'ing when all inputs are vectors
+        if (direction == "Up-and-down" && all(vapply(dims, length, 0L) < 2))
         {
-            if (length(dim(tables[[i]])) < 2)
-                tables[[i]] <- as.matrix(tables[[i]])
-            if (is.null(colnames(tables[[i]])) && ncol(tables[[i]]) == 1)
-                colnames(tables[[i]]) <- names(tables)[i]
+            for (i in seq_along(tables))
+            {
+                tables[[i]] <- t(tables[[i]])
+                rownames(tables[[i]]) <- names(tables)[i]
+            }
+        }else
+        {
+            for (i in 1:length(tables))
+            {
+                if (length(dims[[i]]) < 2)
+                    tables[[i]] <- as.matrix(tables[[i]])
+                if (is.null(colnames(tables[[i]])) && ncol(tables[[i]]) == 1)
+                    colnames(tables[[i]]) <- names(tables)[i]
+            }
         }
     }
 
