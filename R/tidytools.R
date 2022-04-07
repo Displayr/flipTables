@@ -246,7 +246,10 @@ indexSortedByValues <- function(x,
     if (is.character(val.incl) &&
         all(!is.na(suppressWarnings(as.numeric(val.incl[!is.na(val.incl)])))))
         val.incl <- as.numeric(val.incl)
-    ord.ind <- ind.incl[order(val.incl, decreasing = decreasing)]
+    if (is.list(val.incl))
+        val.incl <- unlist(val.incl)
+    tmp.ord <- order(val.incl, decreasing = decreasing)
+    ord.ind <- ind.incl[tmp.ord]
     return(c(ord.ind, ind.excl))
 }
 
