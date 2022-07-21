@@ -108,7 +108,7 @@ AsTidyTabularData <- function(x, ...)
 #' @noRd
 isQTable <- function(x)
 {
-    all(c("questions", "name") %in% names(attributes(x)))
+    all(c("questions", "name") %in% names(attributes(x))) || "qtable" %in% tolower(class(x))
 }
 
 ## Unused and Incomplete!!!
