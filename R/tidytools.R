@@ -151,8 +151,10 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
 
     stat <- attr(x, "statistic")
     qst <- attr(x, "questions")
+    oqst <- attr(x, "original.questions")
+    is.qtable <- !is.null(oqst) || !is.null(qst)
     dnm <- dimnames(x)
-    is.pct <- (!is.null(stat) && !is.null(qst) && grepl("%)?$", stat)) ||
+    is.pct <- (!is.null(stat) && is.qtable && grepl("%)?$", stat)) ||
               (length(dnm) > 2 && grepl("%)?$", dnm[[3]][1]))
 
     if (length(dim(x)) < 2)
