@@ -34,7 +34,7 @@ convertToMatrix <- function(x)
 convertTo3dQTable <- function(x)
 {
     if (!isQTable(x))           # ignore if not Q Table
-       return(x)
+        return(x)
     if (isTableWithStats(x))
         return(x)               # no further conversion for 2d table
 
@@ -46,11 +46,10 @@ convertTo3dQTable <- function(x)
 
     if (!has.only.one.stat && n.dim > 1)
     {
-        res <- array(x, c(dims[1], 1, dims[2]))
-        dimnames(res) <- list(dim.names[[1]], NULL, dim.names[[2]])
-        return(CopyAttributes(res, x))
+        attr(x, "dim") <- c(dims[1L], 1L, dims[2L])
+        attr(x, "dimnames") <- list(dim.names[[1L]], NULL, dim.names[[2L]])
     }
-    return(x)
+    x
 }
 
 
