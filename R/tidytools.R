@@ -27,7 +27,10 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
 convertToMatrix <- function(x)
 {
     res <- as.matrix(x)
-    return(CopyAttributes(res, x))
+    # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
+    if (!inherits(x, "QTable"))
+        res <- CopyAttributes(res, x)
+    res
 }
 
 # Converts 1-d Q Table + statistics in to 3d array
