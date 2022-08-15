@@ -1,10 +1,10 @@
 Package: flipTables
 Type: Package
 Title: Package for handling tables and related objects
-Version: 2.8.2
+Version: 2.8.3
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
-Description: Package for handling tables and related objects.	
+Description: Package for handling tables and related objects.
 License: GPL-3
 Imports:
     stringr,
