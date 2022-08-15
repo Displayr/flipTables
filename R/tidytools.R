@@ -4,9 +4,9 @@
 extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.all.stats = TRUE)
 {
     if (isQTable(x) && is.null(attr(x, "statistic")) && length(dim(x)) == 2 && keep.all.stats)
-        res <- x[row.index,, drop = FALSE]
-    else if(isTableWithStats(x) && keep.all.stats)
-        res <- x[row.index, col.index,, drop = FALSE]
+        res <- x[row.index, , drop = FALSE]
+    else if (isTableWithStats(x) && keep.all.stats)
+        res <- x[row.index, col.index, , drop = FALSE]
     else if (isTableWithStats(x) && !keep.all.stats)
     {
         warning("Only the first statistic '", dimnames(x)[[3]][1], "' used.")
@@ -15,7 +15,10 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
     }
     else
         res <- x[row.index, col.index, drop = FALSE]
-    return(CopyAttributes(res, x))
+    # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
+    if (!inherits(res, "QTable"))
+        res <- CopyAttributes(res, x)
+    return(res)
 }
 
 # Converts vector or 1-d array into matrix
