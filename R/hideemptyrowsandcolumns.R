@@ -26,7 +26,10 @@ HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
         idx <- GetNonEmptyElements(x, FALSE, is.percent)
         if (!length(idx))
             stop("Hiding empty elements gives empty input vector.")
-        return(CopyAttributes(x[idx, drop  = FALSE], x))
+        y <- x[idx, drop  = FALSE]
+        if (!inherits(x, "QTable"))
+            y <- CopyAttributes(y, x)
+        return(y)
     }
     idx <- GetNonEmptyRowsAndColumns(x, FALSE, is.percent = is.percent)
     if (!length(idx[[1L]]) || !length(idx[[2L]]))
@@ -86,7 +89,10 @@ HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
         idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
         if (!length(idx))
             stop("Hiding empty elements gives empty input vector.")
-        return(CopyAttributes(x[idx, drop  = FALSE], x))
+        y <- x[idx, drop  = FALSE]
+        if (!inherits(x, "QTable"))
+            y <- CopyAttributes(y, x)
+        return(y)
     }
     idx <- getNonEmptyIndices(x, 1, FALSE, remove.zeros, first.stat.only)
     if (!length(idx))

@@ -28,11 +28,11 @@ RemoveRowsAndOrColumns <- function(x,
     if (is.null(row.names.to.remove) && is.null(column.names.to.remove))
         return(x)
 
-    if(inherits(x, "list"))
+    if (inherits(x, "list"))
     {
         # Removing the elements from the list.
         if (!is.null(nm <- names(x)))
-            x <- RemoveAt(x, at = column.names.to.remove, ignore.case = TRUE, split = split)#x[RemoveCharacterElements(nm, column.names.to.remove)]
+            x <- RemoveAt(x, at = column.names.to.remove, ignore.case = TRUE, split = split)
 
         # Applying remove to the elements int the list.
         return(lapply(x, RemoveRowsAndOrColumns, row.names.to.remove = row.names.to.remove,
@@ -42,9 +42,6 @@ RemoveRowsAndOrColumns <- function(x,
     # Vectors and 1D arrays
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
         return(RemoveAt(x, row.names.to.remove, split = split))
-    # if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
-    #     return(RemoveByName(x, list(row.names.to.remove,
-    #                                 column.names.to.remove), sep = split))
 
     out <- RemoveAt(x, list(row.names.to.remove, column.names.to.remove), 1:2, TRUE, split)
     if (length(out) == 0 || prod(dim(out)) == 0)
@@ -54,5 +51,7 @@ RemoveRowsAndOrColumns <- function(x,
         if (dim(out)[2] == 0)
             stop("Removing column '", paste(colnames(x), collapse = "', '"), "' gives empty input matrix\n")
     }
-    CopyAttributes(out, x)
+    if (!inherits(x, "QTable"))
+        out <- CopyAttributes(out, x)
+    out
 }
