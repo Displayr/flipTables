@@ -52,7 +52,7 @@ RemoveRowsAndOrColumns <- function(x,
             stop("Removing column '", paste(colnames(x), collapse = "', '"), "' gives empty input matrix\n")
     }
     # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
-    if (!inherits(x, "QTable"))
+    if (!inherits(x, "qTable"))
         out <- CopyAttributes(out, x)
     out
 }
