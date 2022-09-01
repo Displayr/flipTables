@@ -290,3 +290,22 @@ test_that("DS-3521: User can override row and column names of merged table",
                           direction = "Up-and-down", override.row.names = 1:4))
     expect_equal(rownames(merged), c(as.character(1:4), rownames(mat1)))
 })
+
+test_that("DS-3831: Deduce name attribute correctly", {
+    df1 <- data.frame(A = runif(10), B = runif(10))
+    table2 <- array(runif(10), dim = c(10, 2), dimnames = list(1:10, c("B", "C")))
+    merged.out <- data.frame(df1, table2)
+    names(merged.out) <- c("A", "tables[[1]] - B", "B", "C")
+    ## Warning only present if not used on the RServer
+    args <- list(list(tab1 = df1, tab2 = table2), direction = "Side-by-side")
+    expect_warning(out <- do.call(MergeTables, args),
+                   "Assign name to tables[[1]] by setting 'attr(tables[[1]], \"name\") <- name",
+                   fixed = TRUE)
+    ## Expect warning if on R Server
+    expect_warning(r.server.out <- with_mock(IsRServer = function(x) TRUE,
+                                             do.call(MergeTables, args),
+                                             .env = "flipTables"),
+                   NA)
+    expect_equal(out, r.server.out)
+    expect_equal(out, merged.out)
+})

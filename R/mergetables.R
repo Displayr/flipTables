@@ -113,9 +113,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     right.name <- deparse(substitute(right))
     left.table.name <- ""
     right.table.name <- ""
-    if (!is.null(attr(left, "name")))
+    if (!is.null(attr(left, "name", exact = TRUE)))
         left.table.name <- left.name <- attr(left, "name")
-    if (!is.null(attr(right, "name")))
+    if (!is.null(attr(right, "name", exact = TRUE)))
         right.table.name <- right.name <- attr(right, "name")
 
     left <- to.matrix(left, direction)
@@ -259,7 +259,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     {
         ## Don't warn in Q/Displayr since user can now override row/column names
         ## using GUI controls in Combine Tables
-        if (nchar(left.table.name) == 0 && !IsRServer())
+        if (!any(nzchar(left.table.name)) && !IsRServer())
             warning("Assign name to ", left.name,
                     " by setting 'attr(", left.name,  ", \"name\") <- name'")
         colnames(left)[indL] <- paste0(left.name, " - ", colnames(left)[indL])
