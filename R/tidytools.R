@@ -1,9 +1,10 @@
 # Function to extract rows/columns from array
 # It handles both 2d matrices and 3d arrays
 # Will always try to copy attributes
+#' @importFrom flipU IsQTable
 extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.all.stats = TRUE)
 {
-    if (isQTable(x) && is.null(attr(x, "statistic")) && length(dim(x)) == 2 && keep.all.stats)
+    if (IsQTable(x) && is.null(attr(x, "statistic")) && length(dim(x)) == 2 && keep.all.stats)
         res <- x[row.index, , drop = FALSE]
     else if (isTableWithStats(x) && keep.all.stats)
         res <- x[row.index, col.index, , drop = FALSE]
@@ -31,9 +32,10 @@ convertToMatrix <- function(x)
 }
 
 # Converts 1-d Q Table + statistics in to 3d array
+#' @importFrom flipU IsQTable
 convertTo3dQTable <- function(x)
 {
-    if (!isQTable(x))           # ignore if not Q Table
+    if (!IsQTable(x))           # ignore if not Q Table
        return(x)
     if (isTableWithStats(x))
         return(x)               # no further conversion for 2d table

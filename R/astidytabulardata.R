@@ -17,13 +17,14 @@
 #'     variables (with a warning) using
 #'     \code{\link[flipTransformations]{AsNumeric}}.
 #' @seealso \code{\link[flipTransformations]{AsNumeric}}
+#' @importFrom flipU IsQTable
 #' @export
 AsTidyTabularData <- function(x, ...)
 {
     old.attrs <- attributes(x)
     old.attrs <- old.attrs[!names(old.attrs) %in% c("dimnames", "dim", "row.names",
                                                     "names", "class")]
-    if (isQTable(x))
+    if (IsQTable(x))
     {
         x <- qTableToTidyTable(x)
         if (!is.null(attr(x, "statistic")))
@@ -95,32 +96,6 @@ AsTidyTabularData <- function(x, ...)
     x
 }
 
-#' Check if an object is a QTable
-#'
-#' Looks for attributes \code{"name"},
-#' and \code{"questions"} to determine if the object is a
-#' table created by \code{Q}
-#' @param x an R object
-#' @return logical; is \code{x} a \code{QTable}
-#' @note An attribute \code{"statistic"} is not guaranteed to be present, as
-#' the names of the statistics computed may be present in the dimnames
-#' @keywords internal
-#' @noRd
-isQTable <- function(x)
-{
-    all(c("questions", "name") %in% names(attributes(x))) || all(c("original.questions", "name") %in% names(attributes(x)))
-}
-
-## Unused and Incomplete!!!
-## .valid.stats <- c("Average", "Standard Deviation", "Minimum", "5th Percentile", "25th Percentile",
-##                   "Median", "75th Percentile", "95th Percentile", "Maximum", "Mode",
-##                   "Trimmed Average", "Interquartile Range", "Sum", "% Share", "Column Sample Size",
-##                   "Sample Size", "Missing Count", "Effective Sample Size",
-##                   "Weighted Column Sample Size", "Weighted Sample Size", "t-Statistic",
-##                   "d.f.", "z-Statistic", "Standard Error", "p", "Corrected p",
-##                   "Multiple Comparison Adjustment", "Not Duplicate", "Column Names",
-##                   "Columns Compared", "Column Comparisons")
-
 #' Converts a QTable to a tidy table
 #' @param x a QTable (an array with attributes \code{"name"}, \code{"statistic"},
 #' and \code{"questions"} and named dimensions)
@@ -129,10 +104,11 @@ isQTable <- function(x)
 #' @return a matrix or vector with the same attributes (aside from possibly modified
 #' dimensions and \code{dimnames}
 #' @noRd
+#' @importFrom flipU IsQTable
 #' @keywords internal
 qTableToTidyTable <- function(x)
 {
-   stopifnot(isQTable(x))
+   stopifnot(IsQTable(x))
    dims <- dim(x)
    n.dim <- length(dims)
    dim.names <- dimnames(x)

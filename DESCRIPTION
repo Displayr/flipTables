@@ -14,7 +14,7 @@ Imports:
     ca,
     flipTime (>= 1.2.1),
     flipTransformations (>= 1.1.0),
-    flipU (>= 1.0.0),
+    flipU (>= 1.5.5),
     verbs
 LazyData: TRUE
 RoxygenNote: 7.1.1
