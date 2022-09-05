@@ -46,6 +46,7 @@
 #' rownames of the \emph{transposed} table, as should
 #' \code{col.names.to.remove}
 #' @return A \strong{named} matrix or vector; a tidy version of \code{x}.
+#' @importFrom flipU IsQTable
 #' @export
 TidyTabularData <- function(
                             x,
@@ -61,7 +62,7 @@ TidyTabularData <- function(
         x <- processDates(x, date)
 
     ## if not given a numeric vector or matrix or dates, try to coerce to one
-    if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || isQTable(x))
+    if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || IsQTable(x))
         x <- AsTidyTabularData(x, ...)
 
     if (!is.data.frame(x))
@@ -189,5 +190,3 @@ processDates <- function(x, date = NULL)
     names(x) <- date
     x
 }
-
-

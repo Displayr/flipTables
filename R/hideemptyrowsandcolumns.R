@@ -124,9 +124,10 @@ HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 }
 
 # Similar to GetNonEmptyRowsAndColumns but only looks in 1 direction
+#' @importFrom flipU IsQTable
 getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NULL, first.stat.only = TRUE)
 {
-    if (first.stat.only && isQTable(x) && length(dim(x)) > 1)
+    if (first.stat.only && IsQTable(x) && length(dim(x)) > 1)
        x <- GetFirstStat(x)
     if (is.character(x))
         out <- which(apply(x, margin, function(x) any(nzchar(x))))
