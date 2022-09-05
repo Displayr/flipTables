@@ -44,8 +44,9 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     if (!is.null(names(tables)))
     {
         dims <- lapply(tables, dim)
+        dim.lengths <- lengths(dims)
         ## DS-3041: fix rbind'ing when all inputs are vectors
-        if (direction == "Up-and-down" && all(vapply(dims, length, 0L) < 2))
+        if (direction == "Up-and-down" && all(dim.lengths < 2))
         {
             for (i in seq_along(tables))
             {
@@ -54,7 +55,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
             }
         }else
         {
-            for (i in 1:length(tables))
+            for (i in seq_along(tables))
             {
                 if (length(dims[[i]]) < 2)
                     tables[[i]] <- as.matrix(tables[[i]])
@@ -77,9 +78,9 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
     else
     {
         if (direction == "Up-and-down")
-            tmp.names <- unlist(lapply(tables, function(x){rownames(x)}))
+            tmp.names <- unlist(lapply(tables, rownames))
         else
-            tmp.names <- unlist(lapply(tables, function(x){attr(x, "statistic")}))
+            tmp.names <- unlist(lapply(tables, attr, "statistic"))
 
         merged <- Merge2Tables(tables[[1]],
             Recall(tables[-1], direction = direction, nonmatching = nonmatching),
