@@ -612,3 +612,73 @@ test_that("DS-3886: Only CopyAttributes if not a Q Table", {
     class(expected.tab.as.mat) <- c("qTable", "matrix", "array")
     expect_equal(convertToMatrix(single.dim.table), expected.tab.as.mat)
 })
+
+test_that("DS-3886: Conversion to 3d table", {
+    vals <- c(`15-18` = 9.91, `19 to 24` = 17.39, `25 to 29` = 11.00, `30 to 34` = 14.63,
+              `35 to 39` = 16.01, `40 to 44` = 17.06, `45 to 49` = 13.99, NET = 100)
+    q.stat <- data.frame(significancearrowratio = c(1, 1, 1, 0, 0.58, 1, 0, 1),
+                         significancedirection = c("Down", "Up", "Down", "None", "Up", "Up", "None", "Up"),
+                         significancefontsizemultiplier = c(0.20, 4.89, 0.20, 1, 3.29, 4.89, 1, 4.89),
+                         significanceissignificant = as.logical(c(1L, 1L, 1L, 0L, 1L, 1L, 0L, 1L)),
+                         zstatistic = c(-8.70, 6.18, -6.53, 0.68, 3.43, 5.52, -0.58, 170.63),
+                         pcorrected = c(0, 0, 0, 0.69, 0.0008, 0, 0.78, 0))
+    single.dim.table <- structure(vals,
+        statistic = "%",
+        dim = 8L,
+        dimnames = list(names(vals)),
+        class = c("array", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(),
+        span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    multi.stat.1d.table <- structure(c(vals, rep(500L, length(vals))),
+        dim = c(length(vals), 2L),
+        dimnames = list(names(vals), c("%", "Sample size")),
+        class = c("array", "matrix", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(),
+        span = list(row = data.frame(names(vals), fix.empty.names = FALSE),
+                    column = data.frame(c("%", "Sample size"), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    output.1d.multi.stat <- convertTo3dQTable(multi.stat.1d.table)
+    expect_equal(as.vector(output.1d.multi.stat), as.vector(multi.stat.1d.table))
+    original.attributes <- attributes(multi.stat.1d.table)
+    output.attributes <- attributes(output.1d.multi.stat)
+    expect_equal(output.attributes[["dim"]], c(8L, 1L, 2L))
+    expect_equal(output.attributes[["dimnames"]],
+                 append(dimnames(output.1d.multi.stat), NULL, 1L))
+    output.q.stat <- output.attributes[["QStatisticsTestingInfo"]]
+    original.q.stat <- original.attributes[["QStatisticsTestingInfo"]]
+    expect_true(all(c("Row", "Column") %in% names(output.q.stat)))
+    expect_equal(output.q.stat[["Row"]], rownames(multi.stat.1d.table))
+    expect_true(all(output.q.stat[["Column"]] == 1))
+    output.q.stat <- output.q.stat[!names(output.q.stat) %in% c("Row", "Column")]
+    expect_equal(output.q.stat, original.q.stat)
+    attr.to.ignore <- c("dim", "dimnames", "class", "QStatisticsTestingInfo")
+    output.attr.names <- names(output.attributes)
+    original.attr.names <- names(original.attributes)
+    expect_setequal(output.attr.names, original.attr.names)
+    original.attr.names <- original.attr.names
+    output.attributes <- output.attributes[!output.attr.names %in% attr.to.ignore]
+    original.attributes <- original.attributes[!original.attr.names %in% attr.to.ignore]
+    output.attributes <- output.attributes[names(original.attributes)]
+    expect_equal(output.attributes, original.attributes)
+})

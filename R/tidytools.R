@@ -45,18 +45,27 @@ convertTo3dQTable <- function(x)
     if (!IsQTable(x))           # ignore if not Q Table
         return(x)
     if (isTableWithStats(x))
-        return(x)               # no further conversion for 2d table
-
+        return(x)               # no further conversion for 2d table with stats
+    # Tables here should be a matrix or 1d array
     dims <- dim(x)
     n.dim <- length(dims)
     dim.names <- dimnames(x)
     stat <- attr(x, "statistic")
     has.only.one.stat <- !is.null(stat)
 
-    if (!has.only.one.stat && n.dim > 1)
+    if (!has.only.one.stat && n.dim > 1) # Matrix case
     {
         attr(x, "dim") <- c(dims[1L], 1L, dims[2L])
-        attr(x, "dimnames") <- list(dim.names[[1L]], NULL, dim.names[[2L]])
+        attr(x, "dimnames") <- list(dim.names[[1L]], 1, dim.names[[2L]])
+        names(attr(x, "dimnames")) <- c("Row", "Column", "Statistic")
+        is.q.table.class <- inherits(x, "qTable")
+        q.stat.info <- attr(x, "QStatisticsTestingInfo")
+        if (is.q.table.class && !is.null(q.stat.info))
+        {
+            q.stat.info[["Row"]] <- dim.names[[1L]]
+            q.stat.info[["Column"]] <- 1
+            attr(x, "QStatisticsTestingInfo") <- q.stat.info
+        }
     }
     x
 }
