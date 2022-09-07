@@ -185,6 +185,10 @@ test_that("Select Columns",
     res <- SelectColumns(dat, last.k = 4)
     expect_equal(colnames(res), c("50 to 54", "55 to 64", "65 or more", "NET"))
     expect_equal(attr(res, "statistic"), "Total %")
+    # Edge cases
+    expect_equal(SelectColumns(array1d), array1d)
+    expect_equal(SelectColumns(tabWithN, select = NULL), tabWithN)
+    expect_equal(SelectColumns(tabWithN, select = ""), tabWithN)
 })
 
 test_that("SelectEntry",
@@ -307,6 +311,7 @@ test_that("Reverse rows and columns",
     expect_equal(dim(res), dim(tabWithN))
     expect_equal(colnames(res), rev(colnames(tabWithN)))
     expect_equal(dimnames(res)[[3]], dimnames(tabWithN)[[3]])
+    expect_equal(ReverseColumns(array1d), array1d)
 })
 
 displayr1d <- structure(c(12.375, 11.75, 10.375, 11.375, 11.625, 7.875, 11.875,
