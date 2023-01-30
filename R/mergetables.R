@@ -129,11 +129,15 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
 
     if (length(dim(left)) == 3) {
         warning("'", left.name, "' contains multiple statistics. Only using the first statistic.")
+        tmpstat <- dimnames(left)[[3]][1]
         left <- left[, , 1]
+        attr(left, "statistic") <- tmpstat
     }
     if (length(dim(right)) == 3) {
         warning("'", right.name, "' contains multiple statistics. Only using the first statistic.")
+        tmpstat <- dimnames(right)[[3]][1]
         right <- right[, , 1]
+        attr(right, "statistic") <- tmpstat
     }
 
     .makeMatrix <- function(x, statistic) {
@@ -313,6 +317,8 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     }
     if (direction == "Up-and-down" || is.bindable(left, right))
         merged <- as.matrix(merged)
+    if (isTRUE(attr(left, "statistic") == attr(right, "statistic")))
+        attr(merged, "statistic") <- attr(left, "statistic")
     return(merged)
 }
 
