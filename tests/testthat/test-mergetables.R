@@ -309,3 +309,68 @@ test_that("DS-3831: Deduce name attribute correctly", {
     expect_equal(out, r.server.out)
     expect_equal(out, merged.out)
 })
+
+inputtables <- list(table.Income.by.Gender = structure(c(2.75482093663912, 6.06060606060606,
+                         12.6721763085399, 18.4573002754821, 24.7933884297521, 15.9779614325069,
+                         6.06060606060606, 8.26446280991736, 4.95867768595041, 100, 3.77906976744186,
+                         15.9883720930233, 7.84883720930233, 18.0232558139535, 19.7674418604651,
+                         13.0813953488372, 10.7558139534884, 4.06976744186047, 6.68604651162791,
+                         100), statistic = "Column %", dim = c(10L, 2L), dimnames = list(
+                         c("Less than $15,000", "$15,001 to $30,000", "$30,001 to $45,000",
+                           "$45,001 to $60,000", "$60,001 to $90,000", "$90,001 to $120,000",
+                           "$120,001 to $150,000", "$150,001 to $200,000", "$200,001 or more",
+                           "NET"), c("Male", "Female")), class = c("matrix", "array",
+                           "QTable"), dimnets = list(10L, integer(0)), dimduplicates = list(
+                               10L, integer(0)), span = list(rows = structure(list(c("Less than $15,000",
+                             "$15,001 to $30,000", "$30,001 to $45,000", "$45,001 to $60,000",
+                             "$60,001 to $90,000", "$90,001 to $120,000", "$120,001 to $150,000",
+                             "$150,001 to $200,000", "$200,001 or more", "NET")), class = "data.frame", names = "", row.names = c(NA,
+                              10L)), columns = structure(list(c("Male", "Female")), class = "data.frame", names = "", row.names = 1:2)), basedescriptiontext = "sample size = 707; total sample size = 800; 93 missing", basedescription = list(
+                              Minimum = 707L, Maximum = 707L, Range = FALSE, Total = 800L,
+                              Missing = 93L, EffectiveSampleSize = 707L, EffectiveSampleSizeProportion = 100,
+                              FilteredProportion = 0), QStatisticsTestingInfo = structure(list(
+                              significancearrowratio = structure(c(0, 0, 0.74293059125964,
+                           0.74293059125964, 0.246786632390746, 0.246786632390746, 0,
+                           0, 0, 0, 0, 0, 0.246786632390746, 0.246786632390746, 0.246786632390746,
+                           0.246786632390746, 0, 0, 0, 0), dim = 20L), significancedirection = structure(c("None",
+                           "None", "Down", "Up", "Up", "Down", "None", "None", "None",
+                           "None", "None", "None", "Down", "Up", "Up", "Down", "None",
+                           "None", "None", "None"), dim = 20L), significancefontsizemultiplier = structure(c(1,
+                             1, 0.25706940874036, 3.89, 1.96, 0.510204081632653, 1, 1,
+                             1, 1, 1, 1, 0.510204081632653, 1.96, 1.96, 0.510204081632653,
+                             1, 1, 1, 1), dim = 20L), significanceissignificant = structure(c(FALSE,
+                          FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE,
+                          FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE,
+                          FALSE), dim = 20L), zstatistic = structure(c(-0.767283305061572,
+                           0.767283305061572, -4.23524108526787, 4.23524108526787, 2.10660920367076,
+                           -2.10660920367076, 0.14935428437108, -0.14935428437108, 1.60341297009475,
+                           -1.60341297009475, 1.09116040968194, -1.09116040968194, -2.25623098184504,
+                           2.25623098184504, 2.30759486962053, -2.30759486962053, -0.982196258093232,
+                           0.982196258093232, NaN, NaN), dim = 20L), pcorrected = structure(c(0.442913092343004,
+                              0.442913092343004, 0.0000228306627828578, 0.0000228306627828578,
+                              0.0351514682974756, 0.0351514682974756, 0.881274082835059,
+                              0.881274082835059, 0.108843509396061, 0.108843509396061,
+                              0.275202305069102, 0.275202305069102, 0.0240561692086175,
+                              0.0240561692086175, 0.0210216801333983, 0.0210216801333983,
+                              0.326003170694519, 0.326003170694519, NaN, NaN), dim = 20L)), class = "data.frame", row.names = c(NA,
+                            20L)), questiontypes = c("PickOne", "PickOne"), footerhtml = "Income by Gender&lt;br /&gt;sample size = 707; total sample size = 800; 93 missing", name = "table.Income.by.Gender", questions = c("Income",
+                              "Gender [Cola Tracking - January to December - Copy.sav]")),
+                        table.output = structure(c(2.91, 5.82, 13.09, 18.91, 25.45,
+                        15.27, 5.45, 8.36, 4.73, 3.91, 15.23, 8.2, 17.19, 19.53,
+                        13.28, 11.72, 4.3, 6.64), dim = c(9L, 2L), dimnames = list(
+                        c("Less than $15,000", "$15,001 to $30,000", "$30,001 to $45,000",
+                        "$45,001 to $60,000", "$60,001 to $90,000", "$90,001 to $120,000",
+                        "$120,001 to $150,000", "$150,001 to $200,000", "$200,001 or more"
+                        ), c("Male", "Female")), statistic = "Column %"))
+
+test_that("Cell statistics are preserved",
+{
+    merged <- MergeTables(inputtables)
+    expect_equal(attr(merged, "statistic"), "Column %")
+
+    expect_warning(merged_multistat <- Merge2Tables(left.multistat, right.multistat))
+    expect_equal(attr(merged_multistat, "statistic"), "Statistic 1")
+
+    expect_warning(merged_mixed <- MergeTables(list(left.multistat, right)))
+    expect_equal(attr(merged_mixed, "statistic"), NULL)
+})
