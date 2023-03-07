@@ -392,7 +392,10 @@ SortColumns <- function(x,
 # warn = FALSE is used by indexSortedValues when no error/warning is required
 getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
+    pattern.old <- pattern
     pattern <- as.character(pattern)
+    if (!is.null(attr(pattern.old, "is.control")))
+        attr(pattern, "is.control") <- attr(pattern.old, "is.control")
     sel.vec <- if (length(pattern) > 1) pattern else TextAsVector(pattern)
     sel.ind <- matchNameOrIndex(sel.vec, x, strip.zeros = FALSE)
     sel.na <- which(is.na(sel.ind))
