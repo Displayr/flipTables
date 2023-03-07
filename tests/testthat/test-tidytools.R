@@ -568,3 +568,11 @@ test_that("Check that partial matches are only used for unmatched rownames",
                 "Table does not contain row 'Red'", fixed = TRUE)
     expect_equal(res, structure(3:4, .Dim = 2:1, .Dimnames = list(c("Dark Red", "Blue"), NULL)))
 })
+
+test_that("DS-4298: Don't split strings from Displayr controls", {
+    test.names <- c("A, B", "A", "B", "C")
+    control.string <- "A, B"
+    attr(control.string, "is.control") <- TRUE
+    expect_equal(getMatchIndex("A, B", test.names), c(2,3))
+    expect_equal(getMatchIndex(control.string, test.names), 1)
+})
