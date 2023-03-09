@@ -1,3 +1,4 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Displayr/flipTables/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Displayr/flipTables/tree/master)
 [![](https://travis-ci.org/Displayr/flipTables.svg?branch=master)](https://travis-ci.org/Displayr/flipTables/)
 [![Coverage Status](https://coveralls.io/repos/github/Displayr/flipTables/badge.svg?branch=master)](https://coveralls.io/github/Displayr/flipTables?branch=master)
 # flipTables
@@ -12,9 +13,9 @@ require(devtools)
 install_github("Displayr/flipTables", dependencies = NA)
 ```
 
-If you have not set up a GitHub Personal Access Token, you will likely need to do so to avoid 
+If you have not set up a GitHub Personal Access Token, you will likely need to do so to avoid
 GitHub rate limits, which will manifest as 403 errors when downloading packages via
-`install_github`. Please see the documentation in the `usethis` package or see the 
+`install_github`. Please see the documentation in the `usethis` package or see the
 instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
 If you are using Windows, you will need to have a version of Rtools installed that matches your
@@ -26,6 +27,6 @@ in `Suggests` in the `DESCRIPTION` file (some of which may be proprietary and un
 
 ## Submitting a bug report
 
-If you encounter a problem using the package, please open an [issue](https://github.com/Displayr/flipTables/issues). To achieve a resolution as quickly as possible, please include a minimal, reproducible example of the bug, along with the exact error message or output you receive and the behavior you expect. Including the output of `sessionInfo()` in R can be helpful to reproduce the issue. Please see this [FAQ](https://community.rstudio.com/t/faq-whats-a-reproducible-example-reprex-and-how-do-i-create-one/5219), which has a number of useful tips on creating great reproducible examples. 
+If you encounter a problem using the package, please open an [issue](https://github.com/Displayr/flipTables/issues). To achieve a resolution as quickly as possible, please include a minimal, reproducible example of the bug, along with the exact error message or output you receive and the behavior you expect. Including the output of `sessionInfo()` in R can be helpful to reproduce the issue. Please see this [FAQ](https://community.rstudio.com/t/faq-whats-a-reproducible-example-reprex-and-how-do-i-create-one/5219), which has a number of useful tips on creating great reproducible examples.
 
 [![Displayr logo](https://mwmclean.github.io/img/logo-header.png)](https://www.displayr.com)
