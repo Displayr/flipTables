@@ -234,7 +234,7 @@ test_that("Sort Rows",
     expect_equal(dim(res), c(10, 10))
     expect_equal(rownames(res), rownames(dat)[c(9:1,10)])
 
-    res <- SortRows(tabWithN)
+    expect_warning(res <- SortRows(tabWithN), "duplicates")
     rownames(res) <- c("65 or more", "40 to 44", "55 to 64", "18 to 24", "25 to 29",
                        "30 to 34", "35 to 39", "45 to 49", "50 to 54", "NET")
 })
@@ -522,14 +522,14 @@ datNA <- structure(list(V1 = c(11711, 93, NaN, 2762, NaN, NaN, NaN, NaN,
 
 test_that("Sorting NAs",
 {
-    res <- SortColumns(HideEmptyColumns(datNA[1:5,]), row = 2, exclude = "1")
+    expect_warning(res <- SortColumns(HideEmptyColumns(datNA[1:5,]), row = 2, exclude = "1"), "2 NAs")
     expect_equal(colnames(res), c("dispatch:chrisfacer", "dispatch:timbock", "dispatch:mattiasengdahl",
 "dispatch:timali", "dispatch:mattiasengdahl, dispatch:timbock",
 "dispatch:chrisfacer, dispatch:mattiasengdahl", "dispatch:chrisfacer, dispatch:timbock",
 "V1"))
 
 
-    res <- SortRows(HideEmptyColumns(datNA[1:5,]), column = 2, exclude = "5")
+    expect_warning(res <- SortRows(HideEmptyColumns(datNA[1:5,]), column = 2, exclude = "5"), "1 NA")
     expect_equal(rownames(res), c("2017-03-19", "2017-03-05", "2017-03-12", "2017-02-12", "2017-03-26"))
 })
 

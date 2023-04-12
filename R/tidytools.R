@@ -255,6 +255,25 @@ indexSortedByValues <- function(x,
         val.incl <- as.numeric(val.incl)
     if (is.list(val.incl))
         val.incl <- unlist(val.incl)
+
+    # Give warnings if appropriate
+    is.na <- is.na(val.incl)
+    is.dup <- duplicated(val.incl) & !is.na
+    if (any(is.dup) || any(is.na)) {
+        warn.str <- ""
+        if (sum(is.na) == 1)
+            warn.str <- "1 NA"
+        else if (sum(is.na) > 1)
+            warn.str <- sprintf("%d NAs", sum(is.na)) 
+        if (nzchar(warn.str) && any(is.dup))
+            warn.str <- paste0(warn.str, " and ") 
+        if (sum(is.dup) == 1)
+            warn.str <- sprintf("1 duplicate (%s)", val.incl[is.dup])
+        else if (sum(is.dup) > 1)
+            warn.str <- sprintf("%d duplicates (%s)", sum(is.dup), paste(unique(val.incl[is.dup]), collapse = ", "))
+        warning(sprintf("Table has been sorted on %d values containing %s", length(val.incl), warn.str))
+    }
+
     tmp.ord <- order(val.incl, decreasing = decreasing)
     ord.ind <- ind.incl[tmp.ord]
     return(c(ord.ind, ind.excl))
