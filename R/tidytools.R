@@ -272,8 +272,8 @@ indexSortedByValues <- function(x,
             warn.details <- "1 duplicate"
         else if (sum(is.dup) > 1)
             warn.details <- sprintf("%d duplicates", sum(is.dup))
-        warning(sprintf("Table has been sorted on %s containing %d values with %s. Note that the order of these values is not guarenteed.",
-            sort.by, length(val.incl), warn.details, dim))
+        warning(sprintf("Table has been sorted on %s containing %d values with %s. Note that the order of these values is not guaranteed.",
+            sort.by, length(val.incl), warn.details))
     }
 
     tmp.ord <- order(val.incl, decreasing = decreasing)
