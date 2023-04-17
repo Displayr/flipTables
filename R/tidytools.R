@@ -240,7 +240,8 @@ indexSortedByValues <- function(x,
                          values,
                          decreasing = FALSE,
                          exclude = "NET, SUM, Total",
-                         dim = "row")
+                         dim = "row",
+                         sort.by = "")
 {
     max.dim <- if (dim == "column") ncol(x)
                else                 nrow(x)
@@ -260,18 +261,19 @@ indexSortedByValues <- function(x,
     is.na <- is.na(val.incl)
     is.dup <- duplicated(val.incl) & !is.na
     if (any(is.dup) || any(is.na)) {
-        warn.str <- ""
+        warn.details <- ""
         if (sum(is.na) == 1)
-            warn.str <- "1 NA"
+            warn.details <- "1 NA"
         else if (sum(is.na) > 1)
-            warn.str <- sprintf("%d NAs", sum(is.na)) 
-        if (nzchar(warn.str) && any(is.dup))
-            warn.str <- paste0(warn.str, " and ") 
+            warn.details <- sprintf("%d NAs", sum(is.na))
+        if (nzchar(warn.details) && any(is.dup))
+            warn.details <- paste0(warn.details, " and ")
         if (sum(is.dup) == 1)
-            warn.str <- sprintf("1 duplicate (%s)", val.incl[is.dup])
+            warn.details <- "1 duplicate"
         else if (sum(is.dup) > 1)
-            warn.str <- sprintf("%d duplicates (%s)", sum(is.dup), paste(unique(val.incl[is.dup]), collapse = ", "))
-        warning(sprintf("Table has been sorted on %d values containing %s", length(val.incl), warn.str))
+            warn.details <- sprintf("%d duplicates", sum(is.dup))
+        warning(sprintf("Table has been sorted on %s containing %d values with %s. Note that the order of these values is not guarenteed.",
+            sort.by, length(val.incl), warn.details, dim))
     }
 
     tmp.ord <- order(val.incl, decreasing = decreasing)
@@ -358,7 +360,7 @@ SortRows <- function(x,
         col.ind <- ncol(x)
     ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[,col.ind,1] else x[,col.ind],
-                 decreasing, exclude, "row")
+                 decreasing, exclude, "row", paste("column", col.ind))
     extractArray(x, row.index = ind)
 }
 
@@ -401,7 +403,7 @@ SortColumns <- function(x,
 
     ind <- indexSortedByValues(x,
                  values = if (isTableWithStats(x)) x[row.ind,,1] else x[row.ind,],
-                 decreasing, exclude, "column")
+                 decreasing, exclude, "column", paste("row", row.ind))
     extractArray(x, col.index = ind)
 }
 
