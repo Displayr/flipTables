@@ -522,14 +522,16 @@ datNA <- structure(list(V1 = c(11711, 93, NaN, 2762, NaN, NaN, NaN, NaN,
 
 test_that("Sorting NAs",
 {
-    expect_warning(res <- SortColumns(HideEmptyColumns(datNA[1:5,]), row = 2, exclude = "1"), "2 NAs")
+    expect_warning(res <- SortColumns(HideEmptyColumns(datNA[1:5,]), row = 2, exclude = "1"),
+        "Table has been sorted on row 2 containing 7 values with 2 NAs")
     expect_equal(colnames(res), c("dispatch:chrisfacer", "dispatch:timbock", "dispatch:mattiasengdahl",
 "dispatch:timali", "dispatch:mattiasengdahl, dispatch:timbock",
 "dispatch:chrisfacer, dispatch:mattiasengdahl", "dispatch:chrisfacer, dispatch:timbock",
 "V1"))
 
 
-    expect_warning(res <- SortRows(HideEmptyColumns(datNA[1:5,]), column = 2, exclude = "5"), "1 NA")
+    expect_warning(res <- SortRows(HideEmptyColumns(datNA[1:5,]), column = 2, exclude = "5"),
+        "Table has been sorted on column 2 containing 4 values with 1 NA")
     expect_equal(rownames(res), c("2017-03-19", "2017-03-05", "2017-03-12", "2017-02-12", "2017-03-26"))
 })
 
