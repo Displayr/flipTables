@@ -148,6 +148,7 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' attribute is used to represent a percentage. For legacy reasons it is off by
 #' default (i.e. 5\% is returned as 0.05)
 #' @importFrom verbs Sum
+#' @importFrom flipU IsQTable
 #' @export
 SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
                          use.statistic.attribute = FALSE)
@@ -155,9 +156,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
     indRow <- indexSelected(x, "row", as.character(row))
 
     stat <- attr(x, "statistic")
-    qst <- attr(x, "questions")
-    oqst <- attr(x, "original.questions")
-    is.qtable <- !is.null(oqst) || !is.null(qst)
+    is.qtable <- IsQTable(x)
     dnm <- dimnames(x)
     is.pct <- (!is.null(stat) && is.qtable && grepl("%)?$", stat)) ||
               (length(dnm) > 2 && grepl("%)?$", dnm[[3]][1]))
