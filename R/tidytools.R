@@ -32,6 +32,7 @@ convertToMatrix <- function(x)
         r.names <- if (x.is.array) dimnames(x)[[1L]] else names(x)
         attr(x, "dim") <- c(NROW(x), 1L)
         rownames(x) <- r.names
+        class(x) <- c("qTable", "matrix", "array")
         return(x)
     }
     CopyAttributes(as.matrix(x), x)

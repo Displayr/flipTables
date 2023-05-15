@@ -578,3 +578,37 @@ test_that("DS-4298: Don't split strings from Displayr controls", {
     expect_equal(getMatchIndex("A, B", test.names), c(2,3))
     expect_equal(getMatchIndex(control.string, test.names), 1)
 })
+
+test_that("DS-3886: Only CopyAttributes if not a Q Table", {
+    vals <- c(`15-18` = 9.91, `19 to 24` = 17.39, `25 to 29` = 11.00, `30 to 34` = 14.63,
+              `35 to 39` = 16.01, `40 to 44` = 17.06, `45 to 49` = 13.99, NET = 100)
+    q.stat <- data.frame(significancearrowratio = c(1, 1, 1, 0, 0.58, 1, 0, 1),
+                         significancedirection = c("Down", "Up", "Down", "None", "Up", "Up", "None", "Up"),
+                         significancefontsizemultiplier = c(0.20, 4.89, 0.20, 1, 3.29, 4.89, 1, 4.89),
+                         significanceissignificant = as.logical(c(1L, 1L, 1L, 0L, 1L, 1L, 0L, 1L)),
+                         zstatistic = c(-8.70, 6.18, -6.53, 0.68, 3.43, 5.52, -0.58, 170.63),
+                         pcorrected = c(0, 0, 0, 0.69, 0.0008, 0, 0.78, 0))
+    single.dim.table <- structure(vals,
+        statistic = "%",
+        dim = 8L,
+        dimnames = list(names(vals)),
+        class = c("array", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(8L),
+        span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    expected.tab.as.mat <- single.dim.table
+    attr(expected.tab.as.mat, "dim") <- c(length(vals), 1L)
+    attr(expected.tab.as.mat, "dimnames") <- list(names(vals), NULL)
+    class(expected.tab.as.mat) <- c("qTable", "matrix", "array")
+    expect_equal(convertToMatrix(single.dim.table), expected.tab.as.mat)
+})
