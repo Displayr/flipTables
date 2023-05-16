@@ -17,8 +17,8 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
     else
         res <- x[row.index, col.index, drop = FALSE]
     # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
-    if (!inherits(res, "qTable"))
-        res <- CopyAttributes(res, x)
+    res <- copyAttributesIfNotQTable(res, x)
+
     return(res)
 }
 
@@ -27,8 +27,15 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
 # note that no checking is done
 convertToMatrix <- function(x)
 {
-    res <- as.matrix(x)
-    return(CopyAttributes(res, x))
+    if (inherits(x, "qTable")) {
+        x.is.array <- is.array(x)
+        r.names <- if (x.is.array) dimnames(x)[[1L]] else names(x)
+        attr(x, "dim") <- c(NROW(x), 1L)
+        rownames(x) <- r.names
+        class(x) <- c("qTable", "matrix", "array")
+        return(x)
+    }
+    CopyAttributes(as.matrix(x), x)
 }
 
 # Converts 1-d Q Table + statistics in to 3d array
@@ -36,23 +43,31 @@ convertToMatrix <- function(x)
 convertTo3dQTable <- function(x)
 {
     if (!IsQTable(x))           # ignore if not Q Table
-       return(x)
+        return(x)
     if (isTableWithStats(x))
-        return(x)               # no further conversion for 2d table
-
+        return(x)               # no further conversion for 2d table with stats
+    # Tables here should be a matrix or 1d array
     dims <- dim(x)
     n.dim <- length(dims)
     dim.names <- dimnames(x)
     stat <- attr(x, "statistic")
     has.only.one.stat <- !is.null(stat)
 
-    if (!has.only.one.stat && n.dim > 1)
+    if (!has.only.one.stat && n.dim > 1) # Matrix case
     {
-        res <- array(x, c(dims[1], 1, dims[2]))
-        dimnames(res) <- list(dim.names[[1]], NULL, dim.names[[2]])
-        return(CopyAttributes(res, x))
+        attr(x, "dim") <- c(dims[1L], 1L, dims[2L])
+        attr(x, "dimnames") <- list(dim.names[[1L]], 1, dim.names[[2L]])
+        names(attr(x, "dimnames")) <- c("Row", "Column", "Statistic")
+        is.q.table.class <- inherits(x, "qTable")
+        q.stat.info <- attr(x, "QStatisticsTestingInfo")
+        if (is.q.table.class && !is.null(q.stat.info))
+        {
+            q.stat.info[["Row"]] <- dim.names[[1L]]
+            q.stat.info[["Column"]] <- 1
+            attr(x, "QStatisticsTestingInfo") <- q.stat.info
+        }
     }
-    return(x)
+    x
 }
 
 
@@ -96,7 +111,7 @@ ReverseColumns <- function(x)
 #' @importFrom flipTransformations TextAsVector
 #' @importFrom flipU CopyAttributes
 #' @export
-SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
+SelectRows <- function(x, select = NULL, first.k = NA, last.k = NA)
 {
     if (!any(c(nzchar(select), as.integer(first.k), as.integer(last.k)), na.rm = TRUE))
         return(x)
@@ -119,7 +134,7 @@ SelectRows <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @param last.k If a number greater than zero is supplied,
 #'   The last (or up to) \code{last.k} columns of \code{x[,select]} will be returned.
 #' @export
-SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
+SelectColumns <- function(x, select = NULL, first.k = NA, last.k = NA)
 {
     if (!any(c(nzchar(select), as.integer(first.k), as.integer(last.k)), na.rm = TRUE))
         return(x)
@@ -150,8 +165,8 @@ SelectColumns <- function (x, select = NULL, first.k = NA, last.k = NA)
 #' @importFrom verbs Sum
 #' @importFrom flipU IsQTable
 #' @export
-SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
-                         use.statistic.attribute = FALSE)
+SelectEntry <- function(x, row, column = NULL, return.single.value = FALSE,
+                        use.statistic.attribute = FALSE)
 {
     indRow <- indexSelected(x, "row", as.character(row))
 
@@ -191,7 +206,7 @@ SelectEntry <- function (x, row, column = NULL, return.single.value = FALSE,
             attr(res, "statistic") <- "%"
         else
         {
-            res <- res/100
+            res <- res / 100
             attr(res, "statistic") <- NULL # set to null to indicate already converted to decimal
             attr(res, "format") <- "%"
         }
@@ -516,9 +531,7 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
 
 isTableWithStats <- function(x)
 {
-    if (inherits(x, "array") && length(dim(x)) == 3)
-        return(TRUE)
-    return(FALSE)
+    inherits(x, "array") && length(dim(x)) == 3
 }
 
 checkIsTable <- function(x)
@@ -529,9 +542,8 @@ checkIsTable <- function(x)
     res <- length(dim(x)) == 2
     if (!res)
         warning("Input data should be a 2-dimensional matrix or dataframe.")
-    return(res)
+    res
 }
-
 
 #' Throws error if table has small sample size
 #' @description Throws an error if any of the 'Base n' values in the table are too small
@@ -545,10 +557,9 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
         stop("Table does not have 'Sample Size' or 'Base n'")
 
     d.ind <- which(dimnames(x)[[3]] %in% c("Base n", "Sample Size"))
-    if (any(as.numeric(x[,,d.ind[1]]) < min.size, na.rm = TRUE))
+    if (any(as.numeric(x[, , d.ind[1]]) < min.size, na.rm = TRUE))
         stop("Output not shown because it is based on less than ", min.size, " observations.")
-    else
-        return(x)
+    x
 }
 
 #' Removes rows with small sample sizes

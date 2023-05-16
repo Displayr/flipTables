@@ -1,73 +1,83 @@
 context("TidyTools")
 
-dat <- structure(c(1.13154172560113, 0.99009900990099, 0.282885431400283,
-    0.565770862800566, 1.6973125884017, 2.12164073550212, 1.13154172560113,
-    2.54596888260255, 1.83875530410184, 12.3055162659123, 0, 0.99009900990099,
-    0.707213578500707, 0.848656294200849, 0.565770862800566, 0.707213578500707,
-    3.96039603960396, 1.27298444130127, 2.54596888260255, 11.5983026874116,
-    0, 0.848656294200849, 0.707213578500707, 1.41442715700141, 0.848656294200849,
-    0, 1.6973125884017, 2.97029702970297, 1.98019801980198, 10.4667609618105,
-    0.282885431400283, 0.424328147100424, 1.83875530410184, 0.565770862800566,
-    0.99009900990099, 0.848656294200849, 2.68741159830269, 1.83875530410184,
-    1.83875530410184, 11.3154172560113, 0, 0.848656294200849, 0.424328147100424,
-    0.848656294200849, 0.424328147100424, 1.83875530410184, 0.99009900990099,
-    1.41442715700141, 4.52616690240453, 11.3154172560113, 0, 0, 0.565770862800566,
-    1.13154172560113, 0.848656294200849, 0.424328147100424, 0.424328147100424,
-    2.26308345120226, 1.98019801980198, 7.63790664780764, 0, 0.848656294200849,
-    0.282885431400283, 0.848656294200849, 1.27298444130127, 0.99009900990099,
-    2.26308345120226, 1.98019801980198, 3.67751060820368, 12.1640735502122,
-    1.55586987270156, 0.848656294200849, 1.41442715700141, 2.12164073550212,
-    2.68741159830269, 2.26308345120226, 1.41442715700141, 0.848656294200849,
-    3.67751060820368, 16.8316831683168, 0.282885431400283, 0, 0,
-    0, 0.99009900990099, 1.6973125884017, 0, 3.11173974540311, 0.282885431400283,
-    6.36492220650637, 3.25318246110325, 5.7991513437058, 6.22347949080622,
-    8.34512022630834, 10.3253182461103, 10.8910891089109, 14.5685997171146,
-    18.2461103253182, 22.3479490806223, 100),
-.Dim = c(10L, 10L), statistic = "Total %", .Dimnames = list(
-c("Less than $15,000", "$200,001 or more", "$150,001 to $200,000",
-"$120,001 to $150,000", "$30,001 to $45,000", "$15,001 to $30,000",
-"$90,001 to $120,000", "$45,001 to $60,000", "$60,001 to $90,000",
-"NET"), c("18 to 24", "25 to 29", "30 to 34", "35 to 39",
-"40 to 44", "45 to 49", "50 to 54", "55 to 64", "65 or more",
-"NET")), name = "Income by Age", questions = c("Income", "Age"))
-
+vals <- c(
+    1.1315417256, 0.9900990099, 0.2828854314, 0.5657708628, 1.6973125884,
+    2.1216407355, 1.1315417256, 2.5459688826, 1.8387553041, 12.3055162659,
+    0, 0.9900990099, 0.7072135785, 0.8486562942, 0.5657708628, 0.7072135785,
+    3.9603960396, 1.2729844413, 2.5459688826, 11.5983026874, 0, 0.8486562942,
+    0.7072135785, 1.4144271570, 0.8486562942, 0, 1.6973125884, 2.9702970297,
+    1.9801980198, 10.4667609618, 0.2828854314, 0.4243281471, 1.8387553041,
+    0.5657708628, 0.9900990099, 0.8486562942, 2.6874115983, 1.8387553041,
+    1.8387553041, 11.3154172560, 0, 0.8486562942, 0.4243281471, 0.8486562942,
+    0.4243281471, 1.8387553041, 0.9900990099, 1.4144271570, 4.5261669024,
+    11.3154172560, 0, 0, 0.5657708628, 1.1315417256, 0.8486562942, 0.4243281471,
+    0.4243281471, 2.2630834512, 1.9801980198, 7.6379066478, 0, 0.8486562942,
+    0.2828854314, 0.8486562942, 1.2729844413, 0.9900990099, 2.2630834512,
+    1.9801980198, 3.6775106082, 12.1640735502, 1.5558698727, 0.8486562942,
+    1.4144271570, 2.1216407355, 2.6874115983, 2.2630834512, 1.4144271570,
+    0.8486562942, 3.6775106082, 16.8316831683, 0.2828854314, 0, 0, 0, 0.9900990099,
+    1.6973125884, 0, 3.1117397454, 0.2828854314, 6.3649222065, 3.2531824611,
+    5.7991513437, 6.2234794908, 8.3451202263, 10.3253182461, 10.8910891089,
+    14.5685997171, 18.2461103253, 22.3479490806, 100
+)
+dat.names <- list(
+    c("Less than $15,000", "$200,001 or more", "$150,001 to $200,000",
+      "$120,001 to $150,000", "$30,001 to $45,000", "$15,001 to $30,000",
+      "$90,001 to $120,000", "$45,001 to $60,000", "$60,001 to $90,000", "NET"),
+    c("18 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49",
+      "50 to 54", "55 to 64", "65 or more", "NET")
+)
+dat <- structure(
+    vals,
+    dim = c(10L, 10L),
+    statistic = "Total %",
+    dimnames = dat.names,
+    name = "Income by Age",
+    questions = c("Income", "Age")
+)
 # This is QTable with the Base n statistic
 # Note that 'Statistics - Right' and 'Statistics - Below' are never passed
 # to the R output
-tabWithN <- structure(c(12.2448979591837, 6.12244897959184, 4.08163265306122,
-6.12244897959184, 4.08163265306122, 8.16326530612245, 22.4489795918367,
-19.3877551020408, 17.3469387755102, 100, 32.2033898305085, 13.5593220338983,
-5.08474576271187, 10.1694915254237, 5.08474576271187, 0, 5.08474576271187,
-13.5593220338983, 15.2542372881356, 100, 11.8811881188119, 12.8712871287129,
-12.8712871287129, 13.3663366336634, 8.41584158415842, 13.3663366336634,
-13.3663366336634, 8.91089108910891, 4.95049504950495, 100, 10.8843537414966,
-17.687074829932, 11.5646258503401, 7.48299319727891, 16.3265306122449,
-3.40136054421769, 6.12244897959184, 22.4489795918367, 4.08163265306122,
-100, 12.5, 6.25, 18.75, 6.25, 9.375, 12.5, 18.75, 15.625, 0,
-100, 3.57142857142857, 19.6428571428571, 8.92857142857143, 16.0714285714286,
-26.7857142857143, 5.35714285714286, 10.7142857142857, 8.92857142857143,
-0, 100, 13.0769230769231, 2.30769230769231, 12.3076923076923,
-20, 13.8461538461538, 6.92307692307692, 11.5384615384615, 12.3076923076923,
-7.69230769230769, 100, 6.57894736842105, 15.7894736842105, 7.89473684210526,
-5.26315789473684, 11.8421052631579, 9.21052631578947, 9.21052631578947,
-28.9473684210526, 5.26315789473684, 100, 98, 98, 98, 98, 98,
-98, 98, 98, 98, 98, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 202,
-202, 202, 202, 202, 202, 202, 202, 202, 202, 147, 147, 147, 147,
-147, 147, 147, 147, 147, 147, 32, 32, 32, 32, 32, 32, 32, 32,
-32, 32, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 130, 130, 130,
-130, 130, 130, 130, 130, 130, 130, 76, 76, 76, 76, 76, 76, 76,
-76, 76, 76, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
-800, 800, 800, 800, 800), .Dim = c(10L, 8L, 3L), .Dimnames = list(
-    c("18 to 24 ", "25 to 29", "30 to 34", "35 to 39", "40 to 44",
-    "45 to 49", "50 to 54", "55 to 64", "65 or more", "NET"),
-    c("Every or nearly every day", "4 to 5 days a week", "2 to 3 days a week",
-    "Once a week", "Once every 2 weeks", "Once a month", "Less than once a month",
-    "Never"), c("Column %", "Column n", "Base n")), name = "Age by Exercise frequency",         questions = c("Age", "Exercise frequency"))
+tab.vals <- c(
+    12.2448979591, 6.1224489795, 4.0816326530, 6.1224489795, 4.0816326530,
+    8.1632653061, 22.4489795918, 19.3877551020, 17.3469387755, 100, 32.2033898305,
+    13.5593220338, 5.0847457627, 10.1694915254, 5.0847457627, 0, 5.0847457627,
+    13.5593220338, 15.2542372881, 100, 11.8811881188, 12.8712871287, 12.8712871287,
+    13.3663366336, 8.4158415841, 13.3663366336, 13.3663366336, 8.9108910891,
+    4.9504950495, 100, 10.8843537414, 17.6870748299, 11.5646258503, 7.4829931972,
+    16.3265306122, 3.4013605442, 6.1224489795, 22.4489795918, 4.0816326530,
+    100, 12.5, 6.25, 18.75, 6.25, 9.375, 12.5, 18.75, 15.625, 0, 100, 3.5714285714,
+    19.6428571428, 8.9285714285, 16.0714285714, 26.7857142857, 5.3571428571,
+    10.7142857142, 8.9285714285, 0, 100, 13.0769230769, 2.3076923076, 12.3076923076,
+    20, 13.8461538461, 6.9230769230, 11.5384615384, 12.3076923076, 7.6923076923,
+    100, 6.5789473684, 15.7894736842, 7.8947368421, 5.2631578947, 11.8421052631,
+    9.2105263157, 9.2105263157, 28.9473684210, 5.2631578947, 100, 98, 98,
+    98, 98, 98, 98, 98, 98, 98, 98, 59, 59, 59, 59, 59, 59, 59, 59, 59,
+    59, 202, 202, 202, 202, 202, 202, 202, 202, 202, 202, 147, 147, 147,
+    147, 147, 147, 147, 147, 147, 147, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+    32, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 130, 130, 130, 130, 130,
+    130, 130, 130, 130, 130, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800,
+    800, 800, 800, 800, 800, 800, 800, 800, 800
+)
+tab.names <- list(
+    c("18 to 24 ", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54",
+      "55 to 64", "65 or more", "NET"),
+    c("Every or nearly every day", "4 to 5 days a week", "2 to 3 days a week", "Once a week",
+      "Once every 2 weeks", "Once a month", "Less than once a month", "Never"),
+    c("Column %", "Column n", "Base n")
+)
+tabWithN <- structure(
+    tab.vals,
+    dim = c(10L, 8L, 3L),
+    dimnames = tab.names,
+    name = "Age by Exercise frequency",
+    questions = c("Age", "Exercise frequency")
+)
 
 set.seed(1234)
 array1d <- table(rpois(20, 4))
@@ -75,14 +85,18 @@ attr(array1d, "statistic") <- "Count"
 
 test_that("Select Rows",
 {
-    xx <- matrix(1:12, 3, 4, dimnames=list(LETTERS[1:3], letters[1:4]))
+    xx <- matrix(1:12, nrow = 3, ncol = 4,
+                 dimnames = list(LETTERS[1:3], letters[1:4]))
     x2 <- SelectRows(xx, "A,A,C")
-    expect_equal(x2[1,], x2[2,])
-    expect_warning(SelectRows(xx, "A,B,D,E,F"), "Table does not contain rows 'D','E','F'.")
-    expect_error(SelectRows(xx, "D,E,F"), "Table does not contain rows 'D','E','F'.")
+    expect_equal(x2[1, ], x2[2, ])
+    expect_warning(SelectRows(xx, "A,B,D,E,F"),
+                   "Table does not contain rows 'D','E','F'.")
+    expect_error(SelectRows(xx, "D,E,F"),
+                 "Table does not contain rows 'D','E','F'.")
     x4 <- SelectRows(xx, "A,B,C,3,2,1")
-    expect_warning(x5 <- SelectRows(xx, "A,B,C,3,2,1,0,7"), "Table does not contain rows '0','7'.")
-    expect_equal(x5[,1], c(A=1,B=2,C=3,C=3,B=2,A=1))
+    expect_warning(x5 <- SelectRows(xx, "A,B,C,3,2,1,0,7"),
+                   "Table does not contain rows '0','7'.")
+    expect_equal(x5[, 1], setNames(c(1:3, 3:1), LETTERS[c(1:3, 3:1)]))
 
     res <- SelectRows(tabWithN, NULL, NA, NA)
     expect_equal(tabWithN, res)
@@ -98,21 +112,31 @@ test_that("Select Rows",
     res <- SelectRows(tabWithN, last.k = 3)
     expect_equal(dim(res), c(3, 8, 3))
 
-    tb <- structure(c(2.75482093663912, 6.06060606060606, 12.6721763085399,
-18.4573002754821, 24.7933884297521, 15.9779614325069, 6.06060606060606,
-8.26446280991736, 4.95867768595041, 100, 3.77906976744186, 15.9883720930233,
-7.84883720930233, 18.0232558139535, 19.7674418604651, 13.0813953488372,
-10.7558139534884, 4.06976744186047, 6.68604651162791, 100, 3.25318246110325,
-10.8910891089109, 10.3253182461103, 18.2461103253182, 22.3479490806223,
-14.5685997171146, 8.34512022630834, 6.22347949080622, 5.7991513437058,
-100), statistic = "Column %", .Dim = c(10L, 3L), .Dimnames = list(
-    c("Less than $15,000", "$15,001 to $30,000", "$30,001 to $45,000",
-    "$45,001 to $60,000", "$60,001 to $90,000", "$90,001 to $120,000",
-    "$120,001 to $150,000", "$150,001 to $200,000", "$200,001 or more",
-    "NET"), c("Male", "Female", "NET")), name = "Income by Gender", questions = c("Income",
-"Gender"))
+    tb.vals <- c(
+        2.7548209366, 6.0606060606, 12.6721763085, 18.4573002754, 24.7933884297,
+        15.9779614325, 6.0606060606, 8.2644628099, 4.9586776859, 100, 3.7790697674,
+        15.9883720930, 7.8488372093, 18.0232558139, 19.7674418604, 13.0813953488,
+        10.7558139534, 4.0697674418, 6.6860465116, 100, 3.2531824611, 10.8910891089,
+        10.3253182461, 18.2461103253, 22.3479490806, 14.5685997171, 8.3451202263,
+        6.2234794908, 5.7991513437, 100
+    )
+    tb.names <- list(
+        c("Less than $15,000", "$15,001 to $30,000", "$30,001 to $45,000",
+          "$45,001 to $60,000", "$60,001 to $90,000", "$90,001 to $120,000",
+          "$120,001 to $150,000", "$150,001 to $200,000", "$200,001 or more",
+          "NET"),
+        c("Male", "Female", "NET")
+    )
+    tb <- structure(
+        tb.vals,
+        statistic = "Column %",
+        dim = c(10L, 3L),
+        dimnames = tb.names,
+        name = "Income by Gender",
+        questions = c("Income", "Gender")
+    )
     res <- SelectRows(tb, select = c("Less than $15,000", "$15,001 to $30,000"))
-    expect_equal(res, tb[1:2,], check.attributes = FALSE)
+    expect_equal(res, tb[1:2, ], check.attributes = FALSE)
 
     res <- SelectRows(tb, first.k = 1, last.k = 2)
     expect_equal(rownames(res), c("Less than $15,000", "$200,001 or more", "NET"))
@@ -121,15 +145,23 @@ test_that("Select Rows",
                 "45,001 to $60,000"), first.k = 2)
     expect_equal(rownames(res), c("$15,001 to $30,000", "$30,001 to $45,000"))
 })
-
-flavours <- structure(c(0.658707865168539, 0.417134831460674, 0.601123595505618,
-    0.398876404494382, 0.432584269662921, 0.390449438202247, 0.375,
-    0.314606741573034, 0.26685393258427, 0.165730337078652, 0.162921348314607
-    ), .Dim = c(11L, 1L), .Dimnames = list(c("Flavors: Classic Bubble Gum",
-    "Flavors: Super-Strong Bubble Gum", "Flavors: Grape", "Flavors: Orange",
-    "Flavors: Sour", "Flavors: Strawberry", "Flavors: Cola", "Flavors: Apple",
-    "Flavors: Chocolate", "Flavors: Peach", "Flavors: Watermelon"
-    ), NULL), statistic = "Average")
+flavours.vals <- c(
+    0.6587078651, 0.4171348314, 0.6011235955, 0.3988764044, 0.4325842696,
+    0.3904494382, 0.375, 0.3146067415, 0.2668539325, 0.1657303370, 0.1629213483
+)
+flavours.names <- list(
+    c("Flavors: Classic Bubble Gum", "Flavors: Super-Strong Bubble Gum",
+      "Flavors: Grape", "Flavors: Orange", "Flavors: Sour", "Flavors: Strawberry",
+      "Flavors: Cola", "Flavors: Apple", "Flavors: Chocolate", "Flavors: Peach",
+      "Flavors: Watermelon"),
+    NULL
+)
+flavours <- structure(
+    flavours.vals,
+    dim = c(11L, 1L),
+    dimnames = flavours.names,
+    statistic = "Average"
+)
 
 test_that("Partial matches",
 {
@@ -143,14 +175,20 @@ test_that("Partial matches",
 
 test_that("Select Columns",
 {
-    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"), "Table does not contain column 'Twice'")
-    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never,Blah"), "Table does not contain columns 'Twice','Blah'")
+    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never"),
+                   "Table does not contain column 'Twice'")
+    expect_warning(SelectColumns(tabWithN, "Once a week, Twice, Never,Blah"),
+                   "Table does not contain columns 'Twice','Blah'")
     res <- SelectColumns(tabWithN, "1, 2, Never")
     expect_equal(dim(res), c(10, 3, 3))
     expect_equal(colnames(res), c("Every or nearly every day", "4 to 5 days a week", "Never"))
     res <- SelectColumns(dat, last.k = 4)
     expect_equal(colnames(res), c("50 to 54", "55 to 64", "65 or more", "NET"))
     expect_equal(attr(res, "statistic"), "Total %")
+    # Edge cases
+    expect_equal(SelectColumns(array1d), array1d)
+    expect_equal(SelectColumns(tabWithN, select = NULL), tabWithN)
+    expect_equal(SelectColumns(tabWithN, select = ""), tabWithN)
 })
 
 test_that("SelectEntry",
@@ -232,7 +270,7 @@ test_that("Sort Rows",
 {
     res <- SortRows(dat, decreasing = TRUE)
     expect_equal(dim(res), c(10, 10))
-    expect_equal(rownames(res), rownames(dat)[c(9:1,10)])
+    expect_equal(rownames(res), rownames(dat)[c(9:1, 10)])
 
     expect_warning(res <- SortRows(tabWithN), "duplicates")
     rownames(res) <- c("65 or more", "40 to 44", "55 to 64", "18 to 24", "25 to 29",
@@ -273,6 +311,7 @@ test_that("Reverse rows and columns",
     expect_equal(dim(res), dim(tabWithN))
     expect_equal(colnames(res), rev(colnames(tabWithN)))
     expect_equal(dimnames(res)[[3]], dimnames(tabWithN)[[3]])
+    expect_equal(ReverseColumns(array1d), array1d)
 })
 
 displayr1d <- structure(c(12.375, 11.75, 10.375, 11.375, 11.625, 7.875, 11.875,
@@ -577,4 +616,108 @@ test_that("DS-4298: Don't split strings from Displayr controls", {
     attr(control.string, "is.control") <- TRUE
     expect_equal(getMatchIndex("A, B", test.names), c(2,3))
     expect_equal(getMatchIndex(control.string, test.names), 1)
+})
+
+test_that("DS-3886: Only CopyAttributes if not a Q Table", {
+    vals <- c(`15-18` = 9.91, `19 to 24` = 17.39, `25 to 29` = 11.00, `30 to 34` = 14.63,
+              `35 to 39` = 16.01, `40 to 44` = 17.06, `45 to 49` = 13.99, NET = 100)
+    q.stat <- data.frame(significancearrowratio = c(1, 1, 1, 0, 0.58, 1, 0, 1),
+                         significancedirection = c("Down", "Up", "Down", "None", "Up", "Up", "None", "Up"),
+                         significancefontsizemultiplier = c(0.20, 4.89, 0.20, 1, 3.29, 4.89, 1, 4.89),
+                         significanceissignificant = as.logical(c(1L, 1L, 1L, 0L, 1L, 1L, 0L, 1L)),
+                         zstatistic = c(-8.70, 6.18, -6.53, 0.68, 3.43, 5.52, -0.58, 170.63),
+                         pcorrected = c(0, 0, 0, 0.69, 0.0008, 0, 0.78, 0))
+    single.dim.table <- structure(vals,
+        statistic = "%",
+        dim = 8L,
+        dimnames = list(names(vals)),
+        class = c("array", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(8L),
+        span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    expected.tab.as.mat <- single.dim.table
+    attr(expected.tab.as.mat, "dim") <- c(length(vals), 1L)
+    attr(expected.tab.as.mat, "dimnames") <- list(names(vals), NULL)
+    class(expected.tab.as.mat) <- c("qTable", "matrix", "array")
+    expect_equal(convertToMatrix(single.dim.table), expected.tab.as.mat)
+})
+
+test_that("DS-3886: Conversion to 3d table", {
+    vals <- c(`15-18` = 9.91, `19 to 24` = 17.39, `25 to 29` = 11.00, `30 to 34` = 14.63,
+              `35 to 39` = 16.01, `40 to 44` = 17.06, `45 to 49` = 13.99, NET = 100)
+    q.stat <- data.frame(significancearrowratio = c(1, 1, 1, 0, 0.58, 1, 0, 1),
+                         significancedirection = c("Down", "Up", "Down", "None", "Up", "Up", "None", "Up"),
+                         significancefontsizemultiplier = c(0.20, 4.89, 0.20, 1, 3.29, 4.89, 1, 4.89),
+                         significanceissignificant = as.logical(c(1L, 1L, 1L, 0L, 1L, 1L, 0L, 1L)),
+                         zstatistic = c(-8.70, 6.18, -6.53, 0.68, 3.43, 5.52, -0.58, 170.63),
+                         pcorrected = c(0, 0, 0, 0.69, 0.0008, 0, 0.78, 0))
+    single.dim.table <- structure(vals,
+        statistic = "%",
+        dim = 8L,
+        dimnames = list(names(vals)),
+        class = c("array", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(),
+        span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    multi.stat.1d.table <- structure(c(vals, rep(500L, length(vals))),
+        dim = c(length(vals), 2L),
+        dimnames = list(names(vals), c("%", "Sample size")),
+        class = c("array", "matrix", "qTable"),
+        dimnets = list(8L),
+        dimduplicates = list(),
+        span = list(row = data.frame(names(vals), fix.empty.names = FALSE),
+                    column = data.frame(c("%", "Sample size"), fix.empty.names = FALSE)),
+        basedescriptiontext = "base n = 4853",
+        basedescription = list(Minimum = 4853L, Maximum = 4853L, Range = FALSE, Total = 4853L,
+                               Missing = 0L, EffectiveSampleSize = 4853L,
+                               EffectiveSampleSizeProportion = 100, FilteredProportion = 0),
+        QStatisticsTestingInfo = q.stat,
+        questiontypes = "PickOne",
+        footerhtml = paste0("Total sample; Unweighted; base n = 4853; Multiple comparison correction: ",
+                            "False Discovery Rate (FDR) (p = 0.05)"),
+        name = "table.S1.Age",
+        questions = c("S1 Age", "SUMMARY"))
+    output.1d.multi.stat <- convertTo3dQTable(multi.stat.1d.table)
+    expect_equal(as.vector(output.1d.multi.stat), as.vector(multi.stat.1d.table))
+    original.attributes <- attributes(multi.stat.1d.table)
+    output.attributes <- attributes(output.1d.multi.stat)
+    expect_equal(output.attributes[["dim"]], c(8L, 1L, 2L))
+    expect_equal(output.attributes[["dimnames"]],
+                 append(dimnames(output.1d.multi.stat), NULL, 1L))
+    output.q.stat <- output.attributes[["QStatisticsTestingInfo"]]
+    original.q.stat <- original.attributes[["QStatisticsTestingInfo"]]
+    expect_true(all(c("Row", "Column") %in% names(output.q.stat)))
+    expect_equal(output.q.stat[["Row"]], rownames(multi.stat.1d.table))
+    expect_true(all(output.q.stat[["Column"]] == 1))
+    output.q.stat <- output.q.stat[!names(output.q.stat) %in% c("Row", "Column")]
+    expect_equal(output.q.stat, original.q.stat)
+    attr.to.ignore <- c("dim", "dimnames", "class", "QStatisticsTestingInfo")
+    output.attr.names <- names(output.attributes)
+    original.attr.names <- names(original.attributes)
+    expect_setequal(output.attr.names, original.attr.names)
+    original.attr.names <- original.attr.names
+    output.attributes <- output.attributes[!output.attr.names %in% attr.to.ignore]
+    original.attributes <- original.attributes[!original.attr.names %in% attr.to.ignore]
+    output.attributes <- output.attributes[names(original.attributes)]
+    expect_equal(output.attributes, original.attributes)
 })

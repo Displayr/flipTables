@@ -68,23 +68,19 @@ TidyTabularData <- function(
     if (!is.data.frame(x))
         x <- setDimNames(x)
 
+    n.dim <- length(dim(x))
     ## Handle transpose
     ## transpose before removal of rows and columns
     ##   for flipDimensionReduction::CorrespondenceAnalysis !!
     if (transpose)
-    {
-        if (length(dim(x)) > 2)
-            x <- aperm(x, c(2,1,3))
-        else
-            x <- t(x)
-    }
+        x <- if (n.dim <= 2) t(x) else aperm(x, c(2, 1, 3))
 
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove,
                                 split)
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
 
-    if (is.null(dim(x)) || length(dim(x)) == 1L)
+    if (is.null(dim(x)) || n.dim == 1L)
         class(x) <- "numeric"
     else if (!is.data.frame(x))
         class(x) <- "matrix"
