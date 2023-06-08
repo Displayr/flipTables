@@ -196,7 +196,6 @@ flatten3DQTable <- function(a)
     ##   }
     ## }
     ## m
-
     dnames <- dimnames(a)
     ## Weird use of t below is to replicate Q behaviour
     ## The code:

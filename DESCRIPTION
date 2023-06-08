@@ -15,7 +15,7 @@ Imports:
     flipTime (>= 1.2.1),
     flipTransformations (>= 1.1.0),
     flipU (>= 1.5.5),
-    verbs
+    verbs (>= 0.15.0)
 LazyData: TRUE
 RoxygenNote: 7.2.3
 Suggests: gtools, testthat, covr
