@@ -631,7 +631,7 @@ test_that("DS-3886: Only CopyAttributes if not a Q Table", {
         statistic = "%",
         dim = 8L,
         dimnames = list(names(vals)),
-        class = c("array", "QTable"),
+        class = c("array", "QTable", "qTable"),
         dimnets = list(8L),
         dimduplicates = list(8L),
         span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
@@ -648,7 +648,7 @@ test_that("DS-3886: Only CopyAttributes if not a Q Table", {
     expected.tab.as.mat <- single.dim.table
     attr(expected.tab.as.mat, "dim") <- c(length(vals), 1L)
     attr(expected.tab.as.mat, "dimnames") <- list(names(vals), NULL)
-    class(expected.tab.as.mat) <- c("QTable", "matrix", "array")
+    class(expected.tab.as.mat) <- c("qTable", "matrix", "array")
     expect_equal(convertToMatrix(single.dim.table), expected.tab.as.mat)
 })
 
@@ -665,7 +665,7 @@ test_that("DS-3886: Conversion to 3d table", {
         statistic = "%",
         dim = 8L,
         dimnames = list(names(vals)),
-        class = c("array", "QTable"),
+        class = c("array", "QTable", "qTable"),
         dimnets = list(8L),
         dimduplicates = list(),
         span = list(rows = data.frame(names(vals), fix.empty.names = FALSE)),
@@ -682,7 +682,7 @@ test_that("DS-3886: Conversion to 3d table", {
     multi.stat.1d.table <- structure(c(vals, rep(500L, length(vals))),
         dim = c(length(vals), 2L),
         dimnames = list(names(vals), c("%", "Sample size")),
-        class = c("array", "matrix", "QTable"),
+        class = c("array", "matrix", "QTable", "qTable"),
         dimnets = list(8L),
         dimduplicates = list(),
         span = list(row = data.frame(names(vals), fix.empty.names = FALSE),

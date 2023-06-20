@@ -320,7 +320,7 @@ inputtables <- list(table.Income.by.Gender = structure(c(2.75482093663912, 6.060
                            "$45,001 to $60,000", "$60,001 to $90,000", "$90,001 to $120,000",
                            "$120,001 to $150,000", "$150,001 to $200,000", "$200,001 or more",
                            "NET"), c("Male", "Female")), class = c("matrix", "array",
-                           "QTable"), dimnets = list(10L, integer(0)), dimduplicates = list(
+                           "QTable", "qTable"), dimnets = list(10L, integer(0)), dimduplicates = list(
                                10L, integer(0)), span = list(rows = structure(list(c("Less than $15,000",
                              "$15,001 to $30,000", "$30,001 to $45,000", "$45,001 to $60,000",
                              "$60,001 to $90,000", "$90,001 to $120,000", "$120,001 to $150,000",

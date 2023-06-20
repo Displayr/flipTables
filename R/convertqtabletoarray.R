@@ -43,6 +43,6 @@ ConvertQTableToArray <- function(x)
 #' @noRd
 copyAttributesIfNotQTable <- function(x, y)
 {
-    if (inherits(y, "QTable")) return(x)
+    if (inherits(y, "qTable")) return(x)
     CopyAttributes(x, y)
 }
