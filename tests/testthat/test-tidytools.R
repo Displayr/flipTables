@@ -648,7 +648,7 @@ test_that("DS-3886: Only CopyAttributes if not a Q Table", {
     expected.tab.as.mat <- single.dim.table
     attr(expected.tab.as.mat, "dim") <- c(length(vals), 1L)
     attr(expected.tab.as.mat, "dimnames") <- list(names(vals), NULL)
-    class(expected.tab.as.mat) <- c("qTable", "matrix", "array")
+    class(expected.tab.as.mat) <- c("QTable", "matrix", "array")
     expect_equal(convertToMatrix(single.dim.table), expected.tab.as.mat)
 })
 
