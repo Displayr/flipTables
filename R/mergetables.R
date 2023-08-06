@@ -37,6 +37,16 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
                         override.row.names = "",
                         override.column.names = "")
 {
+    
+    # Hotfix for QTable issue DS-5035
+    removeQTableClass <- function(table) {
+        if (is.null(table)) return(table)
+        cs <- class(table)
+        class(table) <- cs[cs != "QTable"]
+        table
+    }
+    tables <- lapply(tables, removeQTableClass)
+
     direction <- match.arg(direction)
     nonmatching <- match.arg(nonmatching)
 
