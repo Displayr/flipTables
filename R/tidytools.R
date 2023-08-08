@@ -27,12 +27,12 @@ extractArray <- function(x, row.index = 1:nrow(x), col.index = 1:ncol(x), keep.a
 # note that no checking is done
 convertToMatrix <- function(x)
 {
-    if (inherits(x, "QTable")) {
+    if (inherits(x, "qTable")) {
         x.is.array <- is.array(x)
         r.names <- if (x.is.array) dimnames(x)[[1L]] else names(x)
         attr(x, "dim") <- c(NROW(x), 1L)
         rownames(x) <- r.names
-        class(x) <- c("QTable", "matrix", "array")
+        class(x) <- c("qTable", "matrix", "array")
         return(x)
     }
     CopyAttributes(as.matrix(x), x)
@@ -58,7 +58,7 @@ convertTo3dQTable <- function(x)
         attr(x, "dim") <- c(dims[1L], 1L, dims[2L])
         attr(x, "dimnames") <- list(dim.names[[1L]], 1, dim.names[[2L]])
         names(attr(x, "dimnames")) <- c("Row", "Column", "Statistic")
-        is.q.table.class <- inherits(x, "QTable")
+        is.q.table.class <- inherits(x, "qTable")
         q.stat.info <- attr(x, "QStatisticsTestingInfo")
         if (is.q.table.class && !is.null(q.stat.info))
         {

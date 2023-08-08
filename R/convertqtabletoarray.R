@@ -39,10 +39,10 @@ ConvertQTableToArray <- function(x)
 }
 
 #' @param x The object to be returned
-#' @param y The object to copy attributes from, if a QTable, the attributes are not copied to x
+#' @param y The object to copy attributes from, if a qTable, the attributes are not copied to x
 #' @noRd
 copyAttributesIfNotQTable <- function(x, y)
 {
-    if (inherits(y, "QTable")) return(x)
+    if (inherits(y, "qTable")) return(x)
     CopyAttributes(x, y)
 }
