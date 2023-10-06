@@ -721,3 +721,25 @@ test_that("DS-3886: Conversion to 3d table", {
     output.attributes <- output.attributes[names(original.attributes)]
     expect_equal(output.attributes, original.attributes)
 })
+
+test_that("Resolve issue with summing QTable", {
+    assign("productName", "Q", envir = .GlobalEnv)
+    test.case <- structure(
+        array(1:30, 
+              dim = c(3,5,2),
+              dimnames = list(LETTERS[1:3],
+                              c(letters[1:5]),
+                              c("Stat 1", "Stat 2"))
+            ), 
+        class = c("array", "QTable"),
+        questions = c("Q1", "Q2"),
+        questiontypes = c("Pick One", "Pick One")
+    )
+    expect_warning(res <- SelectEntry(test.case, "A", "a", 
+                             return.single.value = TRUE,
+                             use.statistic.attribute = TRUE),
+                   "Only the first statistic")
+    expect_equal(res, 
+                 1)
+    remove("productName", envir = .GlobalEnv)
+})

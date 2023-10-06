@@ -198,7 +198,7 @@ SelectEntry <- function(x, row, column = NULL, return.single.value = FALSE,
             is.pct <- TRUE
     }
     if (return.single.value && is.numeric(res))
-        res <- Sum(res)
+        res <- if (all(is.na(res))) NA else sum(res, na.rm = TRUE)
     res <- unlist(res)
     if (is.pct)
     {
