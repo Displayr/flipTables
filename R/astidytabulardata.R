@@ -26,7 +26,9 @@ AsTidyTabularData <- function(x, ...)
                                                     "names", "class")]
     if (IsQTable(x))
     {
+        cat("Input is a QTable")
         x <- qTableToTidyTable(x)
+        print(class(x))
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
         if (length(dim(x)) == 1L)  # convert 1D array to named vector
@@ -91,7 +93,7 @@ AsTidyTabularData <- function(x, ...)
         x <- AsNumeric(x)
     else if (length(dim(x)) == 1L)
         class(x) <- "numeric"
-    else if (!is.data.frame(x))
+    else if (!is.data.frame(x) && !IsQTable(x))
         class(x) <- "matrix"
     x
 }
