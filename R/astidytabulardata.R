@@ -26,9 +26,7 @@ AsTidyTabularData <- function(x, ...)
                                                     "names", "class")]
     if (IsQTable(x))
     {
-        cat("Input is a QTable")
         x <- qTableToTidyTable(x)
-        print(class(x))
         if (!is.null(attr(x, "statistic")))
             old.attrs$statistic <- attr(x, "statistic")  # update if dropped extra stats
         if (length(dim(x)) == 1L)  # convert 1D array to named vector
