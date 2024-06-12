@@ -82,7 +82,7 @@ TidyTabularData <- function(
 
     if (is.null(dim(x)) || n.dim == 1L)
         class(x) <- "numeric"
-    else if (!is.data.frame(x) && !IsQTable(x))
+    else if (!is.data.frame(x))
         class(x) <- "matrix"
     x
 }
