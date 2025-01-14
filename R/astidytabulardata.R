@@ -157,12 +157,15 @@ qTableToTidyTable <- function(x)
 #' dimensions of \code{x} will be dropped in the returned array
 #' @noRd
 #' @keywords internal
-GetFirstStat <- function(x)
+GetFirstStat <- function(x, drop = TRUE)
 {
     # QTables with this attribute always have only 1 statistic
     if (!is.null(attr(x, "statistic")))
         return(x)
-    text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
+    if (drop == FALSE)
+        text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, ", drop = FALSE]")
+    else
+        text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
     eval(parse(text = text))
 }
 
