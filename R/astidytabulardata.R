@@ -168,7 +168,6 @@ GetFirstStat <- function(x, drop = TRUE)
     empty.args <- rep(alist(, )[1L], length(dim(x)) - 1L)
     args <- list(x) |> c(empty.args, 1L, drop = drop)
     do.call(`[`, args)
-    eval(parse(text = text))
 }
 
 #' Flatten a 4D QTable to a matrix
