@@ -162,10 +162,12 @@ GetFirstStat <- function(x, drop = TRUE)
     # QTables with this attribute always have only 1 statistic
     if (!is.null(attr(x, "statistic")))
         return(x)
-    if (drop == FALSE)
-        text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, ", drop = FALSE]")
-    else
-        text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
+    # empty args constructs the correct number of empty arguments for `[` operator
+    # based on the dimension of the table
+    # e.g. a 2d matrix requires the call x[, 1] (1 empty arg) and a 3d array requires x[, , 1] (2 empty args)
+    empty.args <- rep(alist(, )[1L], length(dim(x)) - 1L)
+    args <- list(x) |> c(empty.args, 1L, drop = drop)
+    do.call(`[`, args)
     eval(parse(text = text))
 }
 
