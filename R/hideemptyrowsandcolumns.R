@@ -126,7 +126,7 @@ HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 getNonEmptyIndices <- function(x, margin = 1, use.names = TRUE, is.percent = NULL, first.stat.only = TRUE)
 {
     if (first.stat.only && IsQTable(x) && length(dim(x)) > 1)
-       x <- GetFirstStat(x)
+       x <- GetFirstStat(x, drop = FALSE)
     if (is.character(x))
         out <- which(apply(x, margin, function(x) any(nzchar(x))))
     else

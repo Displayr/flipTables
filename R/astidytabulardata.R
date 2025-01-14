@@ -157,13 +157,17 @@ qTableToTidyTable <- function(x)
 #' dimensions of \code{x} will be dropped in the returned array
 #' @noRd
 #' @keywords internal
-GetFirstStat <- function(x)
+GetFirstStat <- function(x, drop = TRUE)
 {
     # QTables with this attribute always have only 1 statistic
     if (!is.null(attr(x, "statistic")))
         return(x)
-    text <- paste0("x[", paste(rep(",", length(dim(x))-1), collapse = ""), 1, "]")
-    eval(parse(text = text))
+    # empty args constructs the correct number of empty arguments for `[` operator
+    # based on the dimension of the table
+    # e.g. a 2d matrix requires the call x[, 1] (1 empty arg) and a 3d array requires x[, , 1] (2 empty args)
+    empty.args <- rep(alist(, )[1L], length(dim(x)) - 1L)
+    args <- list(x) |> c(empty.args, 1L, drop = drop)
+    do.call(`[`, args)
 }
 
 #' Flatten a 4D QTable to a matrix

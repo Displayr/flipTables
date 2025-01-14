@@ -305,8 +305,62 @@ test_that("Remove empty columns in table with multiple statistics",
     expect_equal(dim(HideEmptyRows(tb2)), c(10,3))
     expect_equal(dim(HideEmptyColumns(tab1d)), c(10,4))
     expect_equal(dim(HideEmptyRows(tab1d)), c(9,4))
-
-
-
 })
 
+tb.with.stats <- structure(c(3.29508196721311, 2.97368421052632, 3.06153846153846,
+     3.21538461538462, 3.23529411764706, 3.52112676056338, 3.47058823529412,
+     3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 0, 0, 0, 0, 0,
+     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), dim = c(1L, 19L, 3L),
+     dimnames = list("Information",
+     c("June 2024", "July 2024", "August 2024", "September 2024",
+     "October 2024", "November 2024", "December 2024", "January 2025",
+     "February 2025", "March 2025", "April 2025", "May 2025",
+     "June 2025", "July 2025", "August 2025", "September 2025", "October 2025", 
+     "November 2025", "December 2025"), c("Average", "signifUp#0000FF", "signifDown#FF0000")), 
+     dimnets = list(integer(0), integer(0)), dimduplicates = list(integer(0), integer(0)), 
+     span = list(rows = structure(list("Information"),
+     class = "data.frame", names = "", row.names = 1L), columns = structure(list(c("June 2024", 
+     "July 2024", "August 2024", "September 2024", "October 2024", "November 2024", "December 2024",
+     "January 2025", "February 2025", "March 2025", "April 2025",
+     "May 2025", "June 2025", "July 2025", "August 2025", "September 2025",
+     "October 2025", "November 2025", "December 2025")), class = "data.frame", names = "", 
+     row.names = c(NA, 19L))), basedescriptiontext = "sample size = 486; total sample size = 814; 328 missing",
+     basedescription = list(Minimum = 486L, Maximum = 486L, Range = FALSE, Total = 814L,
+     Missing = 328L, EffectiveSampleSize = 486L, EffectiveSampleSizeProportion = 100,
+     FilteredProportion = 0), QStatisticsTestingInfo = structure(list(
+     significancearrowratio = structure(c(0, 0.0719794344473008, 0, 0, 0, 0.0719794344473008, 0, 0, 0, 
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0), dim = 19L), significancedirection = structure(c("None",
+     "Down", "None", "None", "None", "Up", "None", "None", "None",
+     "None", "None", "None", "None", "None", "None", "None", "None",
+     "None", "None"), dim = 19L), significancefontsizemultiplier = structure(c(1,
+     0.78125, 1, 1, 1, 1.28, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), dim = 19L), 
+     significanceissignificant = structure(c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, 
+     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE), dim = 19L), 
+     significanceargbcolor = structure(c(-8355712L, -65536L, -8355712L, -8355712L, -8355712L, 
+     -16776961L, -8355712L, -8355712L, -8355712L, -8355712L, -8355712L, -8355712L, -8355712L,
+     -8355712L, -8355712L, -8355712L, -8355712L, -8355712L, -8355712L), dim = 19L),
+     backgroundargbcolor = structure(c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
+     0L, 0L), dim = 19L), zstatistic = structure(c(NaN, -1.53761207080504,
+     0.429985472931958, 0.748364315949354, 0.101239308187553,
+     1.61569450566846, -0.245542729229572, -0.956547846008111,
+     NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN), dim = 19L),
+     pcorrected = structure(c(NaN, 0.124143494294862, 0.667206208608361,
+     0.454240440212268, 0.919360493578279, 0.106160379490347,
+     0.806036227423584, 0.338795523670985, NaN, NaN, NaN, NaN,
+     NaN, NaN, NaN, NaN, NaN, NaN, NaN), dim = 19L)), class = "data.frame", row.names = c(NA, 19L)), 
+    questiontypes = c("Number", "Date"), footerhtml = "Information",
+    name = "Information", questions = c("Information - Average", "Date"), 
+    assigned.rownames = TRUE, signif.annotations = list(
+    list(type = "Arrow - up", data = "signifUp#0000FF", threstype = "above threshold",
+    threshold = 0, color = "#0000FF", size = 12), list(type = "Arrow - down",
+    data = "signifDown#FF0000", threstype = "above threshold", threshold = 0, color = "#FF0000", size = 12)))
+
+test_that("Empty rows and columns are corrently removed from tables with statistics",
+{
+    res_hide_rows <- HideEmptyRows(tb.with.stats)
+    expect_equal(dim(res_hide_rows), c(1, 19, 3))
+
+    res_hide_cols <- HideEmptyColumns(tb.with.stats)
+    expect_equal(dim(res_hide_cols), c(1, 8, 3))
+})
