@@ -18,6 +18,7 @@
 #'     the dates or time periods, and the rows the years.
 #' @importFrom lubridate year years interval duration day
 #' @importFrom flipTime AsDate
+#' @importFrom flipU StopForUserError
 #' @export
 StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
                        period.number = FALSE, transpose = FALSE)
@@ -39,7 +40,7 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
     }
     year.table <- table(year.index)
     if (!containsWholeYear(date, year.index, year.table, calendar))
-        stop("At least one whole year of data is required.")
+        StopForUserError("At least one whole year of data is required.")
     n.periods <- max(year.table)
     colnm <- if(period.number)
         1:n.periods
@@ -79,10 +80,11 @@ StackYears <- function(x, date = NULL, n.years = NULL, calendar = TRUE,
 
 # Duration in years where we round down
 #' @importFrom lubridate year month day
+#' @importFrom flipU StopForUserError
 durationInYears <- function(start.date, end.date)
 {
     if (start.date > end.date)
-        stop("Start date cannot be after end date")
+        StopForUserError("Start date cannot be after end date")
 
     result <- year(end.date) - year(start.date)
     if (month(end.date) < month(start.date) ||

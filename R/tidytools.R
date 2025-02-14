@@ -348,6 +348,7 @@ AutoOrderColumns <- function(x)
 #' @param exclude A string containing a comma-separated list of rows
 #'    (either by name or index) which should not be sorted. These rows
 #'    will remain at the bottom of the output table
+#' @importFrom flipU StopForUserError
 #' @export
 SortRows <- function(x,
                  decreasing = FALSE,
@@ -365,7 +366,7 @@ SortRows <- function(x,
     {
         col.ind <- matchNameOrIndex(column[1], colnames(x, do.NULL = FALSE, prefix = ""))
         if (length(col.ind) == 0)
-            stop("Column '", column, "' was not found in the table.")
+            StopForUserError("Column '", column, "' was not found in the table.")
         if (length(column) > 1)
             warning("Only column '", column[1], "' was used to sort the table.")
 
@@ -389,6 +390,7 @@ SortRows <- function(x,
 #' @param exclude A string containing a comma-separated list of columns
 #'    (either by name or index) which should not be sorted. These columns
 #'    will remain at the end of the output table
+#' @importFrom flipU StopForUserError
 #' @export
 SortColumns <- function(x,
                  decreasing = FALSE,
@@ -407,7 +409,7 @@ SortColumns <- function(x,
         row.ind <- matchNameOrIndex(row[1],
             rownames(x, do.NULL = FALSE, prefix = ""))
         if (length(row.ind) == 0)
-            stop("Row '", row, "' was not found in the table.")
+            StopForUserError("Row '", row, "' was not found in the table.")
         if (length(row) > 1)
             warning("Only row '", row[1], "' was used to sort the table.")
 
@@ -549,16 +551,17 @@ checkIsTable <- function(x)
 #' @description Throws an error if any of the 'Base n' values in the table are too small
 #' @param x Input table, which must contain the 'Base n' statistic.
 #' @param min.size Minimum sample size required.
+#' @importFrom flipU StopForUserError
 #' @export
 HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     x <- convertTo3dQTable(x)
     if (!isTableWithStats(x) || !any(c("Base n", "Sample Size") %in% dimnames(x)[[3]]))
-        stop("Table does not have 'Sample Size' or 'Base n'")
+        StopForUserError("Table does not have 'Sample Size' or 'Base n'")
 
     d.ind <- which(dimnames(x)[[3]] %in% c("Base n", "Sample Size"))
     if (any(as.numeric(x[, , d.ind[1]]) < min.size, na.rm = TRUE))
-        stop("Output not shown because it is based on less than ", min.size, " observations.")
+        StopForUserError("Output not shown because it is based on less than ", min.size, " observations.")
     x
 }
 
@@ -569,14 +572,15 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 #'   then warnings will be given.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
+#' @importFrom flipU StopForUserError
 #' @export
 HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     x <- convertTo3dQTable(x)
     size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
     if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
-        stop("Table must have at least one of the following statistics: '",
-             paste(size.names, collapse = "', '", sep=""), "'.")
+        StopForUserError("Table must have at least one of the following statistics: '",
+                         paste(size.names, collapse = "', '", sep=""), "'.")
 
     j <- 1
     d.ind <- NULL
@@ -608,14 +612,15 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
 #'   then warnings will be given.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
+#' @importFrom flipU StopForUserError
 #' @export
 HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 {
     x <- convertTo3dQTable(x)
     size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
     if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
-        stop("Table must have at least one of the following statistics: '",
-             paste(size.names, collapse = "', '", sep=""), "'.")
+        StopForUserError("Table must have at least one of the following statistics: '",
+                         paste(size.names, collapse = "', '", sep=""), "'.")
 
     j <- 1
     d.ind <- NULL
@@ -646,14 +651,15 @@ HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
 #'   are smaller than \code{min.size}. They will be replaced with \code{NA}.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
+#' @importFrom flipU StopForUserError
 #' @export
 HideValuesWithSmallSampleSizes <- function(x, min.size = 30)
 {
     x <- convertTo3dQTable(x)
     size.names <- c("Column Sample Size", "Column n", "Sample Size", "Base n")
     if (!isTableWithStats(x) || !any(size.names %in% dimnames(x)[[3]]))
-        stop("Table must have at least one of the following statistics: '",
-             paste(size.names, collapse = "', '", sep=""), "'.")
+        StopForUserError("Table must have at least one of the following statistics: '",
+                         paste(size.names, collapse = "', '", sep=""), "'.")
 
     j <- 1
     d.ind <- NULL

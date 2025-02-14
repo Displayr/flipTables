@@ -18,6 +18,7 @@
 #' HideEmptyRowsAndColumns(x)
 #' x[2, ] <- 0
 #' HideEmptyRowsAndColumns(x, is.percent = TRUE)
+#' @importFrom flipU StopForUserError
 #' @export
 HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
 {
@@ -25,7 +26,7 @@ HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
     {
         idx <- GetNonEmptyElements(x, FALSE, is.percent)
         if (!length(idx))
-            stop("Hiding empty elements gives empty input vector.")
+            StopForUserError("Hiding empty elements gives empty input vector.")
         y <- x[idx, drop  = FALSE]
         # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
         y <- copyAttributesIfNotQTable(y, x)
@@ -33,7 +34,7 @@ HideEmptyRowsAndColumns <- function(x, is.percent = NULL)
     }
     idx <- GetNonEmptyRowsAndColumns(x, FALSE, is.percent = is.percent)
     if (!length(idx[[1L]]) || !length(idx[[2L]]))
-        stop ("Hiding empty rows/columns gives empty input matrix.")
+        StopForUserError("Hiding empty rows/columns gives empty input matrix.")
     extractArray(x, idx[[1L]], idx[[2L]])
 }
 
@@ -81,6 +82,7 @@ GetNonEmptyRowsAndColumns <- function(x, use.names = TRUE, is.percent = NULL)
 #'     called "statistic" to check for percentages
 #' @param first.stat.only Only examines the first statistic when
 #'     determining whether the row/column is empty.
+#' @importFrom flipU StopForUserError
 #' @export
 HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 {
@@ -88,7 +90,7 @@ HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
     {
         idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
         if (!length(idx))
-            stop("Hiding empty elements gives empty input vector.")
+            StopForUserError("Hiding empty elements gives empty input vector.")
         y <- x[idx, drop  = FALSE]
         # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
         y <- copyAttributesIfNotQTable(y, x)
@@ -96,7 +98,7 @@ HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
     }
     idx <- getNonEmptyIndices(x, 1, FALSE, remove.zeros, first.stat.only)
     if (!length(idx))
-        stop ("Hiding empty rows gives empty input matrix.")
+        StopForUserError("Hiding empty rows gives empty input matrix.")
     extractArray(x, row.index = idx)
 }
 
@@ -105,6 +107,7 @@ HideEmptyRows <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 #' Searches for empty columns in a table and returns a copy
 #' with those entries removed
 #' @inherit HideEmptyRows
+#' @importFrom flipU StopForUserError
 #' @export
 HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
 {
@@ -112,7 +115,7 @@ HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
     {
         idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
         if (!length(idx))
-            stop("Hiding empty elements gives empty input vector.")
+            StopForUserError("Hiding empty elements gives empty input vector.")
         return(x)
     }
     idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = remove.zeros, first.stat.only)

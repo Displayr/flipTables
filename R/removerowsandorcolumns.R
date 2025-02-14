@@ -17,7 +17,7 @@
 #' @return \code{x} with the rows specified in \code{row.names.to.remove} and
 #' columns specified in \code{column.names.to.remove} removed.
 #' @importFrom flipU CopyAttributes
-#' @importFrom flipU RemoveAt
+#' @importFrom flipU RemoveAt StopForUserError
 #' @export
 RemoveRowsAndOrColumns <- function(x,
                                    row.names.to.remove = c("NET", "Total", "SUM"),
@@ -47,9 +47,9 @@ RemoveRowsAndOrColumns <- function(x,
     if (length(out) == 0 || prod(dim(out)) == 0)
     {
         if (dim(out)[1] == 0)
-            stop("Removing row '", paste(rownames(x), collapse = "', '"), "' gives empty input matrix\n")
+            StopForUserError("Removing row '", paste(rownames(x), collapse = "', '"), "' gives empty input matrix\n")
         if (dim(out)[2] == 0)
-            stop("Removing column '", paste(colnames(x), collapse = "', '"), "' gives empty input matrix\n")
+            StopForUserError("Removing column '", paste(colnames(x), collapse = "', '"), "' gives empty input matrix\n")
     }
     # Subscripting QTables (verbs:::`[.QTable`) already updates attributes
     out <- copyAttributesIfNotQTable(out, x)
