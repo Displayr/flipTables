@@ -17,7 +17,7 @@
 #'     variables (with a warning) using
 #'     \code{\link[flipTransformations]{AsNumeric}}.
 #' @seealso \code{\link[flipTransformations]{AsNumeric}}
-#' @importFrom flipU IsQTable
+#' @importFrom flipU IsQTable StopForUserError
 #' @export
 AsTidyTabularData <- function(x, ...)
 {
@@ -62,7 +62,7 @@ AsTidyTabularData <- function(x, ...)
 
         if (n.dim > 4)
         {
-            stop("Cannot coerce an array of greater than four dimensions to a tidy table.")
+            StopForUserError("Cannot coerce an array of greater than four dimensions to a tidy table.")
         }else if (n.dim == 4 || n.dim == 3)
         {   # Make sure there are sensible dimnames, a statistic attribute,
             #  and flatten as if a QTable
@@ -80,8 +80,8 @@ AsTidyTabularData <- function(x, ...)
     }else
     {
         classes <- paste(class(x), collapse = ", ")
-        stop(gettextf("Cannot coerce object of type (%s) to a  tidy table.",
-                      sQuote(classes)))
+        StopForUserError(gettextf("Cannot coerce object of type (%s) to a  tidy table.",
+                         sQuote(classes)))
     }
 
     #x <- setDimNames(x)  # set labels

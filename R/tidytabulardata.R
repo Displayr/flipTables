@@ -137,6 +137,7 @@ setDimNames <- function(x)
 #' @param date vector of dates; a value of \code{NULL} (the default)
 #'     indicates that the dates are contained in \code{x}
 #' @return a numeric vector with dates for names
+#' @importFrom flipU StopForUserError
 #' @noRd
 processDates <- function(x, date = NULL)
 {
@@ -174,15 +175,15 @@ processDates <- function(x, date = NULL)
             }
         }
         else
-            stop("Input data is not a list, vector, table, matrix or ",
-                 "1D/2D array. It should be one of these data formats.")
+            StopForUserError("Input data is not a list, vector, table, matrix or ",
+                             "1D/2D array. It should be one of these data formats.")
     }
     if (anyDuplicated(date))
-        stop("Duplicate dates. Dates should be unique.")
+        StopForUserError("Duplicate dates. Dates should be unique.")
     x <- as.numeric(x)
     if (length(date) != length(x))
-        stop("The input dates and values have different lengths. ",
-             "They should have the same length.")
+        StopForUserError("The input dates and values have different lengths. ",
+                         "They should have the same length.")
     names(x) <- date
     x
 }
