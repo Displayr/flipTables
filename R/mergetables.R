@@ -37,7 +37,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
                         override.row.names = "",
                         override.column.names = "")
 {
-    
+
     # Hotfix for QTable issue DS-5035
     removeQTableClass <- function(table) {
         if (is.null(table)) return(table)
@@ -114,7 +114,7 @@ MergeTables <- function(tables, direction = c("Side-by-side", "Up-and-down"),
 #'   3 dimensions in the array.
 #' @param disambig.names Optional vector of column names that should be disambiguated
 #'   using the table name
-#' @importFrom flipU IsRServer
+#' @importFrom flipU IsRServer StopForUserError
 #' @export
 Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down"),
     nonmatching = c("Keep all", "Keep all from first table", "Keep all from second table", "Matching only"),
@@ -135,7 +135,7 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
     nonmatching <- match.arg(nonmatching)
 
     if (length(dim(left)) > 3 || length(dim(right)) > 3)
-        stop("One of the input tables has more than 3 dimensions.")
+        StopForUserError("One of the input tables has more than 3 dimensions.")
 
     if (length(dim(left)) == 3) {
         warning("'", left.name, "' contains multiple statistics. Only using the first statistic.")
@@ -228,20 +228,20 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
             type <- "columns"
             other.direction <- "side-by-side"
         }
-        stop("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
+        StopForUserError("Can not find any matching ", type, ". Perhaps you meant to join ", other.direction, "?")
     }
     left.NAs <- which(is.na(rownames(left)))
     if (length(left.NAs) > 0)
-        stop(ngettext(length(left.NAs), "Row", "Rows"), " ", paste(left.NAs, collapse = ", "),
-             " in '", left.name, "' ",
-             ngettext(length(left.NAs), "has missing name. ", "have missing names. "),
-             "Please give the affected rows a unique name before rerunning Merge Tables.")
+        StopForUserError(ngettext(length(left.NAs), "Row", "Rows"), " ", paste(left.NAs, collapse = ", "),
+                         " in '", left.name, "' ",
+                         ngettext(length(left.NAs), "has missing name. ", "have missing names. "),
+                         "Please give the affected rows a unique name before rerunning Merge Tables.")
     right.NAs <- which(is.na(rownames(right)))
     if (length(right.NAs) > 0)
-        stop(ngettext(length(right.NAs), "Row", "Rows"), " ", paste(right.NAs, collapse = ", "),
-             " in '", right.name, "' ",
-             ngettext(length(right.NAs), "has missing name. ", "have missing names. "),
-             "Please give the affected rows a unique name before rerunning Merge Tables.")
+        StopForUserError(ngettext(length(right.NAs), "Row", "Rows"), " ", paste(right.NAs, collapse = ", "),
+                         " in '", right.name, "' ",
+                         ngettext(length(right.NAs), "has missing name. ", "have missing names. "),
+                         "Please give the affected rows a unique name before rerunning Merge Tables.")
 
     .checkDupNames <- function(row.names, tb.name)
     {
@@ -251,9 +251,9 @@ Merge2Tables <- function(left, right, direction = c("Side-by-side", "Up-and-down
         dup.pos <- rep("", length(dup.names))
         for (i in 1:length(dup.names))
             dup.pos[i] <- paste(which(row.names == dup.names[i]), collapse = ", ")
-        stop("Duplicated rownames (",
-            paste(sprintf("'%s' in rows %s", dup.names, dup.pos), collapse = ";"), ") in '", tb.name,
-            "'. Merge duplicated rows or remove duplicated rows before rerunning Merge Tables.")
+        StopForUserError("Duplicated rownames (",
+                         paste(sprintf("'%s' in rows %s", dup.names, dup.pos), collapse = ";"), ") in '", tb.name,
+                         "'. Merge duplicated rows or remove duplicated rows before rerunning Merge Tables.")
     }
     .checkDupNames(rownames(left), left.name)
     .checkDupNames(rownames(right), right.name)
