@@ -68,7 +68,6 @@ TidyTabularData <- function(
     statistic.attribute <- attr(x, "statistic")
     if (!is.data.frame(x))
         x <- setDimNames(x)
-    cat("line 71: statistic:", attr(x, "statistic"), "\n")
 
     n.dim <- length(dim(x))
     ## Handle transpose
@@ -76,22 +75,22 @@ TidyTabularData <- function(
     ##   for flipDimensionReduction::CorrespondenceAnalysis !!
     if (transpose)
         x <- if (n.dim <= 2) t(x) else aperm(x, c(2, 1, 3))
-    cat("line 79: statistic:", attr(x, "statistic"), "\n")
 
     x <- RemoveRowsAndOrColumns(x, row.names.to.remove, col.names.to.remove,
                                 split)
-    cat("line 83: statistic:", attr(x, "statistic"), "\n")
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
 
-    cat("line 87: statistic:", attr(x, "statistic"), "\n")
+    # This line is actually only needed for old outputs in Q
+    # In those cases HideEmptyRowsAndColumns calls the subscript
+    # operator which drops all attributes
     if (!is.null(statistic.attribute))
         attr(x, "statistic") <- statistic.attribute
+
     if (is.null(dim(x)) || n.dim == 1L)
         class(x) <- "numeric"
     else if (!is.data.frame(x) && !IsQTable(x))
         class(x) <- "matrix"
-    cat("line 94: statistic:", attr(x, "statistic"), "\n")
     x
 }
 
