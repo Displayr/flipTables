@@ -81,9 +81,11 @@ TidyTabularData <- function(
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
 
-    # This line is actually only needed for old outputs in Q
-    # In those cases HideEmptyRowsAndColumns calls the subscript
-    # operator which drops all attributes
+    # This is only needed for outputs in Q
+    # This is because RemoveRowsAndOrColumns and
+    # HideEmptyRowsAndColumns call copyAttributesIfNotQTable
+    # However by default verbs has AllowQTableSubscripting
+    # set to false in Q
     if (!is.null(statistic.attribute))
         attr(x, "statistic") <- statistic.attribute
 
