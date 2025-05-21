@@ -65,6 +65,7 @@ TidyTabularData <- function(
     if (!is.numeric(x) || !(is.null(dim(x)) || length(dim(x)) == 2L) || IsQTable(x))
         x <- AsTidyTabularData(x, ...)
 
+    statistic.attribute <- attr(x, "statistic")
     if (!is.data.frame(x))
         x <- setDimNames(x)
 
@@ -79,6 +80,14 @@ TidyTabularData <- function(
                                 split)
     if (hide.empty.rows.and.columns)
         x <- HideEmptyRowsAndColumns(x)
+
+    # This is only needed for outputs in Q
+    # This is because RemoveRowsAndOrColumns and
+    # HideEmptyRowsAndColumns call copyAttributesIfNotQTable
+    # However by default verbs has AllowQTableSubscripting
+    # set to false in Q
+    if (!is.null(statistic.attribute))
+        attr(x, "statistic") <- statistic.attribute
 
     if (is.null(dim(x)) || n.dim == 1L)
         class(x) <- "numeric"
