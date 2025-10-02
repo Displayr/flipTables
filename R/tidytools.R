@@ -427,6 +427,8 @@ SortColumns <- function(x,
 # It will break up the pattern from a commma-separated list to a vector
 # It will also check for unmatched entries and give warnings
 # warn = FALSE is used by indexSortedValues when no error/warning is required
+#' @importFrom flipU StopForUserError
+#' @noRd
 getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 {
     is.control <- attr(pattern, "is.control")
@@ -436,14 +438,17 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
     sel.ind <- matchNameOrIndex(sel.vec, x, strip.zeros = FALSE)
     sel.na <- which(is.na(sel.ind))
     warning.msg <- ""
-    if (length(sel.na) > 0)
-        warning.msg <- paste0("Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
-            paste(sel.vec[sel.na], collapse = "','"), "'.")
+    if (length(sel.na) > 0) {
+        warning.msg <- paste0(
+            "Table does not contain ", dim, if (length(sel.na) > 1) "s" else "",  " '",
+            paste(sel.vec[sel.na], collapse = "','"), "'."
+        )
+    }
 
     # Check for consecutive matches - these are probably incorrectly split up patterns
     runs <- rle(sel.ind)
     r.ind <- which(runs$length > 1)
-    if (any(runs$length))
+    if (any(runs$length)) {
         for (rri in r.ind)
         {
             r.pos <- (sum(runs$lengths[1:rri]) - runs$lengths[rri]) + (1:runs$lengths[rri])
@@ -451,14 +456,17 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
             if (any(grepl(gsub(" ", "", merged.patt), gsub(" ", "", x))))
                 sel.ind[r.pos[-1]] <- NA
         }
+    }
 
     sel.ind[sel.ind == 0] <- NA
     sel.ind <- sel.ind[which(!is.na(sel.ind))]
-    if (warn && nchar(warning.msg) > 0 && length(sel.ind) == 0)
-        stop(warning.msg)
-    else if (warn && nchar(warning.msg))
+    if (warn && nchar(warning.msg) > 0 && length(sel.ind) == 0) {
+        StopForUserError(warning.msg)
+    }
+    if (warn && nchar(warning.msg)) {
         warning(warning.msg)
-    return(sel.ind)
+    }
+    sel.ind
 }
 
 #' @param p.list Vector of patterns to match
@@ -470,7 +478,7 @@ getMatchIndex <- function(pattern, x, dim = "row", warn = TRUE)
 #' @return list of indices mapping p.list to x.
 #'      Unmatched entries in p.list are set to NA
 #'		Ambiguous patterns are preferentially treated as indices
-#' @importFrom flipU TrimWhitespace
+#' @importFrom flipU TrimWhitespace StopForUserError
 #' @importFrom stringi stri_reverse
 #' @noRd
 matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
@@ -486,13 +494,12 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
     {
         m <- charmatch(p, x)
         m[which(m %in% exact.ind)] <- NA
-        return(m)
+        m
     }
     retry <- which(!is.finite(ind.as.name))
     ind.as.name[retry] <- .partialmatches(p.list[retry], x, exact.matches)
     retry <- which(!is.finite(ind.as.name))
-    ind.as.name[retry] <- .partialmatches(stri_reverse(p.list[retry]),
-            stri_reverse(x), exact.matches)
+    ind.as.name[retry] <- .partialmatches(stri_reverse(p.list[retry]), stri_reverse(x), exact.matches)
 
     # Give warnings if pattern can be used as both an index (numeric) or a name
     ind <- suppressWarnings(as.numeric(p.list))
@@ -501,14 +508,17 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
     for (ii in ambig.pos)
     {
         # Check for an exact match
-        if (p.list[ii] %in% x)
-            warning("'", p.list[ii], "' treated as an index. ",
-             "To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n")
+        if (p.list[ii] %in% x) {
+            warning(
+                sQuote(p.list[ii], q = FALSE), " treated as an index. ",
+                "To select entry with name '", p.list[ii], "' use index ", ind.as.name[ii], "\n"
+            )
+        }
     }
 
-	# Patterns are treated as indices where possible
-	pos.as.name <- is.na(ind)
-	ind[pos.as.name] <- ind.as.name[pos.as.name]
+    # Patterns are treated as indices where possible
+    pos.as.name <- is.na(ind)
+    ind[pos.as.name] <- ind.as.name[pos.as.name]
 
     # Give warnings from duplicate matches in charmatch if relevant
     dup.match <- which(ind.as.name == 0 & pos.as.name & nchar(p.list) > 0)
@@ -518,17 +528,20 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
         for (ii in dup.match)
         {
             tmp.match <- grep(p.list[ii], x, value = TRUE, fixed = TRUE)
-            warning.msg <- paste0(warning.msg, "'", p.list[ii], "' matched multiple values ambiguously: '",
-                paste(tmp.match, collapse = "', '"), "'.\n")
+            warning.msg <- paste0(
+                warning.msg, sQuote(p.list[ii], q = FALSE), " matched multiple values ambiguously: ",
+                paste(sQuote(tmp.match, q = FALSE), collapse = ", "), ".\n"
+            )
         }
-        if (any(is.finite(ind) & ind > 0))
+        if (any(is.finite(ind) & ind > 0)) {
             warning(warning.msg)
-        else
-            stop(warning.msg)
+        }
+        StopForUserError(warning.msg)
     }
-    if (strip.zeros)
+    if (strip.zeros) {
         ind[ind == 0] <- NA
-    return(ind)
+    }
+    ind
 }
 
 isTableWithStats <- function(x)

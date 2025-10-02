@@ -114,13 +114,15 @@ HideEmptyColumns <- function(x, remove.zeros = TRUE, first.stat.only = TRUE)
     if (is.null(dim(x)) || is.array(x) && length(dim(x)) == 1)
     {
         idx <- GetNonEmptyElements(x, FALSE, remove.zeros)
-        if (!length(idx))
+        if (!length(idx)) {
             StopForUserError("Hiding empty elements gives empty input vector.")
+        }
         return(x)
     }
     idx <- getNonEmptyIndices(x, 2, FALSE, is.percent = remove.zeros, first.stat.only)
-    if (!length(idx))
-        stop ("Hiding empty columns gives empty input matrix.")
+    if (!length(idx)) {
+        StopForUserError("Hiding empty columns gives empty input matrix.")
+    }
     extractArray(x, col.index = idx)
 }
 
