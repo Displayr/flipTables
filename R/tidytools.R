@@ -533,10 +533,10 @@ matchNameOrIndex <- function(p.list, x, strip.zeros = TRUE)
                 paste(sQuote(tmp.match, q = FALSE), collapse = ", "), ".\n"
             )
         }
-        if (any(is.finite(ind) & ind > 0)) {
-            warning(warning.msg)
+        if (!any(is.finite(ind) & ind > 0)) {
+            StopForUserError(warning.msg)
         }
-        StopForUserError(warning.msg)
+        warning(warning.msg)
     }
     if (strip.zeros) {
         ind[ind == 0] <- NA
