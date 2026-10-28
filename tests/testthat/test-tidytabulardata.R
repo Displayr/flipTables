@@ -318,8 +318,8 @@ test_that("Tidy tables that have been converted to character",
 
     expect_warning(HideColumnsWithSmallSampleSizes(tb.with.colcmp, 40),
         "Columns 1,8,9 have sample size less than 40 and have been removed")
-    expect_warning(HideRowsWithSmallSampleSizes(tb.with.colcmp, 1000),
-        "Rows 1,2,3,4,5,6,7,8,9,10 have sample size less than 1000 and have been removed")
+    expect_error(HideRowsWithSmallSampleSizes(tb.with.colcmp, 1000),
+        "Output not shown because every row is based on less than 1000 observations.", fixed = TRUE)
 
     res <- HideValuesWithSmallSampleSizes(tb.with.colcmp, 40)
     expect_equal(all(is.na(res[,c(1,8,9),1])), TRUE)

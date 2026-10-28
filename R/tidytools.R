@@ -80,6 +80,8 @@ ReverseRows <- function(x)
 {
     if (length(dim(x)) < 2)
         x <- convertToMatrix(x)
+    if (NROW(x) == 0 || NCOL(x) == 0)
+        return(x)
     n <- nrow(x)
     extractArray(x, row.index = n:1)
 }
@@ -93,6 +95,8 @@ ReverseColumns <- function(x)
 {
     if (length(dim(x)) < 2)
         x <- return(x)
+    if (NROW(x) == 0 || NCOL(x) == 0)
+        return(x)
     n <- ncol(x)
     extractArray(x, col.index = n:1)
 }
@@ -359,6 +363,8 @@ SortRows <- function(x,
         x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
+    if (NROW(x) == 0 || NCOL(x) == 0)
+        return(x)
 
     # Finding the column to sort on
     col.ind <- NULL
@@ -400,6 +406,8 @@ SortColumns <- function(x,
     if (length(dim(x)) < 2)
         return(x)
     if (!checkIsTable(x))
+        return(x)
+    if (NROW(x) == 0 || NCOL(x) == 0)
         return(x)
 
     # Finding the row to sort on
@@ -582,7 +590,8 @@ HideOutputsWithSmallSampleSizes <- function(x, min.size = 30)
 #' @description Using the 'Column n' (preferred) or 'Base n' statistic
 #'   this funcion will remove any rows from \code{x}, where all
 #'   are smaller than \code{min.size}. If any rows/columns are removed
-#'   then warnings will be given.
+#'   then warnings will be given. If every row would be removed,
+#'   an error is given instead.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
 #' @importFrom flipU StopForUserError
@@ -602,16 +611,22 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
+    if (NROW(x) == 0 || NCOL(x) == 0)
+        return(x)
 
     # Search rows
     row.rm <- c()
-    for (i in 1:nrow(x))
+    for (i in seq_len(nrow(x)))
     {
         if (all(as.numeric(x[i, ,d.ind]) < min.size))
             row.rm <- c(row.rm, i)
     }
-    if (all(dim(x) > 0) && length(row.rm) > 0)
+    if (length(row.rm) > 0)
     {
+        if (length(row.rm) == nrow(x))
+            StopForUserError("Output not shown because every row is based on less than ", min.size,
+                             " observations. To show it, include more data, such as by changing the filter, ",
+                             "or lower the 'Sample size cut-off' for 'Hide rows with small sample sizes'.")
         warning("Rows ", paste(row.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
         x <- extractArray(x, row.index = -row.rm)
     }
@@ -622,7 +637,8 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
 #' @description Using the 'Column n' (preferred) or 'Base n' statistic
 #'   this funcion will remove any rows from \code{x}, where all
 #'   are smaller than \code{min.size}. If any rows/columns are removed
-#'   then warnings will be given.
+#'   then warnings will be given. If every column would be removed,
+#'   an error is given instead.
 #' @param x Input table, which must contain the 'Column n' or 'Base n' statistic.
 #' @param min.size Minimum sample size required.
 #' @importFrom flipU StopForUserError
@@ -642,16 +658,22 @@ HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
+    if (NROW(x) == 0 || NCOL(x) == 0)
+        return(x)
 
     # Search rows and columns
     col.rm <- c()
-    for (i in 1:ncol(x))
+    for (i in seq_len(ncol(x)))
     {
         if (all(as.numeric(x[,i,d.ind]) < min.size))
             col.rm <- c(col.rm, i)
     }
     if (length(col.rm) > 0)
     {
+        if (length(col.rm) == ncol(x))
+            StopForUserError("Output not shown because every column is based on less than ", min.size,
+                             " observations. To show it, include more data, such as by changing the filter, ",
+                             "or lower the 'Sample size cut-off' for 'Hide columns with small sample sizes'.")
         warning("Columns ", paste(col.rm, collapse=","), " have sample size less than ", min.size, " and have been removed.")
         x <- extractArray(x, col.index = -col.rm)
     }

@@ -15,5 +15,6 @@ HideColumnsWithSmallSampleSizes(x, min.size = 30)
 Using the 'Column n' (preferred) or 'Base n' statistic
   this funcion will remove any rows from \code{x}, where all
   are smaller than \code{min.size}. If any rows/columns are removed
-  then warnings will be given.
+  then warnings will be given. If every column would be removed,
+  an error is given instead.
 }
