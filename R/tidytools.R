@@ -80,7 +80,7 @@ ReverseRows <- function(x)
 {
     if (length(dim(x)) < 2)
         x <- convertToMatrix(x)
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
     n <- nrow(x)
     extractArray(x, row.index = n:1)
@@ -95,7 +95,7 @@ ReverseColumns <- function(x)
 {
     if (length(dim(x)) < 2)
         x <- return(x)
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
     n <- ncol(x)
     extractArray(x, col.index = n:1)
@@ -363,7 +363,7 @@ SortRows <- function(x,
         x <- convertToMatrix(x)
     if (!checkIsTable(x))
         return(x)
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
 
     # Finding the column to sort on
@@ -407,7 +407,7 @@ SortColumns <- function(x,
         return(x)
     if (!checkIsTable(x))
         return(x)
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
 
     # Finding the row to sort on
@@ -557,6 +557,11 @@ isTableWithStats <- function(x)
     inherits(x, "array") && length(dim(x)) == 3
 }
 
+hasNoRowsOrColumns <- function(x)
+{
+    NROW(x) == 0L || NCOL(x) == 0L
+}
+
 checkIsTable <- function(x)
 {
     if (isTableWithStats(x))
@@ -611,7 +616,7 @@ HideRowsWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
 
     # Search rows
@@ -658,7 +663,7 @@ HideColumnsWithSmallSampleSizes <- function(x, min.size = 30)
         d.ind <- which(dimnames(x)[[3]] == size.names[j])
         j <- j + 1
     }
-    if (NROW(x) == 0 || NCOL(x) == 0)
+    if (hasNoRowsOrColumns(x))
         return(x)
 
     # Search rows and columns
