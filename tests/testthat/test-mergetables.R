@@ -302,9 +302,8 @@ test_that("DS-3831: Deduce name attribute correctly", {
                    "Assign name to tables[[1]] by setting 'attr(tables[[1]], \"name\") <- name",
                    fixed = TRUE)
     ## Expect warning if on R Server
-    expect_warning(r.server.out <- with_mock(IsRServer = function(x) TRUE,
-                                             do.call(MergeTables, args),
-                                             .env = "flipTables"),
+    expect_warning(r.server.out <- with_mocked_bindings(do.call(MergeTables, args),
+                                                        IsRServer = function(x) TRUE),
                    NA)
     expect_equal(out, r.server.out)
     expect_equal(out, merged.out)
