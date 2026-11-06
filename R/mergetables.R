@@ -20,11 +20,11 @@
 #'     TRUE}).
 #' @param override.row.names Either a character vector or a single
 #'     string to be parsed by
-#'     \code{\link{ConvertCommaSeparatedStringToVector}}, which will
+#'     \code{\link[flipU]{ConvertCommaSeparatedStringToVector}}, which will
 #'     override/replace the default row names of the output table.
 #' @param override.column.names Either a character vector or a single
 #'     string to be parsed by
-#'     \code{\link{ConvertCommaSeparatedStringToVector}}, which will
+#'     \code{\link[flipU]{ConvertCommaSeparatedStringToVector}}, which will
 #'     override/replace the default column names of the output table.
 #' @details If any table has no names for matching, matching is
 #'     performed based on the index order with the output retaining
