@@ -35,27 +35,35 @@ export(TidyTabularData)
 export(padNAs)
 importFrom(ca,ca)
 importFrom(flipTime,AsDate)
-importFrom(flipTransformations,AsNumeric)
-importFrom(flipTransformations,ParseUserEnteredTable)
-importFrom(flipTransformations,ProcessQVariables)
-importFrom(flipTransformations,TextAsVector)
-importFrom(flipU,ConvertCommaSeparatedStringToVector)
-importFrom(flipU,CopyAttributes)
-importFrom(flipU,IsQTable)
-importFrom(flipU,IsRServer)
-importFrom(flipU,RemoveAt)
-importFrom(flipU,StopForUserError)
-importFrom(flipU,TrimWhitespace)
-importFrom(lubridate,day)
-importFrom(lubridate,duration)
-importFrom(lubridate,interval)
-importFrom(lubridate,month)
-importFrom(lubridate,year)
-importFrom(lubridate,years)
+importFrom(flipTransformations,
+  AsNumeric,
+  ParseUserEnteredTable,
+  ProcessQVariables,
+  TextAsVector
+)
+importFrom(flipU,
+  ConvertCommaSeparatedStringToVector,
+  CopyAttributes,
+  IsQTable,
+  IsRServer,
+  RemoveAt,
+  StopForUserError,
+  TrimWhitespace
+)
+importFrom(lubridate,
+  day,
+  duration,
+  interval,
+  month,
+  year,
+  years
+)
 importFrom(methods,is)
 importFrom(stats,setNames)
 importFrom(stringi,stri_reverse)
 importFrom(utils,modifyList)
-importFrom(verbs,First)
-importFrom(verbs,Last)
-importFrom(verbs,Sum)
+importFrom(verbs,
+  First,
+  Last,
+  Sum
+)
