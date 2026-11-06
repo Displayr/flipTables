@@ -275,6 +275,13 @@ test_that("Sort Rows",
     expect_warning(res <- SortRows(tabWithN), "duplicates")
     rownames(res) <- c("65 or more", "40 to 44", "55 to 64", "18 to 24", "25 to 29",
                        "30 to 34", "35 to 39", "45 to 49", "50 to 54", "NET")
+
+    no.rows <- dat[0, , drop = FALSE]
+    expect_equal(SortRows(no.rows), no.rows)
+    no.columns <- dat[, 0, drop = FALSE]
+    expect_equal(SortRows(no.columns), no.columns)
+    no.rows.with.stats <- tabWithN[0, , , drop = FALSE]
+    expect_equal(SortRows(no.rows.with.stats), no.rows.with.stats)
 })
 
 test_that("Sort Columns",
@@ -299,6 +306,13 @@ test_that("Sort Columns",
     expect_equal(colnames(res), c("I typically eat and drink whatever I feel like",
             "I am on a diet, so I tend to watch what I eat and drink",
             "I tend watch what I eat and drink, but don’t consider myself"))
+
+    no.rows <- tb[0, , drop = FALSE]
+    expect_equal(SortColumns(no.rows), no.rows)
+    no.columns <- tb[, 0, drop = FALSE]
+    expect_equal(SortColumns(no.columns), no.columns)
+    no.columns.with.stats <- tabWithN[, 0, , drop = FALSE]
+    expect_equal(SortColumns(no.columns.with.stats), no.columns.with.stats)
 })
 
 test_that("Reverse rows and columns",
@@ -312,6 +326,13 @@ test_that("Reverse rows and columns",
     expect_equal(colnames(res), rev(colnames(tabWithN)))
     expect_equal(dimnames(res)[[3]], dimnames(tabWithN)[[3]])
     expect_equal(ReverseColumns(array1d), array1d)
+
+    no.rows <- tabWithN[0, , , drop = FALSE]
+    expect_equal(ReverseRows(no.rows), no.rows)
+    expect_equal(ReverseColumns(no.rows), no.rows)
+    no.columns <- tabWithN[, 0, , drop = FALSE]
+    expect_equal(ReverseRows(no.columns), no.columns)
+    expect_equal(ReverseColumns(no.columns), no.columns)
 })
 
 displayr1d <- structure(c(12.375, 11.75, 10.375, 11.375, 11.625, 7.875, 11.875,
@@ -396,6 +417,22 @@ test_that("Checking for small sample sizes",
     expect_silent(HideColumnsWithSmallSampleSizes(displayr2d, 30))
     expect_warning(HideColumnsWithSmallSampleSizes(displayr2d, 400),
                    "Columns 1 have sample size less than 400 and have been removed")
+
+    expect_warning(res <- HideRowsWithSmallSampleSizes(tb1d.with.N, 600),
+                   "Rows 2,5 have sample size less than 600 and have been removed")
+    expect_equal(rownames(res), c("Optus network fails", "Telstra network fails", "Vodafone network fails"))
+    expect_error(HideRowsWithSmallSampleSizes(tabWithN, 1000),
+                 "Output not shown because every row is based on less than 1000 observations.",
+                 fixed = TRUE)
+    expect_error(HideColumnsWithSmallSampleSizes(tabWithN, 1000),
+                 "Output not shown because every column is based on less than 1000 observations.",
+                 fixed = TRUE)
+    no.rows <- tabWithN[0, , , drop = FALSE]
+    expect_equal(HideRowsWithSmallSampleSizes(no.rows, 30), no.rows)
+    expect_equal(HideColumnsWithSmallSampleSizes(no.rows, 30), no.rows)
+    no.columns <- tabWithN[, 0, , drop = FALSE]
+    expect_equal(HideRowsWithSmallSampleSizes(no.columns, 30), no.columns)
+    expect_equal(HideColumnsWithSmallSampleSizes(no.columns, 30), no.columns)
 
     expect_error(HideOutputsWithSmallSampleSizes(1:100, 30))
 
