@@ -46,7 +46,7 @@ override/replace the default row names of the output table.}
 
 \item{override.column.names}{Either a character vector or a single
 string to be parsed by
-\code{\link[flipU[{ConvertCommaSeparatedStringToVector}}, which will
+\code{\link[flipU]{ConvertCommaSeparatedStringToVector}}, which will
 override/replace the default column names of the output table.}
 
 \item{left, right}{The tables to merge. These should be vectors, matrices or
