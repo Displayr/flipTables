@@ -20,7 +20,7 @@
 #'     TRUE}).
 #' @param override.row.names Either a character vector or a single
 #'     string to be parsed by
-#'     \code{\link{ConvertCommaSeparatedStringToVector}}, which will
+#'     \code{\link[flipU]{ConvertCommaSeparatedStringToVector}}, which will
 #'     override/replace the default row names of the output table.
 #' @param override.column.names Either a character vector or a single
 #'     string to be parsed by
