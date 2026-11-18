@@ -18,7 +18,6 @@ Imports:
     flipU (>= 1.6.2),
     verbs (>= 0.15.0)
 LazyData: TRUE
-RoxygenNote: 7.3.2
 Suggests: gtools, testthat, covr
 Remotes:
     Displayr/flipTime,
@@ -27,3 +26,4 @@ Remotes:
     Displayr/verbs
 NeedsCompilation: no
 Encoding: UTF-8
+Config/roxygen2/version: 8.1.1
